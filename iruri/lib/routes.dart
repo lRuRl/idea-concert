@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 // components
-import 'package:iruri/components/navigation.dart';
 import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/typhography.dart';
 // pages
@@ -61,6 +60,19 @@ class _RoutesState extends State<Routes> {
       backgroundColor: Colors.white,
       shadowColor: themeLightGrayOpacity20,
       elevation: 1.0, // less shadow
+      // '+' button : post new article
+      // 게시글 추가는 [홈]에서만 가능하게 하도록 삼항연산자로 구현
+      actions: <Widget>[
+        currentPageIndex == 0
+            ? IconButton(
+                icon: Icon(Icons.add_circle_outline_rounded,
+                    color: themeGrayText),
+                // navigation to article form page
+                // TODO : 새로운 게시글 등록 화면 이동
+                onPressed: () => print('add new article !'),
+              )
+            : SizedBox()  // SizedBox() 는 아무것도 없는 것을 의미합니다.
+      ],
     );
   }
 
@@ -70,7 +82,8 @@ class _RoutesState extends State<Routes> {
    */
   BottomNavigationBar bottomNavigationBar() {
     return BottomNavigationBar(
-      items: [  // 왼쪽부터 나열 됩니다.
+      items: [
+        // 왼쪽부터 나열 됩니다.
         BottomNavigationBarItem(
             icon: Icon(Icons.article_outlined),
             activeIcon: Icon(Icons.article_rounded),
