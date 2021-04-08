@@ -1,0 +1,102 @@
+import 'package:flutter/material.dart';
+// components
+import 'package:iruri/components/navigation.dart';
+import 'package:iruri/components/palette.dart';
+import 'package:iruri/components/typhography.dart';
+// pages
+import 'package:iruri/pages/home/home.dart';
+import 'package:iruri/pages/personal/personal.dart';
+import 'package:iruri/pages/state/state.dart';
+
+// ignore: slash_for_doc_comments
+/**
+ *  Routes
+ *  HOME : 매칭이 이루어지는 탭
+ *  STATE : 매칭 현황을 볼 수 있는 탭
+ *  PERSONAL : 개인 설정을 할 수 있는 탭
+ * 
+ *  page route를 위해서 StatefulWidget으로 구현
+ */
+class Routes extends StatefulWidget {
+  @override
+  _RoutesState createState() => _RoutesState();
+}
+
+class _RoutesState extends State<Routes> {
+  // page route
+  var page = [
+    {'name': '게시글', 'page': HomePage()},
+    {'name': '매칭현황', 'page': StatePage()},
+    {'name': '내정보', 'page': PersonalPage()}
+  ];
+
+  // current page index
+  var currentPageIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    currentPageIndex = 0;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        // APP BAR : Top of application
+        appBar: appBar(),
+        // body
+        body: Center(
+          child: page[currentPageIndex]['page'],
+        ),
+        bottomNavigationBar: bottomNavigationBar());
+  }
+
+  /*
+   *  Flutter 에서 제공해주는 AppBar를 사용 
+   *    탭 이동마다 맨 위 제목이 바뀌게 설정 - 2021.04.09
+   */
+  AppBar appBar() {
+    return AppBar(
+      title: Text(page[currentPageIndex]['name'], style: appBarTitleTextStyle),
+      backgroundColor: Colors.white,
+      shadowColor: themeLightGrayOpacity20,
+      elevation: 1.0, // less shadow
+    );
+  }
+
+  /*
+   *  Flutter 에서 제공해주는 BottomNavigationBar를 사용
+   *  현재 각 label은 안보이게 설정하였음 - 2021.04.08 
+   */
+  BottomNavigationBar bottomNavigationBar() {
+    return BottomNavigationBar(
+      items: [  // 왼쪽부터 나열 됩니다.
+        BottomNavigationBarItem(
+            icon: Icon(Icons.article_outlined),
+            activeIcon: Icon(Icons.article_rounded),
+            label: 'Home'),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.palette_outlined),
+            activeIcon: Icon(Icons.palette_rounded),
+            label: 'Match'),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline_rounded),
+            activeIcon: Icon(Icons.person),
+            label: 'My')
+      ],
+      onTap: (index) {
+        // page index 변경
+        setState(() {
+          currentPageIndex = index;
+        });
+      },
+      // hide all labels
+      showSelectedLabels: false,
+      showUnselectedLabels: false,
+      // Icon settings
+      selectedItemColor: themeLighyOrange,
+      // set current index of page for selectedItemColor
+      currentIndex: currentPageIndex,
+    );
+  }
+}
