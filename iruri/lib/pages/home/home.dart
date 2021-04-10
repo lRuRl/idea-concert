@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:iruri/components/component.dart';
+import 'package:iruri/components/palette.dart';
+import 'package:iruri/components/spacing.dart';
+import 'package:iruri/components/text_form_field.dart';
+import 'package:iruri/components/typhography.dart';
+import 'package:iruri/model/article.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -26,22 +32,27 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   // @params
   ScrollController scrollController; // ScrollController 로 스크롤 높이 등을 조절할 수 있습니다.
-  // TextEditingController textEditingController;
+  TextEditingController textEditingController;
   // var tags;
   // var fetchedData;
 
   @override
   void initState() {
     super.initState();
+    // controller init
+    scrollController = new ScrollController();
+    textEditingController = new TextEditingController();
     // TODO: fetch Data
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Colors.white,
       child: SingleChildScrollView(
         controller: scrollController,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             // SEARCH CONTAINER
             searchContainer(),
@@ -57,9 +68,49 @@ class _HomePageState extends State<HomePage> {
 
   // searchContainer
   Widget searchContainer() {
+    // TODO: referesh list
+    void _searchItem({value}) {
+      print(value != null
+          ? value + ' searched from user'
+          : textEditingController.text + ' searched from user');
+    }
+
     return Container(
-      child: Text("SEARCH CONTAINER"),
-      color: Colors.red,
+      margin: marginCustom(hor: 20, ver: 15),
+      child: Row(
+        // Search Text Bar / Search Button
+        children: <Widget>[
+          // Search Text Bar
+          Expanded(
+            flex: 9,
+            child: TextFormField(
+              controller: textEditingController,
+              onFieldSubmitted: (value) => _searchItem(value: value),
+              onChanged: (value) {
+                setState(() {
+                  // get text saved
+                  textEditingController.text = value;
+                  // get cursor on the max length of text
+                  textEditingController.selection = TextSelection.fromPosition(
+                      TextPosition(offset: textEditingController.text.length));
+                });
+              },
+              // decoration
+              decoration: searchInputDecoration,
+              cursorColor: themeLightOrange,
+            ),
+          ),
+          // Search Button
+          Expanded(
+            flex: 1,
+            child: IconButton(
+              icon: Icon(Icons.search_rounded),
+              iconSize: 25,
+              onPressed: () => _searchItem(),
+            ),
+          )
+        ],
+      ),
     );
   }
 
@@ -88,18 +139,81 @@ class _HomePageState extends State<HomePage> {
 
   // recruitContainer
   Widget recruitContainer() {
+    // sample data
+    List<Article> data = [
+      Article(
+          title: 'test',
+          writer: 'test-writer',
+          tags: ['글', '뎃셍', '그림'],
+          dueDate: 'D-DAY 8',
+          imagePath:
+              'https://picsum.photos/250?image=9'),
+      Article(
+          title: 'test',
+          writer: 'test-writer',
+          tags: ['글', '뎃셍', '그림'],
+          dueDate: 'D-DAY 8',
+          imagePath:
+              'https://i.ibb.co/1vXpqVs/flutter-logo.jpg'),
+      Article(
+          title: 'test',
+          writer: 'test-writer',
+          tags: ['글', '뎃셍', '그림'],
+          dueDate: 'D-DAY 8',
+          imagePath:
+              'http://ideaconcert.com/resources/common/images/character_careers.png'),
+      Article(
+          title: 'test',
+          writer: 'test-writer',
+          tags: ['글', '뎃셍', '그림'],
+          dueDate: 'D-DAY 8',
+          imagePath:
+              'http://ideaconcert.com/resources/common/images/character_careers.png'),
+      Article(
+          title: 'test',
+          writer: 'test-writer',
+          tags: ['글', '뎃셍', '그림'],
+          dueDate: 'D-DAY 8',
+          imagePath:
+              'http://ideaconcert.com/resources/common/images/character_careers.png'),
+      Article(
+          title: 'test',
+          writer: 'test-writer',
+          tags: ['글', '그림', '뎃셍', '콘티', '채색', '캐릭터'],
+          dueDate: 'D-DAY 8',
+          imagePath:
+              'http://ideaconcert.com/resources/common/images/character_careers.png'),
+    ];
+
     return Column(
       children: <Widget>[
-        Row(
-          children: <Widget>[Text("모집중인공고"), Text("TAGS")],
+        Align(
+          alignment: Alignment.center,
+          child: SizedBox(height: 20),
         ),
-        ListView.builder(
-          shrinkWrap: true, // 자동으로 길이를 조정해주는 느낌
-          itemCount: 10, // 리스트 뷰안에 있는 자식 객체 수
-          itemBuilder: (context, index) {
-            return Text(index.toString());
-          },
-        )
+        Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+                padding: paddingH20,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text("모집중인공고", style: articleTitleTextStyle),
+                    Text("TAGS")
+                  ],
+                ))),
+        Align(
+            alignment: Alignment.center,
+            child: ListView.builder(
+              controller: scrollController,
+              shrinkWrap: true, // 자동으로 길이를 조정해주는 느낌
+              itemCount: data.length, // 리스트 뷰안에 있는 자식 객체 수
+              itemBuilder: (context, index) {
+                return HomeArticle(
+                  data: data[index],
+                );
+              },
+            ))
       ],
     );
   }

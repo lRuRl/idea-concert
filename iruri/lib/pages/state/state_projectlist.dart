@@ -204,7 +204,7 @@ Widget selectButton() {
             padding: EdgeInsets.all(3),
             primary: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
             onPrimary: Colors.white,
-            // fixedSize: Size(140, 50),
+            //fixedSize: Size(90, 30),
           )),
       ElevatedButton(
           onPressed: () {},
@@ -213,7 +213,7 @@ Widget selectButton() {
             padding: EdgeInsets.all(3),
             primary: Colors.white,
             onPrimary: Color.fromRGBO(0x82, 0x82, 0x82, 1),
-            // fixedSize: Size(140, 50),
+            // fixedSize: Size(90, 30),
           ))
     ],
   );
@@ -232,7 +232,7 @@ Widget listItemButton() {
               )),
           style: ElevatedButton.styleFrom(
             padding: EdgeInsets.all(0),
-            // fixedSize: Size(90, 30),
+            //fixedSize: Size(90, 30),
             primary: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
             onPrimary: Colors.white,
           )),

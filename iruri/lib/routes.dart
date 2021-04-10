@@ -44,9 +44,12 @@ class _RoutesState extends State<Routes> {
         // APP BAR : Top of application
         appBar: appBar(),
         // body
-        body: Center(
-          child: page[currentPageIndex]['page'],
-        ),
+        body: GestureDetector(
+            // used in keyboard dismiss and so on
+            onTap: () => FocusScope.of(context).requestFocus(new FocusNode()),
+            child: Container(
+              child: page[currentPageIndex]['page'],
+            )),
         bottomNavigationBar: bottomNavigationBar());
   }
 
@@ -107,7 +110,7 @@ class _RoutesState extends State<Routes> {
       showSelectedLabels: false,
       showUnselectedLabels: false,
       // Icon settings
-      selectedItemColor: themeLighyOrange,
+      selectedItemColor: themeLightOrange,
       // set current index of page for selectedItemColor
       currentIndex: currentPageIndex,
     );
