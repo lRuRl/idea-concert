@@ -3,6 +3,7 @@ import 'package:iruri/components/component.dart';
 import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/spacing.dart';
 import 'package:iruri/components/text_form_field.dart';
+import 'package:iruri/components/typhography.dart';
 import 'package:iruri/model/article.dart';
 
 class HomePage extends StatefulWidget {
@@ -138,7 +139,6 @@ class _HomePageState extends State<HomePage> {
 
   // recruitContainer
   Widget recruitContainer() {
-
     // sample data
     List<Article> data = [
       Article(
@@ -147,7 +147,14 @@ class _HomePageState extends State<HomePage> {
           tags: ['글', '뎃셍', '그림'],
           dueDate: 'D-DAY 8',
           imagePath:
-              'http://ideaconcert.com/resources/common/images/character_careers.png'),
+              'https://picsum.photos/250?image=9'),
+      Article(
+          title: 'test',
+          writer: 'test-writer',
+          tags: ['글', '뎃셍', '그림'],
+          dueDate: 'D-DAY 8',
+          imagePath:
+              'https://i.ibb.co/1vXpqVs/flutter-logo.jpg'),
       Article(
           title: 'test',
           writer: 'test-writer',
@@ -158,14 +165,7 @@ class _HomePageState extends State<HomePage> {
       Article(
           title: 'test',
           writer: 'test-writer',
-          tags: ['글', '뎃셍', '그림'],
-          dueDate: 'D-DAY 8',
-          imagePath:
-              'http://ideaconcert.com/resources/common/images/character_careers.png'),
-      Article(
-          title: 'test',
-          writer: 'test-writer',
-          tags: ['글', '뎃셍', '그림'],
+          tags: ['글', '뎃셍', '그림'],
           dueDate: 'D-DAY 8',
           imagePath:
               'http://ideaconcert.com/resources/common/images/character_careers.png'),
@@ -188,10 +188,20 @@ class _HomePageState extends State<HomePage> {
     return Column(
       children: <Widget>[
         Align(
+          alignment: Alignment.center,
+          child: SizedBox(height: 20),
+        ),
+        Align(
             alignment: Alignment.topLeft,
-            child: Row(
-              children: <Widget>[Text("모집중인공고"), Text("TAGS")],
-            )),
+            child: Container(
+                padding: paddingH20,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text("모집중인공고", style: articleTitleTextStyle),
+                    Text("TAGS")
+                  ],
+                ))),
         Align(
             alignment: Alignment.center,
             child: ListView.builder(

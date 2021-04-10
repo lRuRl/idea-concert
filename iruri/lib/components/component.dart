@@ -79,7 +79,7 @@ class HomeArticle extends StatelessWidget {
                           physics: NeverScrollableScrollPhysics(),
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
-                                  childAspectRatio: 4/2,
+                                  childAspectRatio: 4 / 2,
                                   crossAxisCount: 4,
                                   mainAxisSpacing: 10,
                                   crossAxisSpacing: 5),
@@ -143,14 +143,12 @@ class TagWrapper extends StatelessWidget {
     return TextButton(
       onPressed: onPressed,
       style: TextButton.styleFrom(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           // primary: colorMapper[tag],
           backgroundColor: colorMapper[tag],
           alignment: Alignment.center,
           elevation: 0.0, // no shadow
-          padding: paddingH6V4
-          ),
+          padding: paddingH6V4),
       child: Text('# ' + tag, style: articleTagTextStyle),
     );
   }
@@ -168,20 +166,21 @@ class _ImageWrapperState extends State<ImageWrapper> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return ClipRect(
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
       child: Container(
-        width: size.width * 0.27,
-        height: size.width * 0.27,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20), color: lightWhite),
         child: Align(
           alignment: Alignment.center,
-          widthFactor: 0.5,
-          heightFactor: 0.5,
+          widthFactor: 0.8,
+          heightFactor: 0.8,
           child: Image.network(
             widget.imagePath,
+            width: size.width * 0.27,
+            height: size.width * 0.27,
+            alignment: Alignment.center,
             errorBuilder: (context, error, stackTrace) =>
-                Icon(Icons.error_outline_rounded, size: 24),
+                Icon(Icons.error_outline_rounded, size: 24, color: themeGrayText),
+            fit: BoxFit.cover,
           ),
         ),
       ),
