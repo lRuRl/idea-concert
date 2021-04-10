@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:iruri/components/palette.dart';
+import 'package:iruri/components/spacing.dart';
+import 'package:iruri/components/text_form_field.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -26,22 +29,27 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   // @params
   ScrollController scrollController; // ScrollController 로 스크롤 높이 등을 조절할 수 있습니다.
-  // TextEditingController textEditingController;
+  TextEditingController textEditingController;
   // var tags;
   // var fetchedData;
 
   @override
   void initState() {
     super.initState();
+    // controller init
+    scrollController = new ScrollController();
+    textEditingController = new TextEditingController();
     // TODO: fetch Data
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Colors.white,
       child: SingleChildScrollView(
         controller: scrollController,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             // SEARCH CONTAINER
             searchContainer(),
@@ -57,9 +65,49 @@ class _HomePageState extends State<HomePage> {
 
   // searchContainer
   Widget searchContainer() {
+    // TODO: referesh list
+    void _searchItem({value}) {
+      print(value != null
+          ? value + ' searched from user'
+          : textEditingController.text + ' searched from user');
+    }
+
     return Container(
-      child: Text("SEARCH CONTAINER"),
-      color: Colors.red,
+      margin: marginCustom(hor: 20, ver: 15),
+      child: Row(
+        // Search Text Bar / Search Button
+        children: <Widget>[
+          // Search Text Bar
+          Expanded(
+            flex: 9,
+            child: TextFormField(
+              controller: textEditingController,
+              onFieldSubmitted: (value) => _searchItem(value: value),
+              onChanged: (value) {
+                setState(() {
+                  // get text saved
+                  textEditingController.text = value;
+                  // get cursor on the max length of text
+                  textEditingController.selection = TextSelection.fromPosition(
+                      TextPosition(offset: textEditingController.text.length));
+                });
+              },
+              // decoration
+              decoration: searchInputDecoration,
+              cursorColor: themeLightOrange,
+            ),
+          ),
+          // Search Button
+          Expanded(
+            flex: 1,
+            child: IconButton(
+              icon: Icon(Icons.search_rounded),
+              iconSize: 25,
+              onPressed: () => _searchItem(),
+            ),
+          )
+        ],
+      ),
     );
   }
 

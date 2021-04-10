@@ -110,7 +110,7 @@ class _RoutesState extends State<Routes> {
       showSelectedLabels: false,
       showUnselectedLabels: false,
       // Icon settings
-      selectedItemColor: themeLighyOrange,
+      selectedItemColor: themeLightOrange,
       // set current index of page for selectedItemColor
       currentIndex: currentPageIndex,
     );
