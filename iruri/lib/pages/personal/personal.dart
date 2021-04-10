@@ -4,7 +4,6 @@ import 'package:iruri/components/component.dart';
 class PersonalPage extends StatefulWidget {
   @override
   _PersonalPageState createState() => _PersonalPageState();
-  MyProfile myProfile() => MyProfile();
 }
 
 class _PersonalPageState extends State<PersonalPage> {
