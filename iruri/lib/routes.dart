@@ -5,7 +5,7 @@ import 'package:iruri/components/typhography.dart';
 // pages
 import 'package:iruri/pages/home/home.dart';
 import 'package:iruri/pages/personal/personal.dart';
-import 'package:iruri/pages/state/state.dart';
+import 'package:iruri/pages/state/state_projectlist.dart';
 
 // ignore: slash_for_doc_comments
 /**
@@ -25,7 +25,7 @@ class _RoutesState extends State<Routes> {
   // page route
   var page = [
     {'name': '게시글', 'page': HomePage()},
-    {'name': '매칭현황', 'page': StatePage()},
+    {'name': '매칭현황', 'page': ProjectListPage()},
     {'name': '내정보', 'page': PersonalPage()}
   ];
 
@@ -44,9 +44,12 @@ class _RoutesState extends State<Routes> {
         // APP BAR : Top of application
         appBar: appBar(),
         // body
-        body: Center(
-          child: page[currentPageIndex]['page'],
-        ),
+        body: GestureDetector(
+            // used in keyboard dismiss and so on
+            onTap: () => FocusScope.of(context).requestFocus(new FocusNode()),
+            child: Container(
+              child: page[currentPageIndex]['page'],
+            )),
         bottomNavigationBar: bottomNavigationBar());
   }
 
@@ -71,7 +74,7 @@ class _RoutesState extends State<Routes> {
                 // TODO : 새로운 게시글 등록 화면 이동
                 onPressed: () => print('add new article !'),
               )
-            : SizedBox()  // SizedBox() 는 아무것도 없는 것을 의미합니다.
+            : SizedBox() // SizedBox() 는 아무것도 없는 것을 의미합니다.
       ],
     );
   }
@@ -107,7 +110,7 @@ class _RoutesState extends State<Routes> {
       showSelectedLabels: false,
       showUnselectedLabels: false,
       // Icon settings
-      selectedItemColor: themeLighyOrange,
+      selectedItemColor: themeLightOrange,
       // set current index of page for selectedItemColor
       currentIndex: currentPageIndex,
     );
