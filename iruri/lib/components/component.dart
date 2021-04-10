@@ -188,6 +188,103 @@ class _ImageWrapperState extends State<ImageWrapper> {
   }
 }
 
+
+class MyProfile extends StatefulWidget {
+  @override
+  _MyProfileState createState() => _MyProfileState();
+}
+
+class _MyProfileState extends State<MyProfile> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      //margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      //padding: EdgeInsets.fromLTRB(10, 0, 10, 0), //left, top, right, bottom
+      child: Column(children: <Widget>[
+        divider,
+        //프로필 상단 부분
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text("프로필 정보",  style: TextStyle(fontWeight: FontWeight.w700),
+                textAlign: TextAlign.left),
+                IconButton(
+                  icon: Icon(Icons.create_outlined),
+                  iconSize: 25,
+                  onPressed: () => print("look"),
+                ),
+          ],
+        ),
+        //프로필 하단 부분
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+          Container(              //프로필사진 컨테이너
+            height: 130, 
+            width: 130,
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: themeLightGrayOpacity20,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Image.asset('Icon-192.png')
+          ),
+          Column(               //프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
+            children: [ 
+               Container(
+                    margin: EdgeInsets.fromLTRB(10, 10, 0, 10),
+                    width: 50,
+                    alignment: Alignment.topLeft,
+                    child: Text("닉네임"),
+                  ),
+                   Container(
+                    margin: EdgeInsets.fromLTRB(10, 10, 0, 10),
+                    width: 50,
+                    alignment: Alignment.topLeft,
+                    child: Text("포지션"),
+                  ),
+                   Container(
+                    margin: EdgeInsets.fromLTRB(10, 10, 0, 10),
+                    width: 50,
+                    alignment: Alignment.topLeft,
+                    child: Text("연락처"),
+                  ),
+                   Container(
+                    margin: EdgeInsets.fromLTRB(10, 10, 0, 10),
+                    width: 50,
+                    alignment: Alignment.topLeft,
+                    child: Text("이메일"),
+                  ),
+            ]),
+            Column(               //프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
+            children: [ 
+                  Container(
+                    margin: EdgeInsets.fromLTRB(10, 10, 0, 10),
+                    alignment: Alignment.topCenter,
+                    child: Text("parkjang"),
+                  ),
+                   Container(
+                    margin: EdgeInsets.fromLTRB(10, 10, 0, 10),
+                    alignment: Alignment.topCenter,
+                    child: Text("#채색 #콘티 #캐릭터"), //포지션 태그 
+                  ),
+                   Container(
+                    margin: EdgeInsets.fromLTRB(10, 10, 0, 10),
+                    alignment: Alignment.topCenter,
+                    child: Text("010-XXXX-XXXX"),
+                  ),
+                   Container(
+                    margin: EdgeInsets.fromLTRB(10, 10, 0, 10),
+                    alignment: Alignment.topCenter,
+                    child: Text("parkjang@naver.com"),
+                  ),
+            ]),
+        ]),
+      ],)
+    );
+  }
+}
+
 /**
  *  TODO : @jswboseok 프로필정보만들기
  *  1. 프로필 정보는 StatefulWidget으로 만들 것
