@@ -144,7 +144,7 @@ class TagWrapper extends StatelessWidget {
       onPressed: onPressed,
       style: TextButton.styleFrom(
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           // primary: colorMapper[tag],
           backgroundColor: colorMapper[tag],
           alignment: Alignment.center,
