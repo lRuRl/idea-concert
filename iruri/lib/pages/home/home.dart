@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:iruri/components/component.dart';
 import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/spacing.dart';
 import 'package:iruri/components/text_form_field.dart';
+import 'package:iruri/model/article.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -136,18 +138,72 @@ class _HomePageState extends State<HomePage> {
 
   // recruitContainer
   Widget recruitContainer() {
+
+    // sample data
+    List<Article> data = [
+      Article(
+          title: 'test',
+          writer: 'test-writer',
+          tags: ['글', '뎃셍', '그림'],
+          dueDate: 'D-DAY 8',
+          imagePath:
+              'http://ideaconcert.com/resources/common/images/character_careers.png'),
+      Article(
+          title: 'test',
+          writer: 'test-writer',
+          tags: ['글', '뎃셍', '그림'],
+          dueDate: 'D-DAY 8',
+          imagePath:
+              'http://ideaconcert.com/resources/common/images/character_careers.png'),
+      Article(
+          title: 'test',
+          writer: 'test-writer',
+          tags: ['글', '뎃셍', '그림'],
+          dueDate: 'D-DAY 8',
+          imagePath:
+              'http://ideaconcert.com/resources/common/images/character_careers.png'),
+      Article(
+          title: 'test',
+          writer: 'test-writer',
+          tags: ['글', '뎃셍', '그림'],
+          dueDate: 'D-DAY 8',
+          imagePath:
+              'http://ideaconcert.com/resources/common/images/character_careers.png'),
+      Article(
+          title: 'test',
+          writer: 'test-writer',
+          tags: ['글', '뎃셍', '그림'],
+          dueDate: 'D-DAY 8',
+          imagePath:
+              'http://ideaconcert.com/resources/common/images/character_careers.png'),
+      Article(
+          title: 'test',
+          writer: 'test-writer',
+          tags: ['글', '그림', '뎃셍', '콘티', '채색', '캐릭터'],
+          dueDate: 'D-DAY 8',
+          imagePath:
+              'http://ideaconcert.com/resources/common/images/character_careers.png'),
+    ];
+
     return Column(
       children: <Widget>[
-        Row(
-          children: <Widget>[Text("모집중인공고"), Text("TAGS")],
-        ),
-        ListView.builder(
-          shrinkWrap: true, // 자동으로 길이를 조정해주는 느낌
-          itemCount: 10, // 리스트 뷰안에 있는 자식 객체 수
-          itemBuilder: (context, index) {
-            return Text(index.toString());
-          },
-        )
+        Align(
+            alignment: Alignment.topLeft,
+            child: Row(
+              children: <Widget>[Text("모집중인공고"), Text("TAGS")],
+            )),
+        Align(
+            alignment: Alignment.center,
+            child: ListView.builder(
+              controller: scrollController,
+              shrinkWrap: true, // 자동으로 길이를 조정해주는 느낌
+              itemCount: data.length, // 리스트 뷰안에 있는 자식 객체 수
+              itemBuilder: (context, index) {
+                return HomeArticle(
+                  data: data[index],
+                );
+              },
+            ))
       ],
     );
   }
