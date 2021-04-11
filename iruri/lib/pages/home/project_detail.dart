@@ -73,6 +73,11 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                     height: MediaQuery.of(context).size.height * 0.5,
                     child: projectDetailContent(context, data),
                   ),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 1,
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    child: applyButton(),
+                  ),
                 ],
               ),
             )));

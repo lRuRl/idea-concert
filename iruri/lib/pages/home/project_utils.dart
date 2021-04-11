@@ -85,6 +85,21 @@ Widget projectDetailContent(BuildContext context, Article data) {
   ]));
 }
 
+Widget applyButton(){
+  return ElevatedButton(
+          onPressed: () {},
+          child: Text("지원하기",
+              style: TextStyle(
+                fontSize: 12,
+              )),
+          style: ElevatedButton.styleFrom(
+            padding: EdgeInsets.only(top: 11, bottom: 11, left: 21, right: 21),
+            //fixedSize: Size(90, 30),
+            primary: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
+            onPrimary: Colors.white,
+          ));
+}
+
 Widget customBox(BuildContext context, String text) {
   final size = MediaQuery.of(context).size;
 
