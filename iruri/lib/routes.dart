@@ -4,6 +4,7 @@ import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/typhography.dart';
 // pages
 import 'package:iruri/pages/home/home.dart';
+import 'package:iruri/pages/home/project_detail.dart';
 import 'package:iruri/pages/personal/personal.dart';
 import 'package:iruri/pages/post_article.dart';
 import 'package:iruri/pages/state/state_projectlist.dart';
@@ -31,6 +32,8 @@ var page = [
   {'name': '내정보', 'page': PersonalPage()},
   {'name': '내가 쓴 게시글', 'page': MyprojectPage()},
   {'name': '지원한 게시글', 'page': ApplyListPage()},
+  {'name': '프로젝트 상세', 'page': ProjectDetailPage()},
+
 ];
 
 class _RoutesState extends State<Routes> {

@@ -3,6 +3,7 @@ import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/spacing.dart';
 import 'package:iruri/components/typhography.dart';
 import 'package:iruri/model/article.dart';
+import 'package:iruri/pages/home/project_detail.dart';
 
 // light gray 색 구분선
 const Widget divider = Divider(color: Color(0xFFEEEEEE), thickness: 1);
@@ -64,7 +65,14 @@ class HomeArticle extends StatelessWidget {
                               child: IconButton(
                                 icon: Icon(Icons.keyboard_arrow_right_rounded),
                                 iconSize: 20,
-                                onPressed: () => print('look'),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            ProjectDetailPage(data: data),
+                                      ));
+                                },
                               ),
                             )
                           ],
@@ -460,6 +468,6 @@ class ApprovalState extends StatelessWidget {
  *  버전: 2.0.4
  *  게시자: Neevash Ramdial
  *  VS Marketplace 링크: https://marketplace.visualstudio.com/items?itemName=Nash.awesome-flutter-snippets
- * 
+ * ∏
  *  그럼 화이팅 !
  */
