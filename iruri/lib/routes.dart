@@ -5,6 +5,7 @@ import 'package:iruri/components/typhography.dart';
 // pages
 import 'package:iruri/pages/home/home.dart';
 import 'package:iruri/pages/personal/personal.dart';
+import 'package:iruri/pages/post_article.dart';
 import 'package:iruri/pages/state/state_projectlist.dart';
 import 'package:iruri/pages/state/state_myproject.dart';
 import 'package:iruri/pages/state/state_applylist.dart';
@@ -62,18 +63,13 @@ class _RoutesState extends State<Routes> {
             )),
         bottomNavigationBar: bottomNavigationBar());
   }
-
-  /*
-   *  Flutter 에서 제공해주는 AppBar를 사용 
-   *    탭 이동마다 맨 위 제목이 바뀌게 설정 - 2021.04.09
-   */
-
   /*
    *  Flutter 에서 제공해주는 BottomNavigationBar를 사용
    *  현재 각 label은 안보이게 설정하였음 - 2021.04.08 
    */
   BottomNavigationBar bottomNavigationBar() {
     return BottomNavigationBar(
+      backgroundColor: Colors.white,
       items: [
         // 왼쪽부터 나열 됩니다.
         BottomNavigationBarItem(
@@ -106,6 +102,10 @@ class _RoutesState extends State<Routes> {
   }
 }
 
+  /*
+   *  Flutter 에서 제공해주는 AppBar를 사용 
+   *    탭 이동마다 맨 위 제목이 바뀌게 설정 - 2021.04.09
+   */
 AppBar appBar(int currentPageIndex) {
   return AppBar(
     title: Text(page[currentPageIndex]['name'], style: appBarTitleTextStyle),
