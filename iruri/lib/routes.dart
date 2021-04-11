@@ -5,6 +5,7 @@ import 'package:iruri/components/typhography.dart';
 // pages
 import 'package:iruri/pages/home/home.dart';
 import 'package:iruri/pages/personal/personal.dart';
+import 'package:iruri/pages/post_article.dart';
 import 'package:iruri/pages/state/state_projectlist.dart';
 
 // ignore: slash_for_doc_comments
@@ -72,7 +73,8 @@ class _RoutesState extends State<Routes> {
                     color: themeGrayText),
                 // navigation to article form page
                 // TODO : 새로운 게시글 등록 화면 이동
-                onPressed: () => print('add new article !'),
+                onPressed: () => Navigator.push(
+                    context, MaterialPageRoute(builder: (_) => PostArticle())),
               )
             : SizedBox() // SizedBox() 는 아무것도 없는 것을 의미합니다.
       ],
@@ -117,4 +119,3 @@ class _RoutesState extends State<Routes> {
     );
   }
 }
-

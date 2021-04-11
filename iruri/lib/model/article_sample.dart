@@ -53,7 +53,7 @@ import 'package:iruri/model/article.dart';
             desc: '앞으로 접시를 10개씩 닦습니다.',
             tags: ['글', '데생', '채색'],
             prefer: '서울시 송파구 거주',
-            imagePath: 'http://ideaconcert.com/resources/common/images/character_careers.png'
+            imagePath: 'https://cdn.pixabay.com/photo/2015/05/10/22/32/letter-761653_960_720.jpg'
           ),
           writer: '글쓴이',
           location: '서울 송파구 잠실3동',
@@ -79,7 +79,7 @@ import 'package:iruri/model/article.dart';
             desc: '앞으로 접시를 1000개씩 닦습니다.',
             tags: ['그림', '캐릭터', '채색'],
             prefer: '서울시 강남구 거주',
-            imagePath:  'https://picsum.photos/250?image=9'
+            imagePath:  'https://images.unsplash.com/photo-1526498460520-4c246339dccb?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1650&q=80'
           ),
           writer: '쓰니',
           location: '서울 강남구 일원동',
