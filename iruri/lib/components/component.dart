@@ -70,7 +70,7 @@ class HomeArticle extends StatelessWidget {
                                       context,
                                       MaterialPageRoute(
                                         builder: (BuildContext context) =>
-                                            ProjectDetailPage(),
+                                            ProjectDetailPage(data: data),
                                       ));
                                 },
                               ),

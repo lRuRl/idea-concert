@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:iruri/model/article.dart';
+import 'package:iruri/pages/home/project_utils.dart';
 import 'package:iruri/routes.dart';
 import 'package:iruri/components/component.dart';
 import 'package:iruri/components/palette.dart';
 import 'package:flutter/services.dart';
 
 class ProjectDetailPage extends StatefulWidget {
+  Article data;
+  ProjectDetailPage({Key key, @required this.data}): super(key: key);
   @override
-  _ProjectDetailPageState createState() => _ProjectDetailPageState();
+  _ProjectDetailPageState createState() => _ProjectDetailPageState(data);
 }
 
 class _ProjectDetailPageState extends State<ProjectDetailPage> {
   ScrollController scrollController = new ScrollController();
+  
+  final Article data;
+  _ProjectDetailPageState(this.data);
+
   @override
   void initState() {}
 
@@ -30,15 +38,14 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                 children: [
                   Container(
                     width: MediaQuery.of(context).size.width * 1,
-                    height: MediaQuery.of(context).size.height * 0.12,
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    child: Text("썸네일"),
+                    height: MediaQuery.of(context).size.height * 0.25,
+                    child: thumbnail(context, data),
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width * 1,
-                    height: MediaQuery.of(context).size.height * 0.12,
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    child: Text("공고 상세보기"),
+                    height: MediaQuery.of(context).size.height * 0.2,
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    child: noticeDetail(context, data),
                   ),
                   Container(
                     decoration: BoxDecoration(
@@ -48,10 +55,10 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                             color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 1)),
                       ),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 15),
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                     width: MediaQuery.of(context).size.width * 1,
                     height: MediaQuery.of(context).size.height * 0.15,
-                    child: Text("프로젝트 일정"),
+                    child: projectCalendar(context, data),
                   ),
                   Container(
                     decoration: BoxDecoration(
@@ -61,11 +68,11 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                             color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 1)),
                       ),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 15),
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                     width: MediaQuery.of(context).size.width * 1,
                     height: MediaQuery.of(context).size.height * 0.5,
-                    child: Text("프로젝트 상세 내용"),
-                  )
+                    child: projectDetailContent(context, data),
+                  ),
                 ],
               ),
             )));
