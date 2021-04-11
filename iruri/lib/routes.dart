@@ -85,6 +85,7 @@ class _RoutesState extends State<Routes> {
    */
   BottomNavigationBar bottomNavigationBar() {
     return BottomNavigationBar(
+      backgroundColor: Colors.white,
       items: [
         // 왼쪽부터 나열 됩니다.
         BottomNavigationBarItem(
@@ -116,3 +117,4 @@ class _RoutesState extends State<Routes> {
     );
   }
 }
+
