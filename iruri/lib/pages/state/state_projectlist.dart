@@ -13,6 +13,7 @@ class _ProjectListPageState extends State<ProjectListPage> {
   @override
   void initState() {
     ListViewHorizontal();
+    ListViewHorizontal_apply();
   }
 
   @override
@@ -50,7 +51,7 @@ class _ProjectListPageState extends State<ProjectListPage> {
                 padding: EdgeInsets.symmetric(horizontal: 15),
                 width: MediaQuery.of(context).size.width * 1,
                 height: MediaQuery.of(context).size.height * 0.35,
-                child: applyProject(context, items),
+                child: applyProject(context, items_apply),
               ),
             ],
           ),
@@ -62,5 +63,12 @@ List<Container> items;
 ListViewHorizontal() {
   items = List<Container>.generate(5, (index) {
     return boxItem(index, items);
+  });
+}
+
+List<Container> items_apply;
+ListViewHorizontal_apply() {
+  items_apply = List<Container>.generate(5, (index) {
+    return boxItem_apply(index, items);
   });
 }

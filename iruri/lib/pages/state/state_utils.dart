@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iruri/components/component.dart';
 import 'state_applylist.dart';
 import 'state_myproject.dart';
 
@@ -59,20 +60,74 @@ boxItem(int index, List<Container> items) {
                                 fontFamily: "Roboto",
                                 color: Color.fromRGBO(0x77, 0x77, 0x77, 1))),
                         Row(
+                          children: [Position_Small()],
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              )),
+          Expanded(flex: 2, child: listItemButton())
+        ],
+      ));
+}
+
+boxItem_apply(int index, List<Container> items) {
+  return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: 10,
+      ),
+      height: 200,
+      width: 279,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 1),
+        ),
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+      ),
+      alignment: Alignment(0, 0),
+      child: Column(
+        children: [
+          Expanded(
+              flex: 4,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                    width: 90,
+                    height: 90,
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(196, 196, 196, 0.13),
+                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                    ),
+                    child: Center(child: Text("썸네일")),
+                  ),
+                  Container(
+                    width: 150,
+                    height: 90,
+                    decoration: BoxDecoration(),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              "#뎃생 ",
-                              style: TextStyle(fontSize: 10),
+                            ApprovalState(
+                              stateIndex: index % 3,
                             ),
-                            Text(
-                              "#채색 ",
-                              style: TextStyle(fontSize: 10),
-                            ),
-                            Text(
-                              "#콘티",
-                              style: TextStyle(fontSize: 10),
-                            ),
+                            Icon(Icons.chevron_right, size: 30),
                           ],
+                        ),
+                        boldText("메인 그림 작가 모집 !"),
+                        Text("지원한 부분",
+                            style: TextStyle(
+                                fontSize: 10,
+                                fontFamily: "Roboto",
+                                color: Color.fromRGBO(0x77, 0x77, 0x77, 1))),
+                        Row(
+                          children: [Position_Small()],
                         )
                       ],
                     ),

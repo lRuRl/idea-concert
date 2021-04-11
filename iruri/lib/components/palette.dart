@@ -10,7 +10,6 @@ const Color themeOrange = Color.fromRGBO(242, 92, 5, 1);
 // mono
 const Color lightWhite = Color.fromRGBO(242, 242, 242, 0.6);
 
-
 // tags
 const Color tagDessin = Color.fromRGBO(235, 87, 87, 0.2);
 const Color tagDraw = Color.fromRGBO(242, 135, 5, 0.2);
@@ -18,3 +17,6 @@ const Color tagCharacter = Color.fromRGBO(187, 107, 217, 0.2);
 const Color tagConti = Color.fromRGBO(47, 128, 237, 0.2);
 const Color tagPaint = Color.fromRGBO(111, 207, 151, 0.2);
 const Color tagWrite = Color.fromRGBO(189, 189, 189, 0.2);
+const Color tagApproval_WAIT = Color.fromRGBO(45, 156, 219, 0.2);
+const Color tagApproval_YES = Color.fromRGBO(33, 150, 83, 0.2);
+const Color tagApproval_NO = Color.fromRGBO(242, 92, 5, 0.2);

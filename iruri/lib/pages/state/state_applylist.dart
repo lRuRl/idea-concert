@@ -10,7 +10,7 @@ class ApplyListPage extends StatefulWidget {
 List<Container> applyListitems;
 ListViewVertical() {
   applyListitems = List<Container>.generate(5, (index) {
-    return boxItem(index, applyListitems);
+    return boxItem_apply(index, applyListitems);
   });
 }
 
