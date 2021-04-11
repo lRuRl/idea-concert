@@ -142,6 +142,9 @@ class TagWrapper extends StatelessWidget {
     '캐릭터': tagCharacter,
     '그림': tagDraw,
     '데생': tagDessin,
+    '승인대기': tagApproval_WAIT,
+    '승인수락': tagApproval_YES,
+    '승인거절': tagApproval_NO,
   };
 
   @override
@@ -155,7 +158,9 @@ class TagWrapper extends StatelessWidget {
           alignment: Alignment.center,
           elevation: 0.0, // no shadow
           padding: paddingH6V4),
-      child: Text('# ' + tag, style: articleTagTextStyle),
+      child: tag.substring(0, 1) == '승'
+          ? Text(tag, style: articleTagTextStyle)
+          : Text('# ' + tag, style: articleTagTextStyle),
     );
   }
 }
@@ -193,6 +198,253 @@ class _ImageWrapperState extends State<ImageWrapper> {
         ),
       ),
     );
+  }
+}
+
+class MyProfile extends StatefulWidget {
+  @override
+  _MyProfileState createState() => _MyProfileState();
+}
+
+class _MyProfileState extends State<MyProfile> {
+  @override
+  Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+
+    return Container(
+        //margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        //padding: EdgeInsets.fromLTRB(10, 0, 10, 0), //left, top, right, bottom
+        child: Column(
+      children: <Widget>[
+        //프로필 상단 부분
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text("프로필 정보",
+                style: TextStyle(fontWeight: FontWeight.w700),
+                textAlign: TextAlign.left),
+            IconButton(
+              icon: Icon(Icons.create_outlined),
+              iconSize: 20,
+              onPressed: () => print("look"),
+            ),
+          ],
+        ),
+        //프로필 하단 부분
+        Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+          Container(
+              //프로필사진 컨테이너
+              //height: height * 0.25,
+              width: width * 0.3,
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: themeLightGrayOpacity20,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Image.asset('Icon-192.png')),
+          Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
+              children: [
+            Container(
+              margin: EdgeInsets.fromLTRB(10, 0, 0, 10),
+              width: width * 0.15,
+              alignment: Alignment.topLeft,
+              child: Text(
+                "닉네임",
+                style: TextStyle(fontSize: 12),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.fromLTRB(10, 0, 0, 50),
+              width: width * 0.15,
+              alignment: Alignment.topLeft,
+              child: Text(
+                "포지션",
+                style: TextStyle(fontSize: 12),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.fromLTRB(10, 0, 0, 10),
+              width: width * 0.15,
+              alignment: Alignment.topLeft,
+              child: Text(
+                "연락처",
+                style: TextStyle(fontSize: 12),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.fromLTRB(10, 0, 0, 10),
+              width: width * 0.15,
+              alignment: Alignment.topLeft,
+              child: Text(
+                "이메일",
+                style: TextStyle(fontSize: 12),
+              ),
+            ),
+          ]),
+          Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
+              children: [
+            Container(
+              margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+              alignment: Alignment.topCenter,
+              child: Text(
+                "parkjang",
+                style: TextStyle(fontSize: 12),
+              ),
+            ),
+            Position(),
+            Container(
+              margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+              alignment: Alignment.topCenter,
+              child: Text(
+                "010-XXXX-XXXX",
+                style: TextStyle(fontSize: 12),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+              alignment: Alignment.topCenter,
+              child: Text(
+                "parkjang@naver.com",
+                style: TextStyle(fontSize: 12),
+              ),
+            ),
+          ]),
+        ]),
+      ],
+    ));
+  }
+}
+
+class Position extends StatelessWidget {
+  final List<String> data = ["채색", "콘티", "캐릭터"];
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    double bottomMargin;
+    if (data.length >= 4) {
+      bottomMargin = 15;
+    } else {
+      bottomMargin = 40;
+    }
+    return Container(
+        margin: EdgeInsets.fromLTRB(0, 0, 0, bottomMargin),
+        alignment: Alignment.topCenter,
+        width: size.width * 0.45,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          //border: Border.all(color: lightWhite),
+        ),
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                //flex: 5,
+                child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: GridView.builder(
+                        shrinkWrap: true,
+                        physics: AlwaysScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            childAspectRatio: 4 / 1.5,
+                            crossAxisCount: 3,
+                            mainAxisSpacing: 3,
+                            crossAxisSpacing: 3),
+                        itemCount: data.length,
+                        itemBuilder: (context, index) => TagWrapper(
+                              onPressed: () => print('tag pressed'),
+                              tag: data[index],
+                            ))),
+              )
+            ]));
+  }
+}
+
+class Position_Small extends StatelessWidget {
+  final List<String> data = ["채색", "콘티", "캐릭터"];
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    double bottomMargin;
+    if (data.length >= 4) {
+      bottomMargin = 2;
+    } else {
+      bottomMargin = 5;
+    }
+    return Container(
+        margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+        alignment: Alignment.topCenter,
+        width: size.width * 0.35,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          //border: Border.all(color: lightWhite),
+        ),
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                //flex: 5,
+                child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: GridView.builder(
+                        shrinkWrap: true,
+                        physics: AlwaysScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            childAspectRatio: 3.5 / 1.5,
+                            crossAxisCount: 3,
+                            mainAxisSpacing: 3,
+                            crossAxisSpacing: 3),
+                        itemCount: data.length,
+                        itemBuilder: (context, index) => TagWrapper(
+                              onPressed: () => print('tag pressed'),
+                              tag: data[index],
+                            ))),
+              )
+            ]));
+  }
+}
+
+class ApprovalState extends StatelessWidget {
+  int stateIndex = 0;
+  ApprovalState({this.stateIndex});
+  final List<String> data = ["승인대기", "승인수락", "승인거절"];
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
+    return Container(
+        margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+        alignment: Alignment.topCenter,
+        width: size.width * 0.15,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          //border: Border.all(color: lightWhite),
+        ),
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                //flex: 5,
+                child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: GridView.builder(
+                        shrinkWrap: true,
+                        physics: AlwaysScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            childAspectRatio: 4 / 1.5,
+                            crossAxisCount: 1,
+                            mainAxisSpacing: 0,
+                            crossAxisSpacing: 0),
+                        itemCount: 1,
+                        itemBuilder: (context, index) => TagWrapper(
+                              onPressed: () => print('tag pressed'),
+                              tag: data[this.stateIndex],
+                            ))),
+              )
+            ]));
   }
 }
 

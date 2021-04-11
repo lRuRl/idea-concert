@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:iruri/components/component.dart';
 import 'package:iruri/components/palette.dart';
 import 'package:flutter/services.dart';
-
 class PersonalPage extends StatefulWidget {
   @override
   _PersonalPageState createState() => _PersonalPageState();
@@ -76,7 +76,7 @@ class _PersonalPageState extends State<PersonalPage> {
 
   Widget personalInfo() {
     return Container(
-      child: Text("PERSONAL INFO CONTAINER"),
+      child: MyProfile(),
     );
   }
 
@@ -212,3 +212,4 @@ class _PersonalPageState extends State<PersonalPage> {
     ]);
   }
 }
+
