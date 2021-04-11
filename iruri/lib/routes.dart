@@ -6,9 +6,12 @@ import 'package:iruri/components/typhography.dart';
 import 'package:iruri/pages/home/home.dart';
 import 'package:iruri/pages/personal/personal.dart';
 import 'package:iruri/pages/post_article.dart';
-import 'package:iruri/pages/state/state_projectlist.dart';
-import 'package:iruri/pages/state/state_myproject.dart';
 import 'package:iruri/pages/state/state_applylist.dart';
+import 'package:iruri/pages/state/state_myproject.dart';
+import 'package:iruri/pages/state/state_projectlist.dart';
+// provider
+import 'package:iruri/provider.dart';
+import 'package:provider/provider.dart';
 
 // ignore: slash_for_doc_comments
 /**
@@ -24,15 +27,6 @@ class Routes extends StatefulWidget {
   _RoutesState createState() => _RoutesState();
 }
 
-// page route
-var page = [
-  {'name': '게시글', 'page': HomePage()},
-  {'name': '매칭현황', 'page': ProjectListPage()},
-  {'name': '내정보', 'page': PersonalPage()},
-  {'name': '내가 쓴 게시글', 'page': MyprojectPage()},
-  {'name': '지원한 게시글', 'page': ApplyListPage()},
-];
-
 class _RoutesState extends State<Routes> {
   // current page index
   var currentPageIndex;
@@ -43,31 +37,86 @@ class _RoutesState extends State<Routes> {
     currentPageIndex = 0;
   }
 
-  changePageIndex() {
-    setState(() {
-      currentPageIndex = 3;
-    });
-  }
+  var page = {
+    '/': HomePage(),
+    '/state': ProjectListPage(),
+    '/personal': PersonalPage(),
+    '/state/myproject': MyprojectPage(),
+    '/state/applylist': ApplyListPage()
+  };
 
   @override
   Widget build(BuildContext context) {
+
+    // provider
+    final routerWatcher = context.watch<CustomRouter>();
+
     return Scaffold(
         // APP BAR : Top of application
-        appBar: appBar(currentPageIndex),
+        appBar: appBar(context),
         // body
         body: GestureDetector(
             // used in keyboard dismiss and so on
             onTap: () => FocusScope.of(context).requestFocus(new FocusNode()),
             child: Container(
-              child: page[currentPageIndex]['page'],
+              // child: page[currentPageIndex]['page'],
+              // use Provier<CustomRouter>
+              child: page[routerWatcher.currentPage],
             )),
-        bottomNavigationBar: bottomNavigationBar());
+        bottomNavigationBar: bottomNavigationBar(context));
   }
+
+  /*
+   *  Flutter 에서 제공해주는 AppBar를 사용 
+   *    탭 이동마다 맨 위 제목이 바뀌게 설정 - 2021.04.09
+   */
+  AppBar appBar(BuildContext context) {
+
+    // provider
+    final routerWatcher = context.watch<CustomRouter>();
+    final routerReader = context.read<CustomRouter>();
+
+    return AppBar(
+      // title: Text(page[currentPageIndex]['name'], style: appBarTitleTextStyle),
+      title: Text(
+        'IRURI',
+        style: appBarTitleTextStyle,
+      ),
+      backgroundColor: Colors.white,
+      shadowColor: themeLightGrayOpacity20,
+      elevation: 1.0, // less shadow
+      // '+' button : post new article
+      // 게시글 추가는 [홈]에서만 가능하게 하도록 삼항연산자로 구현
+      actions: <Widget>[
+        routerWatcher.index == 0
+            ? IconButton(
+                icon: Icon(Icons.add_circle_outline_rounded,
+                    color: themeGrayText),
+                // navigation to article form page
+                onPressed: () => Navigator.push(
+                    context, MaterialPageRoute(builder: (_) => PostArticle())),
+              )
+            : SizedBox() // SizedBox() 는 아무것도 없는 것을 의미합니다.
+      ],
+      // 2중으로 들어간 경우에는 뒤로가기 만들어주기
+      leading: routerWatcher.currentPage.split('/').length > 2
+            ? IconButton(
+              icon: Icon(Icons.keyboard_arrow_left_rounded, color: themeGrayText),
+              onPressed: () => routerReader.navigateTo(routerWatcher.currentPage, routerWatcher.prevPage),
+            )
+            : SizedBox(),
+    );
+  }
+
   /*
    *  Flutter 에서 제공해주는 BottomNavigationBar를 사용
    *  현재 각 label은 안보이게 설정하였음 - 2021.04.08 
    */
-  BottomNavigationBar bottomNavigationBar() {
+  BottomNavigationBar bottomNavigationBar(BuildContext context) {
+    // provider
+    final routerReader = context.read<CustomRouter>();
+    final routerWatcher = context.watch<CustomRouter>();
+
     return BottomNavigationBar(
       backgroundColor: Colors.white,
       items: [
@@ -85,11 +134,27 @@ class _RoutesState extends State<Routes> {
             activeIcon: Icon(Icons.person),
             label: 'My')
       ],
+      // page index 변경
       onTap: (index) {
-        // page index 변경
-        setState(() {
-          currentPageIndex = index;
-        });
+        // set index
+        routerReader.setIndex(index);
+        // set name, the tap has changed -> new page
+        String path;
+        switch (index) {
+          case 0:
+            path = '/';
+            break;
+          case 1:
+            path = '/state';
+            break;
+          case 2:
+            path = '/personal';
+            break;
+          default:
+            break;
+        }
+        // save prev page and navigate to curr page
+        routerReader.navigateTo(routerWatcher.currentPage, path);
       },
       // hide all labels
       showSelectedLabels: false,
@@ -97,33 +162,8 @@ class _RoutesState extends State<Routes> {
       // Icon settings
       selectedItemColor: themeLightOrange,
       // set current index of page for selectedItemColor
-      currentIndex: currentPageIndex,
+      // used Provider - 2021.04.12
+      currentIndex: context.watch<CustomRouter>().index,
     );
   }
-}
-
-  /*
-   *  Flutter 에서 제공해주는 AppBar를 사용 
-   *    탭 이동마다 맨 위 제목이 바뀌게 설정 - 2021.04.09
-   */
-AppBar appBar(int currentPageIndex) {
-  return AppBar(
-    title: Text(page[currentPageIndex]['name'], style: appBarTitleTextStyle),
-    backgroundColor: Colors.white,
-    shadowColor: themeLightGrayOpacity20,
-    elevation: 1.0, // less shadow
-    // '+' button : post new article
-    // 게시글 추가는 [홈]에서만 가능하게 하도록 삼항연산자로 구현
-    actions: <Widget>[
-      currentPageIndex == 0
-          ? IconButton(
-              icon:
-                  Icon(Icons.add_circle_outline_rounded, color: themeGrayText),
-              // navigation to article form page
-              // TODO : 새로운 게시글 등록 화면 이동
-              onPressed: () => print('add new article !'),
-            )
-          : SizedBox() // SizedBox() 는 아무것도 없는 것을 의미합니다.
-    ],
-  );
 }
