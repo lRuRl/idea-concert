@@ -39,7 +39,7 @@ class HomeArticle extends StatelessWidget {
            */
           Expanded(
             flex: 2,
-            child: ImageWrapper(imagePath: data.imagePath),
+            child: ImageWrapper(imagePath: data.detail.content.imagePath),
           ),
           SizedBox(width: 20),
           // CONTENTS
@@ -58,7 +58,7 @@ class HomeArticle extends StatelessWidget {
                             Expanded(
                                 // title
                                 flex: 9,
-                                child: Text(data.title,
+                                child: Text(data.detail.content.introduction,
                                     style: articleTitleTextStyle)),
                             Expanded(
                               flex: 1,
@@ -91,10 +91,10 @@ class HomeArticle extends StatelessWidget {
                                   crossAxisCount: 4,
                                   mainAxisSpacing: 10,
                                   crossAxisSpacing: 5),
-                          itemCount: data.tags.length,
+                          itemCount: data.detail.content.tags.length,
                           itemBuilder: (context, index) => TagWrapper(
                                 onPressed: () => print('tag pressed'),
-                                tag: data.tags[index],
+                                tag: data.detail.content.tags[index],
                               ))),
                 ),
                 // writer - start
@@ -105,12 +105,18 @@ class HomeArticle extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text(data.writer, style: articleWriterTextStyle),
+                          Text(data.detail.writer,
+                              style: articleWriterTextStyle),
                           Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: <Text>[
                                 Text('마감일 ', style: articleWriterTextStyle),
-                                Text(data.dueDate,
+                                Text(
+                                    'D' +
+                                        DateTime.now()
+                                            .difference(data.detail.dueDate)
+                                            .inDays
+                                            .toString(),
                                     style: articleDuedateTextStyle)
                               ])
                         ],
@@ -143,7 +149,7 @@ class TagWrapper extends StatelessWidget {
     '콘티': tagConti,
     '캐릭터': tagCharacter,
     '그림': tagDraw,
-    '뎃셍': tagDessin,
+    '데생': tagDessin,
     '승인대기': tagApproval_WAIT,
     '승인수락': tagApproval_YES,
     '승인거절': tagApproval_NO,
