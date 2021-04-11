@@ -155,34 +155,34 @@ class _HomePageState extends State<HomePage> {
           dueDate: 'D-DAY 8',
           imagePath:
               'https://i.ibb.co/1vXpqVs/flutter-logo.jpg'),
-      Article(
-          title: 'test',
-          writer: 'test-writer',
-          tags: ['글', '뎃셍', '그림'],
-          dueDate: 'D-DAY 8',
-          imagePath:
-              'http://ideaconcert.com/resources/common/images/character_careers.png'),
-      Article(
-          title: 'test',
-          writer: 'test-writer',
-          tags: ['글', '뎃셍', '그림'],
-          dueDate: 'D-DAY 8',
-          imagePath:
-              'http://ideaconcert.com/resources/common/images/character_careers.png'),
-      Article(
-          title: 'test',
-          writer: 'test-writer',
-          tags: ['글', '뎃셍', '그림'],
-          dueDate: 'D-DAY 8',
-          imagePath:
-              'http://ideaconcert.com/resources/common/images/character_careers.png'),
-      Article(
-          title: 'test',
-          writer: 'test-writer',
-          tags: ['글', '그림', '뎃셍', '콘티', '채색', '캐릭터'],
-          dueDate: 'D-DAY 8',
-          imagePath:
-              'http://ideaconcert.com/resources/common/images/character_careers.png'),
+      // Article(
+      //     title: 'test',
+      //     writer: 'test-writer',
+      //     tags: ['글', '뎃셍', '그림'],
+      //     dueDate: 'D-DAY 8',
+      //     imagePath:
+      //         'http://ideaconcert.com/resources/common/images/character_careers.png'),
+      // Article(
+      //     title: 'test',
+      //     writer: 'test-writer',
+      //     tags: ['글', '뎃셍', '그림'],
+      //     dueDate: 'D-DAY 8',
+      //     imagePath:
+      //         'http://ideaconcert.com/resources/common/images/character_careers.png'),
+      // Article(
+      //     title: 'test',
+      //     writer: 'test-writer',
+      //     tags: ['글', '뎃셍', '그림'],
+      //     dueDate: 'D-DAY 8',
+      //     imagePath:
+      //         'http://ideaconcert.com/resources/common/images/character_careers.png'),
+      // Article(
+      //     title: 'test',
+      //     writer: 'test-writer',
+      //     tags: ['글', '그림', '뎃셍', '콘티', '채색', '캐릭터'],
+      //     dueDate: 'D-DAY 8',
+      //     imagePath:
+      //         'http://ideaconcert.com/resources/common/images/character_careers.png'),
     ];
 
     return Column(
