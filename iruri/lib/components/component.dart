@@ -197,11 +197,13 @@ class MyProfile extends StatefulWidget {
 class _MyProfileState extends State<MyProfile> {
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+
     return Container(
       //margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       //padding: EdgeInsets.fromLTRB(10, 0, 10, 0), //left, top, right, bottom
       child: Column(children: <Widget>[
-        divider,
         //프로필 상단 부분
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -210,7 +212,7 @@ class _MyProfileState extends State<MyProfile> {
                 textAlign: TextAlign.left),
                 IconButton(
                   icon: Icon(Icons.create_outlined),
-                  iconSize: 25,
+                  iconSize: 20,
                   onPressed: () => print("look"),
                 ),
           ],
@@ -220,8 +222,8 @@ class _MyProfileState extends State<MyProfile> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
           Container(              //프로필사진 컨테이너
-            height: 130, 
-            width: 130,
+            //height: height * 0.25, 
+            width: width * 0.3,
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: themeLightGrayOpacity20,
@@ -232,57 +234,105 @@ class _MyProfileState extends State<MyProfile> {
           Column(               //프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
             children: [ 
                Container(
-                    margin: EdgeInsets.fromLTRB(10, 10, 0, 10),
-                    width: 50,
+                    margin: EdgeInsets.fromLTRB(10, 0, 0, 10),
+                    width: width * 0.15,
                     alignment: Alignment.topLeft,
-                    child: Text("닉네임"),
+                    child: Text("닉네임", style: TextStyle(fontSize: 12),),
                   ),
                    Container(
-                    margin: EdgeInsets.fromLTRB(10, 10, 0, 10),
-                    width: 50,
+                    margin: EdgeInsets.fromLTRB(10, 0, 0, 50),
+                    width: width * 0.15,
                     alignment: Alignment.topLeft,
-                    child: Text("포지션"),
+                    child: Text("포지션", style: TextStyle(fontSize: 12),),
                   ),
                    Container(
-                    margin: EdgeInsets.fromLTRB(10, 10, 0, 10),
-                    width: 50,
+                    margin: EdgeInsets.fromLTRB(10, 0, 0, 10),
+                    width: width * 0.15,
                     alignment: Alignment.topLeft,
-                    child: Text("연락처"),
+                    child: Text("연락처", style: TextStyle(fontSize: 12),),
                   ),
                    Container(
-                    margin: EdgeInsets.fromLTRB(10, 10, 0, 10),
-                    width: 50,
+                    margin: EdgeInsets.fromLTRB(10, 0, 0, 10),
+                    width: width * 0.15,
                     alignment: Alignment.topLeft,
-                    child: Text("이메일"),
+                    child: Text("이메일", style: TextStyle(fontSize: 12),),
                   ),
             ]),
             Column(               //프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
             children: [ 
                   Container(
-                    margin: EdgeInsets.fromLTRB(10, 10, 0, 10),
+                    margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
                     alignment: Alignment.topCenter,
-                    child: Text("parkjang"),
+                    child: Text("parkjang", style: TextStyle(fontSize: 12),),
+                  ),
+                  Position(),
+                  Container(
+                    margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                    alignment: Alignment.topCenter,
+                    child: Text("010-XXXX-XXXX", style: TextStyle(fontSize: 12),),
                   ),
                    Container(
-                    margin: EdgeInsets.fromLTRB(10, 10, 0, 10),
+                    margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
                     alignment: Alignment.topCenter,
-                    child: Text("#채색 #콘티 #캐릭터"), //포지션 태그 
-                  ),
-                   Container(
-                    margin: EdgeInsets.fromLTRB(10, 10, 0, 10),
-                    alignment: Alignment.topCenter,
-                    child: Text("010-XXXX-XXXX"),
-                  ),
-                   Container(
-                    margin: EdgeInsets.fromLTRB(10, 10, 0, 10),
-                    alignment: Alignment.topCenter,
-                    child: Text("parkjang@naver.com"),
+                    child: Text("parkjang@naver.com", style: TextStyle(fontSize: 12),),
                   ),
             ]),
         ]),
       ],)
     );
   }
+}
+
+class Position extends StatelessWidget {
+  final List<String> data = ["채색", "콘티", "캐릭터"];
+  
+  
+  @override
+  Widget build(BuildContext context) {
+  final size = MediaQuery.of(context).size;
+  double bottomMargin;
+  if(data.length >= 4){
+    bottomMargin = 15;
+  } else {
+    bottomMargin = 40;
+  }
+    return Container(
+      margin: EdgeInsets.fromLTRB(0, 0, 0, bottomMargin),
+      alignment: Alignment.topCenter,
+      width: size.width * 0.45,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        //border: Border.all(color: lightWhite),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
+            //flex: 5,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  physics: AlwaysScrollableScrollPhysics(),
+                    gridDelegate:
+                    SliverGridDelegateWithFixedCrossAxisCount(
+                      childAspectRatio: 4 / 1.5,
+                      crossAxisCount: 3,
+                      mainAxisSpacing: 3,
+                      crossAxisSpacing: 3
+                    ),
+                    itemCount: data.length,
+                    itemBuilder: (context, index) => TagWrapper(
+                      onPressed: () => print('tag pressed'),
+                      tag: data[index],
+                    ))),
+          )
+        ])
+    );
+  }
+
+
 }
 
 /**
