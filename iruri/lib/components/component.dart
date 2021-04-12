@@ -249,7 +249,7 @@ class _MyProfileState extends State<MyProfile> {
     final width = MediaQuery.of(context).size.width;
     var profileContent, icon, changeButton, imageChangeButton;
 
-    if(index == true){
+    if(index == false){
       profileContent = showProfileContent(width, height, testInput);
       icon = changeIcon();
       changeButton = Container();
