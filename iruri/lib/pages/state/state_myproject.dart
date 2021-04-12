@@ -26,7 +26,8 @@ class _MyprojectPageState extends State<MyprojectPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         // APP BAR : Top of application
-        appBar: appBar(3),
+        // appBar: appBar(3),
+        
         // body
         body: SingleChildScrollView(
             controller: scrollController,

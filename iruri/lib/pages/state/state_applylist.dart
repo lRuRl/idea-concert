@@ -25,7 +25,7 @@ class _ApplyListPageState extends State<ApplyListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         // APP BAR : Top of application
-        appBar: appBar(4),
+        //appBar: appBar(4),
         // body
         body: SingleChildScrollView(
             controller: scrollController,
