@@ -43,7 +43,9 @@ class _RoutesState extends State<Routes> {
     '/state': ProjectListPage(),
     '/personal': PersonalPage(),
     '/state/myproject': MyprojectPage(),
-    '/state/applylist': ApplyListPage()
+    '/state/applylist': ApplyListPage(),
+    '/home/projectdetail': ProjectDetailPage(),
+    
   };
 
   @override

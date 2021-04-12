@@ -1,32 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:iruri/model/article.dart';
-import 'package:iruri/pages/home/project_utils.dart';
-import 'package:iruri/routes.dart';
-import 'package:iruri/components/component.dart';
-import 'package:iruri/components/palette.dart';
-import 'package:flutter/services.dart';
+import 'package:iruri/pages/home/project_detail_components.dart';
+// provider
+import 'package:provider/provider.dart';
+import 'package:iruri/provider.dart';
 
 class ProjectDetailPage extends StatefulWidget {
-  Article data;
-  ProjectDetailPage({Key key, @required this.data}): super(key: key);
   @override
-  _ProjectDetailPageState createState() => _ProjectDetailPageState(data);
+  _ProjectDetailPageState createState() => _ProjectDetailPageState();
 }
 
 class _ProjectDetailPageState extends State<ProjectDetailPage> {
   ScrollController scrollController = new ScrollController();
-  
-  final Article data;
-  _ProjectDetailPageState(this.data);
-
-  @override
-  void initState() {}
 
   @override
   Widget build(BuildContext context) {
+    Article data = context.watch<CustomRouter>().data;
+
     return Scaffold(
-        // APP BAR : Top of application
-        appBar: appBar(5),
         // body
         body: SingleChildScrollView(
             controller: scrollController,
