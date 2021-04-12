@@ -4,6 +4,7 @@ import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/typhography.dart';
 // pages
 import 'package:iruri/pages/home/home.dart';
+import 'package:iruri/pages/home/project_detail.dart';
 import 'package:iruri/pages/personal/personal.dart';
 import 'package:iruri/pages/post_article.dart';
 import 'package:iruri/pages/state/state_applylist.dart';
