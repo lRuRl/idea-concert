@@ -209,118 +209,315 @@ class _ImageWrapperState extends State<ImageWrapper> {
   }
 }
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////                              프로필 정보 : 석운                             /////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+class ProfileInfo {
+  String nickname;
+  String phone;
+  String email;
+  ProfileInfo({this.nickname,this.phone,this.email});
+}
+
 class MyProfile extends StatefulWidget {
   @override
   _MyProfileState createState() => _MyProfileState();
 }
 
 class _MyProfileState extends State<MyProfile> {
+  var index;
+  ProfileInfo testInput = ProfileInfo(nickname: "parkjang", phone : "010-XXXX-XXXX", email : "parkjang@naver.com");
+
+  @override
+  void initState() {
+    super.initState();
+    index = false;
+  }
+  changeIndex() {
+    setState(() {
+      index = !index;
+    });
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+    var profileContent, icon, changeButton;
+
+    if(index == true){
+      profileContent = showProfileContent(width, height, testInput);
+      icon = changeIcon();
+      changeButton = Container();
+    }
+    else {
+      profileContent = changeProfileContent(width, height, testInput);
+      icon = Container();
+      changeButton = confirmChangeButton();
+    }
 
     return Container(
-        //margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        //padding: EdgeInsets.fromLTRB(10, 0, 10, 0), //left, top, right, bottom
-        child: Column(
-      children: <Widget>[
-        //프로필 상단 부분
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text("프로필 정보",
-                style: TextStyle(fontWeight: FontWeight.w700),
-                textAlign: TextAlign.left),
-            IconButton(
-              icon: Icon(Icons.create_outlined),
-              iconSize: 20,
-              onPressed: () => print("look"),
-            ),
-          ],
-        ),
-        //프로필 하단 부분
-        Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+      child: Column(
+        children: <Widget>[
+          //프로필 상단 부분
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("프로필 정보",
+                  style: TextStyle(fontWeight: FontWeight.w700),
+                  textAlign: TextAlign.left),
+              icon,
+            ],
+          ),
+          //프로필 하단 부분
+          Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
           Container(
-              //프로필사진 컨테이너
-              //height: height * 0.25,
-              width: width * 0.3,
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: themeLightGrayOpacity20,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Image.asset('Icon-192.png')),
-          Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
+            //프로필사진 컨테이너
+            width: width * 0.3,
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: themeLightGrayOpacity20,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Image.asset('Icon-192.png')),
+            Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
               children: [
+                Container(
+                  margin: EdgeInsets.fromLTRB(10, 0, 0, 10),
+                  width: width * 0.15,
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    "닉네임",
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.fromLTRB(10, 0, 0, 50),
+                  width: width * 0.15,
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    "포지션",
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.fromLTRB(10, 0, 0, 10),
+                  width: width * 0.15,
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    "연락처",
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.fromLTRB(10, 0, 0, 10),
+                  width: width * 0.15,
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    "이메일",
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ),
+              ]),
+              profileContent,
+            ]
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
             Container(
-              margin: EdgeInsets.fromLTRB(10, 0, 0, 10),
-              width: width * 0.15,
-              alignment: Alignment.topLeft,
-              child: Text(
-                "닉네임",
-                style: TextStyle(fontSize: 12),
-              ),
+              margin : EdgeInsets.all(5),
+              alignment: Alignment.center,
+              child: changeButton,)
+          ])
+        ],
+      ));
+    }
+
+  Column showProfileContent(final width, final height, ProfileInfo testInput){
+    return Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
+      children: [
+        Container(
+          margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+          alignment: Alignment.topCenter,
+          child: Text(
+            testInput.nickname,
+            style: TextStyle(fontSize: 12),
+          ),
+        ),
+        Position(),
+        Container(
+          margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+          alignment: Alignment.topCenter,
+            child: Text(
+              testInput.phone,
+              style: TextStyle(fontSize: 12),
             ),
-            Container(
-              margin: EdgeInsets.fromLTRB(10, 0, 0, 50),
-              width: width * 0.15,
-              alignment: Alignment.topLeft,
-              child: Text(
-                "포지션",
-                style: TextStyle(fontSize: 12),
-              ),
+          ),
+          Container(
+            margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+            alignment: Alignment.topCenter,
+            child: Text(
+              testInput.email,
+              style: TextStyle(fontSize: 12),
             ),
-            Container(
-              margin: EdgeInsets.fromLTRB(10, 0, 0, 10),
-              width: width * 0.15,
-              alignment: Alignment.topLeft,
-              child: Text(
-                "연락처",
-                style: TextStyle(fontSize: 12),
+          ),
+        ]
+      );
+  }
+
+  Container confirmChangeButton() {
+    return Container(
+      alignment: Alignment.center,
+      width: 80,
+      height: 30,
+      margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
+      child: RaisedButton(
+        padding: EdgeInsets.all(3),
+        color: themeDeepBlue,
+        onPressed: () => showDialog(
+          context: context, 
+          barrierDismissible: false, 
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content: Text("수정하시겠습니까?"),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('예'),
+                  onPressed: () => changeIndex(),
+                ),
+                FlatButton(
+                  child: Text('아니오'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+          }),
+        child: Text("수정하기", style: TextStyle(color: Colors.white)),
+      )
+    );
+  }
+
+  IconButton changeIcon() {  
+    return IconButton(
+      icon: Icon(Icons.create_outlined),
+      iconSize: 20,
+      onPressed: () => showDialog(
+        context: context, 
+        barrierDismissible: false, 
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Text("수정하시겠습니까?"),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('예'),
+                onPressed: () => changeIndex(),
               ),
-            ),
-            Container(
-              margin: EdgeInsets.fromLTRB(10, 0, 0, 10),
-              width: width * 0.15,
-              alignment: Alignment.topLeft,
-              child: Text(
-                "이메일",
-                style: TextStyle(fontSize: 12),
+              FlatButton(
+                child: Text('아니오'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        }),
+    );
+  }
+
+  Column changeProfileContent(final width, final height, ProfileInfo testInput){
+    return Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
+      children: [
+        Container(
+          margin: EdgeInsets.fromLTRB(0, 0, 0, 3),
+          alignment: Alignment.topLeft,
+          width: width * 0.45,
+          height: height* 0.025,
+          child: TextFormField(
+            enabled: false,
+            maxLines: 1,
+            decoration: InputDecoration(
+              focusedBorder: OutlineInputBorder(
+                borderSide: new BorderSide(color: themeLightGrayOpacity20, width: 1),
+                borderRadius: BorderRadius.circular(20)
               ),
-            ),
-          ]),
-          Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
-              children: [
-            Container(
-              margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
-              alignment: Alignment.topCenter,
-              child: Text(
-                "parkjang",
-                style: TextStyle(fontSize: 12),
+              enabledBorder: OutlineInputBorder(
+                borderSide: new BorderSide(color: themeLightGrayOpacity20, width: 1),
+                borderRadius: BorderRadius.circular(20)
               ),
-            ),
-            Position(),
-            Container(
-              margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
-              alignment: Alignment.topCenter,
-              child: Text(
-                "010-XXXX-XXXX",
-                style: TextStyle(fontSize: 12),
+              disabledBorder: OutlineInputBorder(
+                borderSide: new BorderSide(color: themeLightGrayOpacity20, width: 1),
+                borderRadius: BorderRadius.circular(20)
               ),
+              fillColor: Colors.white,
+              labelStyle: TextStyle(color: themeGrayText, fontSize: 11),
+              labelText: testInput.nickname,
             ),
-            Container(
-              margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
-              alignment: Alignment.topCenter,
-              child: Text(
-                "parkjang@naver.com",
-                style: TextStyle(fontSize: 12),
+          ),
+        ),
+        Position(),
+        Container(
+          margin: EdgeInsets.fromLTRB(0, 0, 0, 3),
+          alignment: Alignment.topLeft,
+          width: width * 0.45,
+          height: height* 0.025,
+            child: TextFormField(
+            enabled: false,
+            maxLines: 1,
+            decoration: InputDecoration(
+              focusedBorder: OutlineInputBorder(
+                borderSide: new BorderSide(color: themeLightGrayOpacity20, width: 1),
+                borderRadius: BorderRadius.circular(20)
               ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: new BorderSide(color: themeLightGrayOpacity20, width: 1),
+                borderRadius: BorderRadius.circular(20)
+              ),
+              disabledBorder: OutlineInputBorder(
+                borderSide: new BorderSide(color: themeLightGrayOpacity20, width: 1),
+                borderRadius: BorderRadius.circular(20)
+              ),
+              fillColor: Colors.white,
+              labelStyle: TextStyle(color: themeGrayText, fontSize: 11),
+              labelText: testInput.phone,
             ),
-          ]),
-        ]),
-      ],
-    ));
+          ),
+          ),
+          Container(
+            margin: EdgeInsets.fromLTRB(0, 0, 0, 3),
+            alignment: Alignment.topLeft,
+            width: width * 0.45,
+            height: height* 0.025,
+            child: TextFormField(
+            enabled: true,
+            maxLines: 1,
+            decoration: InputDecoration(
+              focusedBorder: OutlineInputBorder(
+                borderSide: new BorderSide(color: themeLightGrayOpacity20, width: 1),
+                borderRadius: BorderRadius.circular(20)
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: new BorderSide(color: themeLightGrayOpacity20, width: 1),
+                borderRadius: BorderRadius.circular(20)
+              ),
+              disabledBorder: OutlineInputBorder(
+                borderSide: new BorderSide(color: themeLightGrayOpacity20, width: 1),
+                borderRadius: BorderRadius.circular(20)
+              ),
+              fillColor: Colors.white,
+              labelStyle: TextStyle(color: themeGrayText, fontSize: 11),
+              labelText: testInput.email,
+            ),
+          ),
+          ),
+        ]
+      );
   }
 }
 
@@ -337,35 +534,37 @@ class Position extends StatelessWidget {
       bottomMargin = 40;
     }
     return Container(
-        margin: EdgeInsets.fromLTRB(0, 0, 0, bottomMargin),
-        alignment: Alignment.topCenter,
-        width: size.width * 0.45,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          //border: Border.all(color: lightWhite),
-        ),
-        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Expanded(
-                //flex: 5,
-                child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: GridView.builder(
-                        shrinkWrap: true,
-                        physics: AlwaysScrollableScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            childAspectRatio: 4 / 1.5,
-                            crossAxisCount: 3,
-                            mainAxisSpacing: 3,
-                            crossAxisSpacing: 3),
-                        itemCount: data.length,
-                        itemBuilder: (context, index) => TagWrapper(
-                              onPressed: () => print('tag pressed'),
-                              tag: data[index],
-                            ))),
+      margin: EdgeInsets.fromLTRB(0, 0, 0, bottomMargin),
+      alignment: Alignment.topCenter,
+      width: size.width * 0.45,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Expanded(
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: GridView.builder(
+                shrinkWrap: true,
+                physics: AlwaysScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  childAspectRatio: 4 / 1.5,
+                  crossAxisCount: 3,
+                  mainAxisSpacing: 3,
+                  crossAxisSpacing: 3
+                ),
+                itemCount: data.length,
+                itemBuilder: (context, index) => TagWrapper(
+                  onPressed: () => print('tag pressed'),
+                  tag: data[index],
+                )
               )
-            ]));
+            ),
+          )
+        ]
+      )
+    );
   }
 }
 
@@ -413,6 +612,12 @@ class Position_Small extends StatelessWidget {
             ]));
   }
 }
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////                              프로필 정보 : 석운                             /////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 class ApprovalState extends StatelessWidget {
   int stateIndex = 0;
