@@ -247,17 +247,19 @@ class _MyProfileState extends State<MyProfile> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    var profileContent, icon, changeButton;
+    var profileContent, icon, changeButton, imageChangeButton;
 
     if(index == true){
       profileContent = showProfileContent(width, height, testInput);
       icon = changeIcon();
       changeButton = Container();
+      imageChangeButton = Container();
     }
     else {
       profileContent = changeProfileContent(width, height, testInput);
       icon = Container();
       changeButton = confirmChangeButton();
+      imageChangeButton = confirmImageChangeButton();
     }
 
     return Container(
@@ -278,12 +280,14 @@ class _MyProfileState extends State<MyProfile> {
           Container(
             //프로필사진 컨테이너
             width: width * 0.3,
+            margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: themeLightGrayOpacity20,
               borderRadius: BorderRadius.circular(20),
             ),
-            child: Image.asset('Icon-192.png')),
+            child: Column(children: [Image.asset('Icon-192.png'), imageChangeButton],)
+          ),
             Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
               children: [
                 Container(
@@ -338,6 +342,80 @@ class _MyProfileState extends State<MyProfile> {
       ));
     }
 
+  //그림 수정 버튼
+  Container confirmImageChangeButton() {
+    return Container(
+      alignment: Alignment.center,
+      width: 40,
+      height: 20,
+      margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+      child: RaisedButton(
+        padding: EdgeInsets.all(3),
+        color: themeDeepBlue,
+        onPressed: () => print("image change button clicked"),
+        child: Text("수정", style: TextStyle(color: Colors.white, fontSize: 10)),
+      )
+    );
+  }
+
+  //수정 화면에서 "수정하기" 버튼 => 누르면 원래 화면으로 돌아감 => 내용 수정은 차후로
+  Container confirmChangeButton() {
+    return Container(
+      alignment: Alignment.center,
+      width: 80,
+      height: 30,
+      margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+      child: RaisedButton(
+        padding: EdgeInsets.all(3),
+        color: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
+        onPressed: () => showDialog(
+          context: context, 
+          barrierDismissible: false, 
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content: Text("수정이 완료되었습니다"),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('확인'),
+                  onPressed: () => changeIndex(),
+                ),
+              ],
+            );
+          }),
+        child: Text("저장하기", style: TextStyle(color: Colors.white)),
+      )
+    );
+  }
+
+  //초기 프로필 정보 화면에서 연필모양 아이콘 => 누르면 수정하는 화면으로 바뀜
+  IconButton changeIcon() {  
+    return IconButton(
+      icon: Icon(Icons.create_outlined),
+      iconSize: 20,
+      onPressed: () => showDialog(
+        context: context, 
+        barrierDismissible: false, 
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Text("수정하시겠습니까?"),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('예'),
+                onPressed: () => changeIndex(),
+              ),
+              FlatButton(
+                child: Text('아니오'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        }),
+    );
+  }
+
+ //프로필 정보 화면 초기상태
   Column showProfileContent(final width, final height, ProfileInfo testInput){
     return Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
       children: [
@@ -370,67 +448,7 @@ class _MyProfileState extends State<MyProfile> {
       );
   }
 
-  Container confirmChangeButton() {
-    return Container(
-      alignment: Alignment.center,
-      width: 80,
-      height: 30,
-      margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
-      child: RaisedButton(
-        padding: EdgeInsets.all(3),
-        color: themeDeepBlue,
-        onPressed: () => showDialog(
-          context: context, 
-          barrierDismissible: false, 
-          builder: (BuildContext context) {
-            return AlertDialog(
-              content: Text("수정하시겠습니까?"),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text('예'),
-                  onPressed: () => changeIndex(),
-                ),
-                FlatButton(
-                  child: Text('아니오'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                )
-              ],
-            );
-          }),
-        child: Text("수정하기", style: TextStyle(color: Colors.white)),
-      )
-    );
-  }
-
-  IconButton changeIcon() {  
-    return IconButton(
-      icon: Icon(Icons.create_outlined),
-      iconSize: 20,
-      onPressed: () => showDialog(
-        context: context, 
-        barrierDismissible: false, 
-        builder: (BuildContext context) {
-          return AlertDialog(
-            content: Text("수정하시겠습니까?"),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('예'),
-                onPressed: () => changeIndex(),
-              ),
-              FlatButton(
-                child: Text('아니오'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              )
-            ],
-          );
-        }),
-    );
-  }
-
+  //연필 아이콘 누르면 수정하는 화면으로 바뀜
   Column changeProfileContent(final width, final height, ProfileInfo testInput){
     return Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
       children: [
@@ -521,6 +539,7 @@ class _MyProfileState extends State<MyProfile> {
   }
 }
 
+//포지션 태그 나타내는 클래스
 class Position extends StatelessWidget {
   final List<String> data = ["채색", "콘티", "캐릭터"];
 
