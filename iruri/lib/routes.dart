@@ -4,9 +4,10 @@ import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/typhography.dart';
 // pages
 import 'package:iruri/pages/home/home.dart';
-import 'package:iruri/pages/home/project_detail.dart';
+import 'package:iruri/pages/home/post_article.dart';
 import 'package:iruri/pages/personal/personal.dart';
-import 'package:iruri/pages/post_article.dart';
+import 'package:iruri/pages/state/state_projectlist.dart';
+import 'package:iruri/pages/state/state_myproject.dart';
 import 'package:iruri/pages/state/state_applylist.dart';
 import 'package:iruri/pages/state/state_myproject.dart';
 import 'package:iruri/pages/state/state_projectlist.dart';
@@ -56,7 +57,7 @@ class _RoutesState extends State<Routes> {
 
     return Scaffold(
         // APP BAR : Top of application
-        appBar: appBar(context),
+        appBar: appBar(currentPageIndex, context: context),
         // body
         body: GestureDetector(
             // used in keyboard dismiss and so on
@@ -68,7 +69,6 @@ class _RoutesState extends State<Routes> {
             )),
         bottomNavigationBar: bottomNavigationBar(context));
   }
-
   /*
    *  Flutter 에서 제공해주는 AppBar를 사용 
    *    탭 이동마다 맨 위 제목이 바뀌게 설정 - 2021.04.09
@@ -110,7 +110,6 @@ class _RoutesState extends State<Routes> {
             : SizedBox(),
     );
   }
-
   /*
    *  Flutter 에서 제공해주는 BottomNavigationBar를 사용
    *  현재 각 label은 안보이게 설정하였음 - 2021.04.08 
