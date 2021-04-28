@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:iruri/components/component.dart';
+import 'package:iruri/provider.dart';
 import 'state_applylist.dart';
 import 'state_myproject.dart';
+// provider
+import 'package:provider/provider.dart';
 
 boxItem(int index, List<Container> items) {
   return Container(
@@ -160,6 +163,11 @@ Widget myList_vertical(List<Container> items) {
 }
 
 Widget applyProject(BuildContext context, List<Container> items) {
+  
+  // provider
+  final routerReader = context.read<CustomRouter>();
+  final routerWatcher = context.watch<CustomRouter>();
+
   return Column(children: [
     Expanded(
         flex: 1,
@@ -169,11 +177,14 @@ Widget applyProject(BuildContext context, List<Container> items) {
             boldText("내가 지원한 프로젝트 "),
             IconButton(
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => ApplyListPage(),
-                    ));
+                // Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //       builder: (BuildContext context) => ApplyListPage(),
+                //     ));
+                // use Provider - updated 04.12.21 by seunghwanly
+                routerReader.navigateTo(
+                    routerWatcher.currentPage, '/state/applylist');
               },
               icon: Icon(Icons.chevron_right, size: 30),
             )
@@ -271,6 +282,11 @@ Widget listItemButton() {
 }
 
 Widget myProject(BuildContext context, List<Container> items) {
+  
+  // provider
+  final routerReader = context.read<CustomRouter>();
+  final routerWatcher = context.watch<CustomRouter>();
+
   return Column(children: [
     Expanded(
         flex: 1,
@@ -279,13 +295,7 @@ Widget myProject(BuildContext context, List<Container> items) {
           children: [
             boldText("내가 올린 프로젝트 "),
             IconButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => MyprojectPage(),
-                    ));
-              },
+              onPressed: () => routerReader.navigateTo(routerWatcher.currentPage, '/state/myproject'),
               icon: Icon(Icons.chevron_right, size: 30),
             )
           ],
