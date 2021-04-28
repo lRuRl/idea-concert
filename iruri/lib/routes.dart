@@ -5,6 +5,7 @@ import 'package:iruri/components/typhography.dart';
 // pages
 import 'package:iruri/pages/home/home.dart';
 import 'package:iruri/pages/home/post_article.dart';
+import 'package:iruri/pages/home/project_detail.dart';
 import 'package:iruri/pages/personal/personal.dart';
 import 'package:iruri/pages/state/state_projectlist.dart';
 import 'package:iruri/pages/state/state_myproject.dart';
@@ -46,7 +47,6 @@ class _RoutesState extends State<Routes> {
     '/state/myproject': MyprojectPage(),
     '/state/applylist': ApplyListPage(),
     '/home/projectdetail': ProjectDetailPage(),
-    
   };
 
   @override
@@ -57,7 +57,7 @@ class _RoutesState extends State<Routes> {
 
     return Scaffold(
         // APP BAR : Top of application
-        appBar: appBar(currentPageIndex, context: context),
+        appBar: appBar(context),
         // body
         body: GestureDetector(
             // used in keyboard dismiss and so on
