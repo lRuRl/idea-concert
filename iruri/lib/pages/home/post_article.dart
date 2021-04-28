@@ -3,6 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/typhography.dart';
 import 'package:iruri/model/article.dart';
+import 'package:iruri/pages/home/muliple_choice_chip.dart';
 
 class PostArticle extends StatefulWidget {
   /*
@@ -23,6 +24,46 @@ class _PostArticleState extends State<PostArticle> {
 
   // upload Data
   Article uploadArticle;
+
+  // save data
+  Map<String, Map<String, bool>> applicantType = {
+    '메인글': {'write_main': false},
+    '글콘티': {'write_conti': false},
+    '메인그림': {'draw_main': false},
+    '그림콘티': {'draw_conti': false},
+    '뎃셍': {'draw_dessin': false},
+    '선화': {'draw_line': false},
+    '캐릭터': {'draw_char': false},
+    '채색': {'draw_color': false},
+    '후보정': {'draw_after': false}
+  };
+
+  Map<String, Map<String, bool>> genreType = {
+    '스릴러': {'thriller': false},
+    '드라마': {'drama': false},
+    '판타지': {'fantasy': false},
+    '액션': {'action': false},
+    '무협': {'muhyup': false},
+    '로맨스': {'romance': false},
+    '학원': {'teen': false},
+    '코믹': {'comic': false},
+    '일상': {'daily': false},
+    '스포츠': {'sports': false},
+    '시대극': {'costume': false},
+    '공포': {'horror': false},
+    'SF': {'sf': false}
+  };
+
+  void applicantTypeChanged(Map<String, Map<String, bool>> map) {
+    setState(() {
+      applicantType = map;
+    });
+  }
+  void genreTypeChanged(Map<String, Map<String, bool>> map) {
+    setState(() {
+      genreType = map;
+    });
+  }
 
   @override
   void initState() {
@@ -56,6 +97,15 @@ class _PostArticleState extends State<PostArticle> {
               controller: controller,
               child: Column(
                 children: <Widget>[
+                  // multi choice chip
+                  MultiChoiceChip(
+                    choiceChipType: 0,
+                      typeMap: applicantType,
+                      onSelectionChanged: applicantTypeChanged),
+                  MultiChoiceChip(
+                    choiceChipType: 1,
+                      typeMap: genreType,
+                      onSelectionChanged: genreTypeChanged),
                   FormBuilder(
                       key: _formKey,
                       child: Column(children: <Widget>[
@@ -74,24 +124,32 @@ class _PostArticleState extends State<PostArticle> {
                           ]),
                           keyboardType: TextInputType.number,
                         ),
-                        FormBuilderChoiceChip(
-                          name: 'choice_chip',
-                          decoration: const InputDecoration(
-                            labelText: 'Select an option',
-                          ),
-                          options: [
-                            FormBuilderFieldOption(
-                                value: 'Test', child: Text('Test')),
-                            FormBuilderFieldOption(
-                                value: 'Test 1', child: Text('Test 1')),
-                            FormBuilderFieldOption(
-                                value: 'Test 2', child: Text('Test 2')),
-                            FormBuilderFieldOption(
-                                value: 'Test 3', child: Text('Test 3')),
-                            FormBuilderFieldOption(
-                                value: 'Test 4', child: Text('Test 4')),
-                          ],
-                        ),
+                        FormBuilderCheckboxGroup(
+                            decoration: InputDecoration(
+                                labelText: '지원 받을 작가님들을 선택해주세요.',
+                                border: InputBorder.none),
+                            activeColor: themeLightOrange,
+                            name: 'applicantType',
+                            options: [
+                              FormBuilderFieldOption(
+                                  value: 'write_main', child: Text('메인글')),
+                              FormBuilderFieldOption(
+                                  value: 'write_conti', child: Text('글콘티')),
+                              FormBuilderFieldOption(
+                                  value: 'draw_main', child: Text('메인그림')),
+                              FormBuilderFieldOption(
+                                  value: 'draw_conti', child: Text('그림콘티')),
+                              FormBuilderFieldOption(
+                                  value: 'draw_dessin', child: Text('뎃셍')),
+                              FormBuilderFieldOption(
+                                  value: 'draw_line', child: Text('선화')),
+                              FormBuilderFieldOption(
+                                  value: 'draw_char', child: Text('캐릭터')),
+                              FormBuilderFieldOption(
+                                  value: 'draw_color', child: Text('채색')),
+                              FormBuilderFieldOption(
+                                  value: 'draw_after', child: Text('후보정')),
+                            ]),
                         FormBuilderDateTimePicker(
                           name: 'date',
                           initialValue: DateTime.now(),
