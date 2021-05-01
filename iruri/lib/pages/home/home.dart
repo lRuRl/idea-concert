@@ -131,13 +131,93 @@ class _HomePageState extends State<HomePage> {
    * 
    *  그럼 화이팅 !
    */
+
+  // 수림 추가
   Widget tagContainer() {
     return Column(
-        // TODO: @sooo19 / 태그 텍스트, 태그를 누를 수 있는 버튼 6개
-        );
+      children: <Widget>[
+        Container(
+            margin: EdgeInsets.only(left: 15.0),
+            child: Text('태그',
+                style: TextStyle(
+                    fontSize: 18, fontWeight: FontWeight.bold))), //태그 글씨
+        Container(
+          margin: EdgeInsets.only(bottom: 3, left: 5, right: 5, top: 2),
+          height: 80,
+          width: 345,
+          decoration: BoxDecoration(
+              // '태그' 회색 테투리 박스
+              color: Color.fromRGBO(255, 255, 255, 1),
+              border: Border.all(
+                  width: 1, color: Color.fromRGBO(196, 196, 196, 0.13)),
+              borderRadius: BorderRadius.circular(20)),
+          child: Row(
+            //버튼 6개
+            mainAxisAlignment:
+                MainAxisAlignment.spaceEvenly, //6개의 버튼이 같은 간격을 가지도록 정렬
+            children: <Widget>[
+              Column(children: <Widget>[
+                Container(
+                    height: 30,
+                    width: 30,
+                    decoration: BoxDecoration(
+                        color: Color.fromRGBO(196, 196, 196, 0.13), //회색 네모 박스
+                        borderRadius: BorderRadius.circular(12))),
+                Container(
+                    child: Text('# 글', style: TextStyle(fontSize: 10))) //글씨(#글)
+              ]),
+              Column(children: <Widget>[
+                Container(
+                    height: 30,
+                    width: 30,
+                    decoration: BoxDecoration(
+                        color: Color.fromRGBO(196, 196, 196, 0.13),
+                        borderRadius: BorderRadius.circular(12))),
+                Container(child: Text('# 뎃셍', style: TextStyle(fontSize: 10)))
+              ]),
+              Column(children: <Widget>[
+                Container(
+                    height: 30,
+                    width: 30,
+                    decoration: BoxDecoration(
+                        color: Color.fromRGBO(196, 196, 196, 0.13),
+                        borderRadius: BorderRadius.circular(12))),
+                Container(child: Text('# 그림', style: TextStyle(fontSize: 10)))
+              ]),
+              Column(children: <Widget>[
+                Container(
+                    height: 30,
+                    width: 30,
+                    decoration: BoxDecoration(
+                        color: Color.fromRGBO(196, 196, 196, 0.13),
+                        borderRadius: BorderRadius.circular(12))),
+                Container(child: Text('# 캐릭터', style: TextStyle(fontSize: 10)))
+              ]),
+              Column(children: <Widget>[
+                Container(
+                    height: 30,
+                    width: 30,
+                    decoration: BoxDecoration(
+                        color: Color.fromRGBO(196, 196, 196, 0.13),
+                        borderRadius: BorderRadius.circular(12))),
+                Container(child: Text('# 콘티', style: TextStyle(fontSize: 10)))
+              ]),
+              Column(children: <Widget>[
+                Container(
+                    height: 30,
+                    width: 30,
+                    decoration: BoxDecoration(
+                        color: Color.fromRGBO(196, 196, 196, 0.13),
+                        borderRadius: BorderRadius.circular(12))),
+                Container(child: Text('# 채색', style: TextStyle(fontSize: 10)))
+              ]),
+            ],
+          ),
+        ),
+      ],
+    );
   }
-
-  // recruitContainer
+  
   Widget recruitContainer() {  
     return Column(
       children: <Widget>[
