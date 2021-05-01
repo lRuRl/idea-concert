@@ -147,9 +147,10 @@ class _PostArticleState extends State<PostArticle> {
                                   icon: Icon(Icons.date_range_rounded,
                                       size: 24, color: themeGrayText),
                                   labelText: '프로젝트 공고 마감일'),
-                              pickerType: Platform.isIOS
-                                  ? PickerType.cupertino
-                                  : PickerType.material,
+                              // Platform 
+                              // pickerType: Platform.isIOS
+                              //     ? PickerType.cupertino
+                              //     : PickerType.material,
                               validator: FormBuilderValidators.compose([
                                 FormBuilderValidators.required(context),
                               ]),
@@ -241,37 +242,38 @@ class _PostArticleState extends State<PostArticle> {
                               height: 20,
                             ),
                             // location - scroll
-                            FormBuilderSearchableDropdown(
-                              name: 'location',
-                              items: [
-                                '서울',
-                                '인천',
-                                '부산',
-                                '대구',
-                                '광주',
-                                '대전',
-                                '울산',
-                                '제주',
-                                '경기',
-                                '강원',
-                                '충북',
-                                '충남',
-                                '전북',
-                                '전남',
-                                '경북',
-                                '경남'
-                              ],
-                              decoration: textFieldStyle(
-                                  icon: Icon(Icons.place_rounded,
-                                      size: 24, color: themeGrayText),
-                                  labelText: '근무지'),
-                              showAsSuffixIcons: true,
-                              searchBoxDecoration: textFieldStyle(),
-                              autoFocusSearchBox: true,
-                              validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(context),
-                              ]),
-                            ),
+                            // FormBuilderDropdown(
+                            //   name: 'location',
+                            //   items: <DropdownMenuItem>[
+                            //     DropdownMenuItem(child: ),
+                            //     '서울',
+                            //     '인천',
+                            //     '부산',
+                            //     '대구',
+                            //     '광주',
+                            //     '대전',
+                            //     '울산',
+                            //     '제주',
+                            //     '경기',
+                            //     '강원',
+                            //     '충북',
+                            //     '충남',
+                            //     '전북',
+                            //     '전남',
+                            //     '경북',
+                            //     '경남'
+                            //   ],
+                            //   decoration: textFieldStyle(
+                            //       icon: Icon(Icons.place_rounded,
+                            //           size: 24, color: themeGrayText),
+                            //       labelText: '근무지'),
+                            //   showAsSuffixIcons: true,
+                            //   searchBoxDecoration: textFieldStyle(),
+                            //   autoFocusSearchBox: true,
+                            //   validator: FormBuilderValidators.compose([
+                            //     FormBuilderValidators.required(context),
+                            //   ]),
+                            // ),
                           ])),
                   SizedBox(
                     height: 30,
