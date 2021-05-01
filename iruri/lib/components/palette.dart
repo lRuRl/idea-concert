@@ -1,11 +1,41 @@
 import 'package:flutter/material.dart';
 
+/**
+ *  color update
+ *  https://www.figma.com/file/mdBQdBrwnJsBDZiDpKtwLX/Design_Guide_V.01?node-id=0%3A1
+ */
+// 1. Color Theme - Light
+const Color primary = Color(0xffff943a);
+const Color secondary = Color(0xff171c61);
+const Color onError = Color(0xfffa3c6a);
+const Color onSuccess = Color(0xff00ba88);
+const Color onDisabled = Color(0xffd9d9d9);
+// text color
+const Color displayText = Color(0xff161616);
+const Color subText = Color(0xffb6b6b6);
+const Color greytext = Color(0xff828282);
+const Color offWhiteText = Color(0xfff5f5f5);
+
+// 2. Color Theme - Tag/Line
+const Color themeRed = Color(0xfffe4a47);
+const Color themeOrange = Color(0xffff943a);
+const Color themeYellow = Color(0xfff4b704);
+const Color themeBlue = Color(0xff6aa8ff);
+const Color themeGreen = Color(0xff56c678);
+const Color themePurple = Color(0xffb770ff);
+
+// line - InputLineBorder / OutlineBorder ...
+const Color primaryLine = Color(0xff676767);
+const Color subLine = Color(0xffd9d9d9);
+const Color subSecondLine = Color(0xff626262);
+const Color whiteLine = Color(0xffffffff);
+
 // theme
 const Color themeLightOrange = Color.fromRGBO(242, 162, 12, 1);
 const Color themeDeepBlue = Color.fromRGBO(27, 48, 89, 1);
 const Color themeLightGrayOpacity20 = Color.fromRGBO(196, 196, 196, 0.13);
 const Color themeGrayText = Color.fromRGBO(119, 119, 119, 0.9);
-const Color themeOrange = Color.fromRGBO(242, 92, 5, 1);
+// const Color themeOrange = Color.fromRGBO(242, 92, 5, 1);
 
 // mono
 const Color lightWhite = Color.fromRGBO(242, 242, 242, 0.6);
