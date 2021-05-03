@@ -233,7 +233,12 @@ class _MyProfileState extends State<MyProfile> {
   ProfileInfo testInput = ProfileInfo(
       nickname: "parkjang",
       phone: "010-XXXX-XXXX",
-      email: "parkjang@naver.com");
+      email: "parkjang@naver.com"
+  );
+  final nameEditor_ = TextEditingController();
+  final phoneEditor_ = TextEditingController();
+  final emailEditor_ = TextEditingController();
+
 
   @override
   void initState() {
@@ -244,6 +249,9 @@ class _MyProfileState extends State<MyProfile> {
   changeIndex() {
     setState(() {
       index = !index;
+      testInput.nickname = nameEditor_.text;
+      testInput.phone = phoneEditor_.text;
+      testInput.email = emailEditor_.text;
     });
     Navigator.of(context).pop();
   }
@@ -260,7 +268,7 @@ class _MyProfileState extends State<MyProfile> {
       changeButton = Container();
       imageChangeButton = Container();
     } else {
-      profileContent = changeProfileContent(width, height, testInput);
+      profileContent = changeProfileContent(nameEditor_, phoneEditor_, emailEditor_, width, height, testInput);
       icon = Container();
       changeButton = confirmChangeButton();
       imageChangeButton = confirmImageChangeButton();
@@ -451,7 +459,13 @@ class _MyProfileState extends State<MyProfile> {
 
   //연필 아이콘 누르면 수정하는 화면으로 바뀜
   Column changeProfileContent(
-      final width, final height, ProfileInfo testInput) {
+      final nameEditor_, 
+      final phoneEditor_, 
+      final emailEditor_, 
+      final width, 
+      final height, 
+      ProfileInfo testInput
+    ) {
     return Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
         children: [
       Container(
@@ -460,8 +474,9 @@ class _MyProfileState extends State<MyProfile> {
         width: width * 0.45,
         height: height * 0.025,
         child: TextFormField(
-          enabled: false,
+          enabled: true,
           maxLines: 1,
+          controller: nameEditor_,
           decoration: InputDecoration(
             focusedBorder: OutlineInputBorder(
                 borderSide:
@@ -477,7 +492,7 @@ class _MyProfileState extends State<MyProfile> {
                 borderRadius: BorderRadius.circular(20)),
             fillColor: Colors.white,
             labelStyle: TextStyle(color: themeGrayText, fontSize: 11),
-            labelText: testInput.nickname,
+            //labelText: testInput.nickname,
           ),
         ),
       ),
@@ -488,8 +503,9 @@ class _MyProfileState extends State<MyProfile> {
         width: width * 0.45,
         height: height * 0.025,
         child: TextFormField(
-          enabled: false,
+          enabled: true,
           maxLines: 1,
+          controller: phoneEditor_,
           decoration: InputDecoration(
             focusedBorder: OutlineInputBorder(
                 borderSide:
@@ -505,7 +521,7 @@ class _MyProfileState extends State<MyProfile> {
                 borderRadius: BorderRadius.circular(20)),
             fillColor: Colors.white,
             labelStyle: TextStyle(color: themeGrayText, fontSize: 11),
-            labelText: testInput.phone,
+            //labelText: testInput.phone,
           ),
         ),
       ),
@@ -517,6 +533,7 @@ class _MyProfileState extends State<MyProfile> {
         child: TextFormField(
           enabled: true,
           maxLines: 1,
+          controller: emailEditor_,
           decoration: InputDecoration(
             focusedBorder: OutlineInputBorder(
                 borderSide:
@@ -532,7 +549,7 @@ class _MyProfileState extends State<MyProfile> {
                 borderRadius: BorderRadius.circular(20)),
             fillColor: Colors.white,
             labelStyle: TextStyle(color: themeGrayText, fontSize: 11),
-            labelText: testInput.email,
+            //labelText: testInput.email,
           ),
         ),
       ),
