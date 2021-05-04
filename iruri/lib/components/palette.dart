@@ -38,7 +38,7 @@ const Color themeGrayText = Color.fromRGBO(119, 119, 119, 0.9);
 // const Color themeOrange = Color.fromRGBO(242, 92, 5, 1);
 
 // mono
-const Color lightWhite = Color.fromRGBO(242, 242, 242, 0.6);
+const Color lightWhite = Color(0xfff0f0f0);
 
 // tags
 const Color tagDessin = Color.fromRGBO(235, 87, 87, 0.2);

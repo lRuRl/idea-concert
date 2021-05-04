@@ -26,12 +26,18 @@ TextStyle articleDuedateTextStyle =
 // Markdown standard
 // @param FontWeight
 // NotoSansKR
-TextStyle notoSansTextStyle({double fontSize, FontWeight fontWeight}) => GoogleFonts.notoSans(
-    fontSize: fontSize != null ? fontSize : 18,
-    letterSpacing: 1.4, // 행간
-    fontWeight: fontWeight != null ? fontWeight : FontWeight.normal);    
+TextStyle notoSansTextStyle(
+        {double fontSize, FontWeight fontWeight, Color textColor}) =>
+    GoogleFonts.notoSans(
+        fontSize: fontSize != null ? fontSize : 18,
+        letterSpacing: 1.4, // 행간
+        fontWeight: fontWeight != null ? fontWeight : FontWeight.normal,
+        color: textColor != null ? textColor : primary);
 // Montsesrrat
-TextStyle montSesrratTextStyle({double fontSize, FontWeight fontWeight}) => GoogleFonts.montserrat(
-    fontSize: fontSize != null ? fontSize : 18,
-    letterSpacing: 1.4, // 행간
-    fontWeight: fontWeight != null ? fontWeight : FontWeight.normal);    
+TextStyle montSesrratTextStyle(
+        {double fontSize, FontWeight fontWeight, Color textColor}) =>
+    GoogleFonts.montserrat(
+        fontSize: fontSize != null ? fontSize : 18,
+        letterSpacing: 1.4, // 행간
+        fontWeight: fontWeight != null ? fontWeight : FontWeight.normal,
+        color: textColor != null ? textColor : primary);

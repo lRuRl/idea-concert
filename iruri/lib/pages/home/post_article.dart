@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:iruri/components/input_decoration.dart';
 import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/spacing.dart';
 import 'package:iruri/components/text_form_field.dart';
@@ -80,6 +81,15 @@ class _PostArticleState extends State<PostArticle> {
     return applicant > 0 && genre > 0 ? true : false;
   }
 
+  void validateWholeForm() {
+    if (_formKey.currentState.saveAndValidate() && validateMultiChoices()) {
+      print(_formKey.currentState.value);
+    } else {
+      print(_formKey.currentState.value);
+      print('validation failed');
+    }
+  }
+  
   @override
   void initState() {
     super.initState();
@@ -125,10 +135,15 @@ class _PostArticleState extends State<PostArticle> {
                             // project name
                             FormBuilderTextField(
                               name: 'introduction',
-                              decoration: textFieldStyle(
+                              decoration: borderTextInputBox(
+                                  onPressed: () =>
+                                      _formKey.currentState.reset(),
                                   icon: Icon(Icons.title_rounded,
                                       size: 24, color: themeGrayText),
-                                  labelText: '프로젝트 제목'),
+                                  labelText: '프로젝트 제목',
+                                  hintText: '20자 이내로 제목을 입력해주세요',
+                                  validate: 0
+                                          ),
                               validator: FormBuilderValidators.compose([
                                 FormBuilderValidators.required(context),
                                 // 20자 최대
@@ -147,7 +162,7 @@ class _PostArticleState extends State<PostArticle> {
                                   icon: Icon(Icons.date_range_rounded,
                                       size: 24, color: themeGrayText),
                                   labelText: '프로젝트 공고 마감일'),
-                              // Platform 
+                              // Platform
                               // pickerType: Platform.isIOS
                               //     ? PickerType.cupertino
                               //     : PickerType.material,
@@ -284,14 +299,7 @@ class _PostArticleState extends State<PostArticle> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20)),
                           padding: paddingH20V5),
-                      onPressed: () {
-                        if (_formKey.currentState.saveAndValidate() && validateMultiChoices()) {
-                          print(_formKey.currentState.value);
-                        } else {
-                          print(_formKey.currentState.value);
-                          print('validation failed');
-                        }
-                      },
+                      onPressed: () => validateWholeForm(),
                       child: const Text(
                         '지원하기',
                         style: TextStyle(color: Colors.white),
