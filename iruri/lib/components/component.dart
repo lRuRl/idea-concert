@@ -65,7 +65,7 @@ class HomeArticle extends StatelessWidget {
                             Expanded(
                                 // title
                                 flex: 9,
-                                child: Text(data.detail.content.introduction,
+                                child: Text(data.detail.content.title,
                                     style: articleTitleTextStyle)),
                             Expanded(
                               flex: 1,

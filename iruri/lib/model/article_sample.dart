@@ -21,7 +21,7 @@ List<Article> articleSampleData = [
         condition: Condition(
             contractType: '외주', projectType: '일부계약', wage: '2,100,000'),
         content: Content(
-            introduction: '그림 작가 공고',
+            title: '그림 작가 공고',
             desc: '앞으로 접시를 10개씩 닦습니다.',
             tags: ['콘티', '데생'],
             prefer: '서울시 송파구 거주',
@@ -45,7 +45,7 @@ List<Article> articleSampleData = [
         condition: Condition(
             contractType: '외주', projectType: '일부계약', wage: '2,100,000'),
         content: Content(
-            introduction: '그림 작가 공고',
+            title: '그림 작가 공고',
             desc: '앞으로 접시를 10개씩 닦습니다.',
             tags: ['글', '데생', '채색'],
             prefer: '서울시 송파구 거주',
@@ -70,7 +70,7 @@ List<Article> articleSampleData = [
         condition: Condition(
             contractType: '외주', projectType: '일부계약', wage: '9,100,000'),
         content: Content(
-            introduction: '그림 작가 공고',
+            title: '그림 작가 공고',
             desc: '앞으로 접시를 1000개씩 닦습니다.',
             tags: ['그림', '캐릭터', '채색'],
             prefer: '서울시 강남구 거주',
@@ -95,7 +95,7 @@ List<Article> articleSampleData = [
         condition: Condition(
             contractType: '외주', projectType: '전속계약', wage: '91,100,000'),
         content: Content(
-            introduction: '그림 및 글 작가 공고',
+            title: '그림 및 글 작가 공고',
             desc: '석유 캐는 만화',
             tags: ['그림', '캐릭터', '채색', '글', '콘티'],
             prefer: '서울시 서초구 거주',
