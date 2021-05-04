@@ -13,7 +13,7 @@ const Color onDisabled = Color(0xffd9d9d9);
 // text color
 const Color displayText = Color(0xff161616);
 const Color subText = Color(0xffb6b6b6);
-const Color greytext = Color(0xff828282);
+const Color greyText = Color(0xff828282);
 const Color offWhiteText = Color(0xfff5f5f5);
 
 // 2. Color Theme - Tag/Line

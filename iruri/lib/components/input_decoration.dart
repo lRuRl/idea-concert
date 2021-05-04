@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/typhography.dart';
@@ -47,7 +48,8 @@ InputDecoration lightWhiteNoneBorderWithIconTextInputBox = InputDecoration(
  *  1 : success state ✅
  */
 InputDecoration borderTextInputBox(
-        {@required Function onPressed,
+        {@required bool displaySuffixIcon,
+        Function onPressed,
         int validate,
         String errorText,
         Icon icon,
@@ -64,15 +66,17 @@ InputDecoration borderTextInputBox(
         disabledBorder: primaryBorder,
         focusedErrorBorder: errorBorder,
         // icon
-        suffixIcon: IconButton(
-                icon: Icon(Icons.cancel_outlined,
+        suffixIcon: displaySuffixIcon
+            ? IconButton(
+                icon: Icon(FeatherIcons.xCircle,
                     size: 20,
                     color: validate == 0
-                        ? primaryLine
+                        ? subSecondLine
                         : validate == 1
                             ? onSuccess
                             : onError),
-                onPressed: onPressed),
+                onPressed: onPressed)
+            : null,
         // icon
         icon: icon != null ? icon : null,
         // label
@@ -80,11 +84,11 @@ InputDecoration borderTextInputBox(
         hintText: hintText != null ? hintText : null,
         // labelstyle
         labelStyle: notoSansTextStyle(
-            fontSize: 18, fontWeight: FontWeight.w500, textColor: subText),
-        hintStyle: notoSansTextStyle(
             fontSize: 16, fontWeight: FontWeight.w500, textColor: subText),
+        hintStyle: notoSansTextStyle(
+            fontSize: 14, fontWeight: FontWeight.w500, textColor: subText),
         errorStyle: notoSansTextStyle(
-            fontSize: 16, fontWeight: FontWeight.w500, textColor: onError),
+            fontSize: 14, fontWeight: FontWeight.w500, textColor: onError),
         errorText: errorText != null ? errorText : null,
         // color
         fillColor: Colors.white,
