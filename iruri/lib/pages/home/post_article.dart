@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:iruri/components/input_decoration.dart';
 import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/spacing.dart';
@@ -7,7 +8,7 @@ import 'package:iruri/components/text_form_field.dart';
 import 'package:iruri/components/typhography.dart';
 import 'package:iruri/model/article.dart';
 import 'package:iruri/pages/home/muliple_choice_chip.dart';
-import 'dart:io' show Platform;
+import 'dart:io';
 
 class PostArticle extends StatefulWidget {
   /*
@@ -27,7 +28,7 @@ class _PostArticleState extends State<PostArticle> {
   ScrollController controller;
 
   // upload Data
-  Article uploadArticle;
+  File _thumbnail;
 
   // save data
   Map<String, Map<String, bool>> applicantType = {
@@ -89,18 +90,31 @@ class _PostArticleState extends State<PostArticle> {
       print('validation failed');
     }
   }
-  
+  // thumbnail upload button pressed
+  void onThumbnailUploadPressed() async {
+    final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
+    setState(() {
+      if(pickedFile != null) {
+        _thumbnail = File(pickedFile.path);
+      } else {
+        print("no image selected");
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     // controller
     controller = new ScrollController();
     // model
-    uploadArticle = new Article();
+    
   }
 
   @override
   Widget build(BuildContext context) {
+    // size
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -127,11 +141,39 @@ class _PostArticleState extends State<PostArticle> {
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
+                            SizedBox(height: 20),
                             // thumbnail  - img
-                            SizedBox(
-                              height: 200,
-                              child: Text('image picker'),
+                            Stack(
+                              alignment: Alignment.center,
+                              children: <Widget>[
+                                Container(
+                                  width: size.width,
+                                  height: size.height * 0.3,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: subLine),
+                                    borderRadius: BorderRadius.circular(8),
+                                      image: DecorationImage(
+                                          image: _thumbnail != null 
+                                          ?   Image.file(_thumbnail)
+                                          :   AssetImage('assets/default.png'),
+                                          fit: BoxFit.cover)),
+                                ),
+                                ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        primary: themeOrange,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8) // 8px
+                                            )),
+                                    onPressed: () => onThumbnailUploadPressed(),
+                                    child: Text('업로드',
+                                        style: notoSansTextStyle(
+                                            fontSize: 16,
+                                            textColor: Colors.white,
+                                            fontWeight: FontWeight.w600))),
+                              ],
                             ),
+                            SizedBox(height: 20),
                             // project name
                             FormBuilderTextField(
                               name: 'introduction',
@@ -142,8 +184,7 @@ class _PostArticleState extends State<PostArticle> {
                                       size: 24, color: themeGrayText),
                                   labelText: '프로젝트 제목',
                                   hintText: '20자 이내로 제목을 입력해주세요',
-                                  validate: 0
-                                          ),
+                                  validate: 0),
                               validator: FormBuilderValidators.compose([
                                 FormBuilderValidators.required(context),
                                 // 20자 최대
@@ -162,10 +203,6 @@ class _PostArticleState extends State<PostArticle> {
                                   icon: Icon(Icons.date_range_rounded,
                                       size: 24, color: themeGrayText),
                                   labelText: '프로젝트 공고 마감일'),
-                              // Platform
-                              // pickerType: Platform.isIOS
-                              //     ? PickerType.cupertino
-                              //     : PickerType.material,
                               validator: FormBuilderValidators.compose([
                                 FormBuilderValidators.required(context),
                               ]),
