@@ -25,7 +25,7 @@ Widget noticeDetail(BuildContext context, Article data) {
         alignment: Alignment.centerRight,
         child: Position_Small(),
       ),
-      Text(data.detail.content.introduction,
+      Text(data.detail.content.title,
           style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20)),
       Container(
         padding: EdgeInsets.symmetric(vertical: 15),
