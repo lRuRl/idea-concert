@@ -51,12 +51,12 @@ class Condition {
 
 // Content Class
 class Content {
-  final String introduction;
+  final String title;
   final String desc;
   final List<String> tags;
   final String prefer;
   final String imagePath;
 
   Content(
-      {this.desc, this.imagePath, this.introduction, this.prefer, this.tags});
+      {this.desc, this.imagePath, this.title, this.prefer, this.tags});
 }
