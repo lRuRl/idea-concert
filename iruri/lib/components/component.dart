@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'dart:io';
 import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/spacing.dart';
 import 'package:iruri/components/typhography.dart';
@@ -8,7 +9,9 @@ import 'package:iruri/pages/home/project_detail.dart';
 import 'package:iruri/components/input_decoration.dart';
 // provider
 import 'package:provider/provider.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:iruri/provider.dart';
+import 'package:image_picker/image_picker.dart';
 
 // light gray 색 구분선
 const Widget divider = Divider(color: Color(0xFFEEEEEE), thickness: 1);
@@ -224,19 +227,22 @@ class ProfileInfo {
   String email;
   ProfileInfo({this.nickname, this.phone, this.email});
 }
-
-class MyProfile extends StatefulWidget {
-  @override
-  _MyProfileState createState() => _MyProfileState();
-}
 ProfileInfo testInput = ProfileInfo(
       nickname: "parkjang",
       phone: "010-XXXX-XXXX",
       email: "parkjang@naver.com"
 );
+
+class MyProfile extends StatefulWidget {
+  @override
+  _MyProfileState createState() => _MyProfileState();
+}
+
 class _MyProfileState extends State<MyProfile> {
   var index;
-  
+  final ImagePicker _picker = ImagePicker();
+  PickedFile _image;
+  String imagePath;
   TextEditingController nameEditor_ = new TextEditingController(text: testInput.nickname);
   TextEditingController phoneEditor_ = new TextEditingController(text: testInput.phone);
   TextEditingController emailEditor_ = new TextEditingController(text: testInput.email);
@@ -246,6 +252,10 @@ class _MyProfileState extends State<MyProfile> {
   void initState() {
     super.initState();
     index = false;
+    _image = null;
+    //need to be personal info which should be already stored in DB
+    //내 temporary 이미지 path
+    imagePath = "/data/user/0/com.example.iruri/cache/image_picker4896229670943898999.jpg";
   }
 
   changeIndex() {
@@ -277,7 +287,7 @@ class _MyProfileState extends State<MyProfile> {
     }
 
     return Container(
-        child: Column(
+      child: Column(
       children: <Widget>[
         //프로필 상단 부분
         Row(
@@ -295,14 +305,27 @@ class _MyProfileState extends State<MyProfile> {
               //프로필사진 컨테이너
               width: width * 0.3,
               margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.all(5),
               decoration: BoxDecoration(
                 color: themeLightGrayOpacity20,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Column(
-                children: [Image.asset('Icon-192.png'), imageChangeButton],
-              )),
+                children: [
+                  Container(
+                    height: height * 0.13,
+                    //width: width * 10,
+                    //padding: EdgeInsets.all(2),
+                    child: //ImageWrapper(imagePath: imagePath),
+                     ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.file(File(imagePath))
+                    ),
+                  ),
+                  imageChangeButton
+                ],
+              ),
+            ),
           Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
               children: [
             Container(
@@ -365,11 +388,25 @@ class _MyProfileState extends State<MyProfile> {
         child: RaisedButton(
           padding: EdgeInsets.all(3),
           color: themeDeepBlue,
-          onPressed: () => print("image change button clicked"),
+          onPressed: _getImage,
           child:
               Text("수정", style: TextStyle(color: Colors.white, fontSize: 10)),
         ));
   }
+  
+  Future _getImage() async{
+    PickedFile image = await _picker.getImage(source: ImageSource.gallery);
+    setState((){
+      _image = image;
+    });
+    if(image != null){
+      setState((){
+      imagePath = image.path;
+    });
+    print("path >>>> " + imagePath);
+    }
+  }
+
 
   //수정 화면에서 "수정하기" 버튼 => 누르면 원래 화면으로 돌아감 => 내용 수정은 차후로
   Container confirmChangeButton() {
