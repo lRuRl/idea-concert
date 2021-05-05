@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/spacing.dart';
 import 'package:iruri/components/typhography.dart';
 import 'package:iruri/model/article.dart';
 import 'package:iruri/pages/home/project_detail.dart';
+import 'package:iruri/components/input_decoration.dart';
 // provider
 import 'package:provider/provider.dart';
 import 'package:iruri/provider.dart';
@@ -227,17 +229,17 @@ class MyProfile extends StatefulWidget {
   @override
   _MyProfileState createState() => _MyProfileState();
 }
-
-class _MyProfileState extends State<MyProfile> {
-  var index;
-  ProfileInfo testInput = ProfileInfo(
+ProfileInfo testInput = ProfileInfo(
       nickname: "parkjang",
       phone: "010-XXXX-XXXX",
       email: "parkjang@naver.com"
-  );
-  final nameEditor_ = TextEditingController();
-  final phoneEditor_ = TextEditingController();
-  final emailEditor_ = TextEditingController();
+);
+class _MyProfileState extends State<MyProfile> {
+  var index;
+  
+  TextEditingController nameEditor_ = new TextEditingController(text: testInput.nickname);
+  TextEditingController phoneEditor_ = new TextEditingController(text: testInput.phone);
+  TextEditingController emailEditor_ = new TextEditingController(text: testInput.email);
 
 
   @override
@@ -304,7 +306,7 @@ class _MyProfileState extends State<MyProfile> {
           Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
               children: [
             Container(
-              margin: EdgeInsets.fromLTRB(10, 0, 0, 10),
+              margin: EdgeInsets.fromLTRB(10, 3, 0, 10),
               width: width * 0.15,
               alignment: Alignment.topLeft,
               child: Text(
@@ -313,7 +315,7 @@ class _MyProfileState extends State<MyProfile> {
               ),
             ),
             Container(
-              margin: EdgeInsets.fromLTRB(10, 0, 0, 50),
+              margin: EdgeInsets.fromLTRB(10, 3, 0, 40),
               width: width * 0.15,
               alignment: Alignment.topLeft,
               child: Text(
@@ -434,7 +436,7 @@ class _MyProfileState extends State<MyProfile> {
         alignment: Alignment.topCenter,
         child: Text(
           testInput.nickname,
-          style: TextStyle(fontSize: 12),
+          style: TextStyle(fontSize: 11),
         ),
       ),
       Position(),
@@ -443,7 +445,7 @@ class _MyProfileState extends State<MyProfile> {
         alignment: Alignment.topCenter,
         child: Text(
           testInput.phone,
-          style: TextStyle(fontSize: 12),
+          style: TextStyle(fontSize: 11),
         ),
       ),
       Container(
@@ -451,7 +453,7 @@ class _MyProfileState extends State<MyProfile> {
         alignment: Alignment.topCenter,
         child: Text(
           testInput.email,
-          style: TextStyle(fontSize: 12),
+          style: TextStyle(fontSize: 9),
         ),
       ),
     ]);
@@ -459,9 +461,9 @@ class _MyProfileState extends State<MyProfile> {
 
   //연필 아이콘 누르면 수정하는 화면으로 바뀜
   Column changeProfileContent(
-      final nameEditor_, 
-      final phoneEditor_, 
-      final emailEditor_, 
+      TextEditingController nameEditor_, 
+      TextEditingController phoneEditor_, 
+      TextEditingController emailEditor_, 
       final width, 
       final height, 
       ProfileInfo testInput
@@ -476,27 +478,30 @@ class _MyProfileState extends State<MyProfile> {
         child: TextFormField(
           enabled: true,
           maxLines: 1,
+          inputFormatters: [new LengthLimitingTextInputFormatter(20)],
           controller: nameEditor_,
+          style: TextStyle(color: themeGrayText, fontSize: 10),
           decoration: InputDecoration(
             focusedBorder: OutlineInputBorder(
                 borderSide:
                     new BorderSide(color: themeLightGrayOpacity20, width: 1),
-                borderRadius: BorderRadius.circular(20)),
+                borderRadius: BorderRadius.circular(5)),
             enabledBorder: OutlineInputBorder(
                 borderSide:
                     new BorderSide(color: themeLightGrayOpacity20, width: 1),
-                borderRadius: BorderRadius.circular(20)),
+                borderRadius: BorderRadius.circular(5)),
             disabledBorder: OutlineInputBorder(
                 borderSide:
                     new BorderSide(color: themeLightGrayOpacity20, width: 1),
-                borderRadius: BorderRadius.circular(20)),
-            fillColor: Colors.white,
-            labelStyle: TextStyle(color: themeGrayText, fontSize: 11),
+                borderRadius: BorderRadius.circular(5)),
+            fillColor: themeLightGrayOpacity20,
+            filled: true,
+            //labelStyle: TextStyle(color: themeGrayText, fontSize: 3),
             //labelText: testInput.nickname,
           ),
         ),
       ),
-      Position(),
+      Position_Small(),
       Container(
         margin: EdgeInsets.fromLTRB(0, 0, 0, 3),
         alignment: Alignment.topLeft,
@@ -505,22 +510,25 @@ class _MyProfileState extends State<MyProfile> {
         child: TextFormField(
           enabled: true,
           maxLines: 1,
+          inputFormatters: [new LengthLimitingTextInputFormatter(20)],
           controller: phoneEditor_,
+          style: TextStyle(color: themeGrayText, fontSize: 10),
           decoration: InputDecoration(
             focusedBorder: OutlineInputBorder(
                 borderSide:
                     new BorderSide(color: themeLightGrayOpacity20, width: 1),
-                borderRadius: BorderRadius.circular(20)),
+                borderRadius: BorderRadius.circular(5)),
             enabledBorder: OutlineInputBorder(
                 borderSide:
                     new BorderSide(color: themeLightGrayOpacity20, width: 1),
-                borderRadius: BorderRadius.circular(20)),
+                borderRadius: BorderRadius.circular(5)),
             disabledBorder: OutlineInputBorder(
                 borderSide:
                     new BorderSide(color: themeLightGrayOpacity20, width: 1),
-                borderRadius: BorderRadius.circular(20)),
-            fillColor: Colors.white,
-            labelStyle: TextStyle(color: themeGrayText, fontSize: 11),
+                borderRadius: BorderRadius.circular(5)),
+            fillColor: themeLightGrayOpacity20,
+            filled: true,
+            //labelStyle: TextStyle(color: themeGrayText, fontSize: 3),
             //labelText: testInput.phone,
           ),
         ),
@@ -533,22 +541,25 @@ class _MyProfileState extends State<MyProfile> {
         child: TextFormField(
           enabled: true,
           maxLines: 1,
+          inputFormatters: [new LengthLimitingTextInputFormatter(25)],
           controller: emailEditor_,
+          style: TextStyle(color: themeGrayText, fontSize: 8),
           decoration: InputDecoration(
             focusedBorder: OutlineInputBorder(
                 borderSide:
                     new BorderSide(color: themeLightGrayOpacity20, width: 1),
-                borderRadius: BorderRadius.circular(20)),
+                borderRadius: BorderRadius.circular(5)),
             enabledBorder: OutlineInputBorder(
                 borderSide:
                     new BorderSide(color: themeLightGrayOpacity20, width: 1),
-                borderRadius: BorderRadius.circular(20)),
+                borderRadius: BorderRadius.circular(5)),
             disabledBorder: OutlineInputBorder(
                 borderSide:
                     new BorderSide(color: themeLightGrayOpacity20, width: 1),
-                borderRadius: BorderRadius.circular(20)),
-            fillColor: Colors.white,
-            labelStyle: TextStyle(color: themeGrayText, fontSize: 11),
+                borderRadius: BorderRadius.circular(5)),
+            fillColor: themeLightGrayOpacity20,
+            filled: true,
+            //labelStyle: TextStyle(color: themeGrayText, fontSize: 6),
             //labelText: testInput.email,
           ),
         ),
@@ -559,24 +570,30 @@ class _MyProfileState extends State<MyProfile> {
 
 //포지션 태그 나타내는 클래스
 class Position extends StatelessWidget {
-  final List<String> data = ["채색", "콘티", "캐릭터"];
+  final List<String> data = ["채색", "콘티", "색칠", "캐릭터"];
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     double bottomMargin;
     if (data.length >= 4) {
-      bottomMargin = 15;
+      bottomMargin = 10;
     } else {
-      bottomMargin = 40;
+      bottomMargin = 35;
     }
     return Container(
         margin: EdgeInsets.fromLTRB(0, 0, 0, bottomMargin),
+        padding: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
         alignment: Alignment.topCenter,
         width: size.width * 0.45,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-        ),
+        // decoration: BoxDecoration(
+        //   border: Border.all( 
+        //     width: 1,
+        //     color: themeLightGrayOpacity20, 
+        //   ),
+        //   borderRadius: BorderRadius.circular(10),
+        //   color: Colors.white,
+        // ),
         child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -600,51 +617,176 @@ class Position extends StatelessWidget {
             ]));
   }
 }
-
 class Position_Small extends StatelessWidget {
-  final List<String> data = ["채색", "콘티", "캐릭터"];
+ final List<String> data = ["채색", "콘티", "색칠", "캐릭터"];
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     double bottomMargin;
     if (data.length >= 4) {
-      bottomMargin = 2;
+      bottomMargin = 3;
     } else {
-      bottomMargin = 5;
+      bottomMargin = 3;
     }
-    return Container(
-        margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+    return 
+    Container(
+      margin: EdgeInsets.fromLTRB(0, 0, 0, bottomMargin),
+        padding: EdgeInsets.symmetric(horizontal: 2, vertical: 2),
         alignment: Alignment.topCenter,
-        width: size.width * 0.35,
+        width: size.width * 0.45,
+        height: size.height * 0.06,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          //border: Border.all(color: lightWhite),
+          borderRadius: BorderRadius.circular(5),
+          border: Border.all( 
+            width: 1,
+            color: themeLightGrayOpacity20, 
+          ),
+          color: themeLightGrayOpacity20,
         ),
-        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //crossAxisAlignment: CrossAxisAlignment.center,
+    child: Container(
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Expanded(
-                //flex: 5,
                 child: Align(
-                    alignment: Alignment.centerLeft,
+                    alignment: Alignment.topCenter,
                     child: GridView.builder(
                         shrinkWrap: true,
                         physics: AlwaysScrollableScrollPhysics(),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            childAspectRatio: 3.5 / 1.5,
+                            childAspectRatio: 4 / 1.5,
                             crossAxisCount: 3,
                             mainAxisSpacing: 3,
                             crossAxisSpacing: 3),
                         itemCount: data.length,
                         itemBuilder: (context, index) => TagWrapper(
-                              onPressed: () => print('tag pressed'),
+                              onPressed: () => _showDialog(context),
                               tag: data[index],
                             ))),
               )
-            ]));
+            ]))
+    );
   }
 }
+
+void _showDialog(context) { 
+    showDialog(
+      context: context,
+      barrierDismissible: false,  
+      builder: (BuildContext context) { 
+        return AlertDialog(
+          title: Text("태그 선택"),
+          content: Text("최대 6개 골라주세요"),
+          actions: <Widget>[
+            Container(
+                alignment: Alignment.center,
+                child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Column(
+                        children: [
+                          Checkbox(
+                            value: false,
+                          ),
+                          Text('채색'),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Checkbox(
+                            value: false,
+                          ),
+                          Text('콘티'),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Checkbox(
+                            value: false,
+                          ),
+                          Text('캐릭터'),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Checkbox(
+                            value: false,
+                          ),
+                          Text('그림'),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Checkbox(
+                            value: false,
+                          ),
+                          Text('글'),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Column(
+                        children: [
+                          Checkbox(
+                            value: false,
+                          ),
+                          Text('뎃셍'),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Checkbox(
+                            value: false,
+                          ),
+                          Text('기타'),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Checkbox(
+                            value: false,
+                          ),
+                          Text('기타'),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Checkbox(
+                            value: false,
+                          ),
+                          Text('기타'),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Checkbox(
+                            value: false,
+                          ),
+                          Text('기타'),
+                        ],
+                      ),
+                    ],
+                  ),
+                  FlatButton(
+                    child: new Text("닫기"),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ), 
+                ],
+              ),
+            )
+          ],
+        );
+      },
+    );
+  }
+
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////                              프로필 정보 : 석운                             /////////////////////
