@@ -8,26 +8,26 @@ class MyprojectPage extends StatefulWidget {
 }
 
 List<Container> myProjectListItems;
-ListViewVertical() {
-  myProjectListItems = List<Container>.generate(5, (index) {
-    return boxItem(index, myProjectListItems);
-  });
-}
+// ListViewVertical() {
+//   myProjectListItems = List<Container>.generate(5, (index) {
+//     return boxItem(index, myProjectListItems);
+//   });
+// }
 
 class _MyprojectPageState extends State<MyprojectPage> {
   ScrollController scrollController = new ScrollController();
 
-  @override
-  void initState() {
-    ListViewVertical();
-  }
+  // @override
+  // void initState() {
+  //   ListViewVertical();
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         // APP BAR : Top of application
         // appBar: appBar(3),
-        
+
         // body
         body: SingleChildScrollView(
             controller: scrollController,
@@ -50,7 +50,11 @@ class _MyprojectPageState extends State<MyprojectPage> {
 
                     width: MediaQuery.of(context).size.width * 1,
                     height: MediaQuery.of(context).size.height * 0.98,
-                    child: myProject_vertical(context, myProjectListItems),
+                    child: myProject_vertical(
+                        context,
+                        List<Container>.generate(5, (index) {
+                          return boxItem(index, myProjectListItems, context);
+                        })),
                   ),
                 ],
               ),

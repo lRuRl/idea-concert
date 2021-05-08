@@ -1,12 +1,22 @@
+import 'dart:js';
+
 import 'package:flutter/material.dart';
 import 'package:iruri/components/component.dart';
 import 'package:iruri/provider.dart';
 import 'state_applylist.dart';
 import 'state_myproject.dart';
+
+// article
+import 'package:iruri/model/article.dart';
+import 'package:iruri/model/article_sample.dart';
+
+// member
+import 'package:iruri/model/member.dart';
+import 'package:iruri/model/member_sample.dart';
 // provider
 import 'package:provider/provider.dart';
 
-boxItem(int index, List<Container> items) {
+boxItem(int index, List<Container> items, BuildContext context) {
   return Container(
       margin: EdgeInsets.symmetric(
         horizontal: 10,
@@ -70,12 +80,12 @@ boxItem(int index, List<Container> items) {
                   )
                 ],
               )),
-          Expanded(flex: 2, child: listItemButton())
+          Expanded(flex: 2, child: listItemButton(context))
         ],
       ));
 }
 
-boxItem_apply(int index, List<Container> items) {
+boxItem_apply(int index, List<Container> items, BuildContext context) {
   return Container(
       margin: EdgeInsets.symmetric(
         horizontal: 10,
@@ -137,7 +147,7 @@ boxItem_apply(int index, List<Container> items) {
                   )
                 ],
               )),
-          Expanded(flex: 2, child: listItemButton())
+          Expanded(flex: 2, child: listItemButton(context))
         ],
       ));
 }
@@ -163,7 +173,6 @@ Widget myList_vertical(List<Container> items) {
 }
 
 Widget applyProject(BuildContext context, List<Container> items) {
-  
   // provider
   final routerReader = context.read<CustomRouter>();
   final routerWatcher = context.watch<CustomRouter>();
@@ -248,7 +257,40 @@ Widget selectButton() {
   );
 }
 
-Widget listItemButton() {
+Widget saveButton() {
+  return ElevatedButton(
+      onPressed: () {},
+      child: Text("저장하기",
+          style: TextStyle(
+            fontSize: 12,
+          )),
+      style: ElevatedButton.styleFrom(
+        padding: EdgeInsets.only(top: 11, bottom: 11, left: 21, right: 21),
+        //fixedSize: Size(90, 30),
+        primary: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
+        onPrimary: Colors.white,
+      ));
+}
+
+Widget editButton() {
+  return ElevatedButton(
+      onPressed: () {},
+      child: Text("수정",
+          style: TextStyle(
+            fontSize: 12,
+          )),
+      style: ElevatedButton.styleFrom(
+        padding: EdgeInsets.only(top: 2, bottom: 2, left: 8, right: 8),
+        //fixedSize: Size(90, 30),
+        primary: Color.fromRGBO(0x1b, 0x30, 0x59, 1),
+        onPrimary: Colors.white,
+      ));
+}
+
+Widget listItemButton(BuildContext context) {
+  // provider
+  final routerReader = context.read<CustomRouter>();
+  final routerWatcher = context.watch<CustomRouter>();
   return Row(
     crossAxisAlignment: CrossAxisAlignment.center,
     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -266,7 +308,10 @@ Widget listItemButton() {
             onPrimary: Colors.white,
           )),
       ElevatedButton(
-          onPressed: () {},
+          onPressed: () => routerReader.navigateTo(
+                routerWatcher.currentPage,
+                '/state/projectdetail',
+              ),
           child: Text("팀원 조회",
               style: TextStyle(
                 fontSize: 12,
@@ -282,7 +327,6 @@ Widget listItemButton() {
 }
 
 Widget myProject(BuildContext context, List<Container> items) {
-  
   // provider
   final routerReader = context.read<CustomRouter>();
   final routerWatcher = context.watch<CustomRouter>();
@@ -295,7 +339,8 @@ Widget myProject(BuildContext context, List<Container> items) {
           children: [
             boldText("내가 올린 프로젝트 "),
             IconButton(
-              onPressed: () => routerReader.navigateTo(routerWatcher.currentPage, '/state/myproject'),
+              onPressed: () => routerReader.navigateTo(
+                  routerWatcher.currentPage, '/state/myproject'),
               icon: Icon(Icons.chevron_right, size: 30),
             )
           ],
@@ -318,4 +363,89 @@ Widget myProject_vertical(BuildContext context, List<Container> items) {
     Expanded(flex: 10, child: myList_vertical(items)),
     Expanded(flex: 1, child: Text('')),
   ]);
+}
+
+Widget stateprojectDetailContent(BuildContext context, Article data) {
+  return Container(
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    Text("팀원 관리",
+        style: TextStyle(fontWeight: FontWeight.w700),
+        textAlign: TextAlign.left),
+    manageTeam(context),
+  ]));
+}
+
+Widget manageTeam(BuildContext context) {
+  return Container(
+      height: MediaQuery.of(context).size.height * 0.25,
+      width: MediaQuery.of(context).size.width * 1,
+      child: ListView.builder(
+        scrollDirection: Axis.vertical,
+        itemCount: memberListSample.length,
+        itemBuilder: (context, index) {
+          return Container(
+            width: MediaQuery.of(context).size.width * 1,
+            margin: EdgeInsets.symmetric(vertical: 7),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Icon(
+                    Icons.remove_circle_outline,
+                    size: 20,
+                  ),
+                ),
+                Expanded(
+                    flex: 4,
+                    child: Container(
+                        alignment: Alignment.centerRight,
+                        height: 20,
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: List<Widget>.generate(
+                                memberListSample[index].roles.length,
+                                (indexs) => Container(
+                                      margin: EdgeInsets.only(left: 10),
+                                      child: TagWrapper(
+                                        onPressed: () {},
+                                        tag: memberListSample[index]
+                                            .roles[indexs],
+                                      ),
+                                    ))))),
+                Expanded(
+                    flex: 6,
+                    child: nicknameEdit(
+                        "@" + memberListSample[index].info.nickname)),
+              ],
+            ),
+          );
+        },
+      ));
+}
+
+Widget nicknameEdit(String nickname) {
+  return Container(
+      margin: EdgeInsets.symmetric(horizontal: 15),
+      padding: EdgeInsets.symmetric(horizontal: 5),
+      height: 20,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(5)),
+          color: Color.fromRGBO(0xF2, 0xF2, 0xF2, 1)),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(nickname,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 9,
+                )),
+            flex: 5,
+          ),
+          Expanded(
+            child: Container(child: editButton()),
+            flex: 1,
+          )
+        ],
+      ));
 }
