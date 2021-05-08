@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 import 'state_utils.dart';
 import 'package:iruri/routes.dart';

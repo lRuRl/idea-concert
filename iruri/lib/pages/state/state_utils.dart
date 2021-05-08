@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 import 'package:iruri/components/component.dart';
 import 'package:iruri/provider.dart';
@@ -276,11 +274,9 @@ Widget editButton() {
   return ElevatedButton(
       onPressed: () {},
       child: Text("수정",
-          style: TextStyle(
-            fontSize: 12,
-          )),
+          style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold)),
       style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.only(top: 2, bottom: 2, left: 8, right: 8),
+        padding: EdgeInsets.only(top: 5, bottom: 5, left: 0, right: 0),
         //fixedSize: Size(90, 30),
         primary: Color.fromRGBO(0x1b, 0x30, 0x59, 1),
         onPrimary: Colors.white,
@@ -414,7 +410,7 @@ Widget manageTeam(BuildContext context) {
                                       ),
                                     ))))),
                 Expanded(
-                    flex: 6,
+                    flex: 5,
                     child: nicknameEdit(
                         "@" + memberListSample[index].info.nickname)),
               ],
@@ -440,7 +436,7 @@ Widget nicknameEdit(String nickname) {
                   fontWeight: FontWeight.bold,
                   fontSize: 9,
                 )),
-            flex: 5,
+            flex: 4,
           ),
           Expanded(
             child: Container(child: editButton()),
