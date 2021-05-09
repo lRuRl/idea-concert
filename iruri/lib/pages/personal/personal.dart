@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:iruri/components/component.dart';
 import 'package:iruri/components/palette.dart';
 import 'package:flutter/services.dart';
+import 'dart:io';
+import 'package:device_info/device_info.dart';
+
 class PersonalPage extends StatefulWidget {
   @override
   _PersonalPageState createState() => _PersonalPageState();
@@ -118,6 +121,30 @@ class _PersonalPageState extends State<PersonalPage> {
     );
   }
 
+  //unique ID 생성 (기기의 고유식별번호(uuid) 이용)
+  Future<String> getMobiledID() async {
+    final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+    String id = '';
+    try {
+      if (Platform.isAndroid) {
+        //안드로이드 기기의 경우
+        final AndroidDeviceInfo androidData =
+            await deviceInfoPlugin.androidInfo; //androidInfo를 가져옴
+        id = androidData.androidId;
+      } else if (Platform.isIOS) {
+        //IOS의 경우
+        final IosDeviceInfo iosData =
+            await deviceInfoPlugin.iosInfo; //iosInfo를 가져옴
+        id = iosData.identifierForVendor;
+      }
+    } on PlatformException {
+      id = '';
+    }
+    return id;
+  }
+
+  final String mobileID = await getMobiledID(); //mobileID에 ID 저장
+
   Widget personalCode() {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Expanded(
@@ -142,7 +169,8 @@ class _PersonalPageState extends State<PersonalPage> {
                       color: themeLightGrayOpacity20),
                   child: Center(
                       child: Text(
-                    "CHBH12387DNJ13",
+                    //"CHBH12387DNJ13",
+                    mobileID, //mobileID 변수에 받아온 ID를 출력
                     style: TextStyle(
                         color: themeGrayText, fontWeight: FontWeight.w800),
                   )),
@@ -197,7 +225,8 @@ class _PersonalPageState extends State<PersonalPage> {
                                   color: themeLightGrayOpacity20, width: 1),
                               borderRadius: BorderRadius.circular(30)),
                           fillColor: Colors.white,
-                          labelStyle: TextStyle(color: themeGrayText, fontSize: 13),
+                          labelStyle:
+                              TextStyle(color: themeGrayText, fontSize: 13),
                           labelText: 'URL 또는 드라이브 링크'),
                     )),
                 ElevatedButton(
@@ -212,4 +241,3 @@ class _PersonalPageState extends State<PersonalPage> {
     ]);
   }
 }
-
