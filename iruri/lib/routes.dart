@@ -82,6 +82,7 @@ class _RoutesState extends State<Routes> {
 
     return AppBar(
       // title: Text(page[currentPageIndex]['name'], style: appBarTitleTextStyle),
+      centerTitle: true,
       title: Text(
         'IRURI',
         style: appBarTitleTextStyle,
