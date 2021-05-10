@@ -644,8 +644,8 @@ class ApprovalState extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return Container(
-        margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-        alignment: Alignment.topCenter,
+        // margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+        // alignment: Alignment.topCenter,
         width: size.width * 0.15,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),

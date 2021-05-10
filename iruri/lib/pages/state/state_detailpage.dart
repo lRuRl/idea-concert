@@ -3,6 +3,7 @@ import 'package:iruri/model/article.dart';
 import 'package:iruri/model/article_sample.dart';
 import 'package:iruri/pages/home/project_detail_components.dart';
 import 'package:iruri/pages/state/state_utils.dart';
+import 'package:iruri/components/typhography.dart';
 // provider
 import 'package:provider/provider.dart';
 import 'package:iruri/provider.dart';
