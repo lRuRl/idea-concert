@@ -13,6 +13,7 @@ import 'package:iruri/pages/state/state_applylist.dart';
 import 'package:iruri/pages/state/state_myproject.dart';
 import 'package:iruri/pages/state/state_projectlist.dart';
 import 'package:iruri/pages/state/state_detailpage.dart';
+
 // provider
 import 'package:iruri/provider.dart';
 import 'package:provider/provider.dart';
