@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:iruri/components/component.dart';
 import 'package:iruri/provider.dart';
-import 'state_applylist.dart';
-import 'state_myproject.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:path_provider/path_provider.dart';
 
 // article
 import 'package:iruri/model/article.dart';
@@ -292,7 +292,10 @@ Widget listItemButton(BuildContext context) {
     mainAxisAlignment: MainAxisAlignment.spaceAround,
     children: [
       ElevatedButton(
-          onPressed: () {},
+          onPressed: () => routerReader.navigateTo(
+                routerWatcher.currentPage,
+                '/state/fillcontract',
+              ),
           child: Text("계약서 작성",
               style: TextStyle(
                 fontSize: 12,
@@ -444,4 +447,26 @@ Widget nicknameEdit(String nickname) {
           )
         ],
       ));
+}
+
+Widget contractDetail(BuildContext context, Article data) {
+  return Container(
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    Text("계약서 작성",
+        style: TextStyle(fontWeight: FontWeight.w700),
+        textAlign: TextAlign.left),
+    Padding(
+        padding: const EdgeInsets.all(10.0), child: contractContent(data, 1))
+  ]));
+}
+
+Widget contractContent(Article data, int index) {
+  return Container(
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    Text("계약서 조항 ($index)",
+        style: TextStyle(fontWeight: FontWeight.normal),
+        textAlign: TextAlign.left),
+    Padding(padding: const EdgeInsets.all(10.0), child: Text("계약서 내용 첨부"))
+  ]));
+  // <key>io.flutter.embedded_views_preview</key> --> iOS에서 Info.plist에 추가
 }
