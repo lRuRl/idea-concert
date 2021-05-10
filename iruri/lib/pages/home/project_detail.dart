@@ -67,7 +67,19 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                   Container(
                     width: MediaQuery.of(context).size.width * 1,
                     padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                    child: applyButton(),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 6,
+                          child: scrapButton(),
+                        ),
+                        Expanded(flex: 1, child: SizedBox()),
+                        Expanded(
+                          flex: 12,
+                          child: applyButton(context),
+                        )
+                      ],
+                    ),
                   ),
                 ],
               ),
