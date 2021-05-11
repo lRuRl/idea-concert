@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:iruri/components/component.dart';
 import 'package:iruri/provider.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:iruri/pages/home/project_detail_components.dart';
+import 'package:iruri/components/palette.dart';
+
+import 'dart:async';
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'state_applylist.dart';
 import 'state_myproject.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -345,17 +355,16 @@ Widget listItemButton(BuildContext context) {
     mainAxisAlignment: MainAxisAlignment.spaceAround,
     children: [
       ElevatedButton(
-          onPressed: () {},
-          child: Row(
-            children: [
-              Icon(FeatherIcons.edit,
-                  size: 14, color: Color.fromRGBO(0x1b, 0x30, 0x59, 1)),
-              Text("  계약서 작성",
-                  style: TextStyle(
-                      fontSize: 12,
-                      color: Color.fromRGBO(0x1b, 0x30, 0x59, 1))),
-            ],
-          ),
+          onPressed: () => routerReader.navigateTo(
+                routerWatcher.currentPage,
+                '/state/fillcontract',
+              ),
+          child: Text("계약서 작성",
+              style: TextStyle(
+                fontSize: 12,
+                color: Color.fromRGBO(0x1b, 0x30, 0x59, 1))),
+              )),
+
           style: ElevatedButton.styleFrom(
             padding: EdgeInsets.symmetric(vertical: 4, horizontal: 88),
             elevation: 0,
@@ -585,4 +594,73 @@ Widget nicknameEdit(String nickname) {
           )
         ],
       ));
+}
+
+Widget contractTitle(BuildContext context) {
+  return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(width: 5, color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 1)),
+        ),
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      width: MediaQuery.of(context).size.width * 1,
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text("계약서 작성",
+            style: TextStyle(fontWeight: FontWeight.w700),
+            textAlign: TextAlign.left),
+      ]));
+}
+
+Widget saveContractButton(BuildContext context) {
+  return ElevatedButton(
+      onPressed: () {
+        showMyDialog(context, "저장이 완료되었습니다.", "");
+      },
+      child: Text("계약서 저장하기",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+      style: ElevatedButton.styleFrom(
+        padding: EdgeInsets.only(top: 11, bottom: 11, left: 11, right: 11),
+        //fixedSize: Size(90, 30),
+        primary: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
+        onPrimary: Colors.white,
+      ));
+}
+
+Future<File> createFileOfPdfUrl() async {
+  Completer<File> completer = Completer();
+  try {
+    final url = "http://www.africau.edu/images/default/sample.pdf";
+    final filename = url.substring(url.lastIndexOf("/") + 1);
+    var request = await HttpClient().getUrl(Uri.parse(url));
+    var response = await request.close();
+    var bytes = await consolidateHttpClientResponseBytes(response);
+    var dir = await getApplicationDocumentsDirectory();
+    File file = File("${dir.path}/$filename");
+
+    await file.writeAsBytes(bytes, flush: true);
+    completer.complete(file);
+  } catch (e) {
+    throw Exception('Error parsing asset file!');
+  }
+
+  return completer.future;
+}
+
+Future<File> fromAsset(String asset, String filename) async {
+  // To open from assets, you can copy them to the app storage folder, and the access them "locally"
+  Completer<File> completer = Completer();
+
+  try {
+    var dir = await getApplicationDocumentsDirectory();
+    File file = File("${dir.path}/$filename");
+    var data = await rootBundle.load(asset);
+    var bytes = data.buffer.asUint8List();
+    await file.writeAsBytes(bytes, flush: true);
+    completer.complete(file);
+  } catch (e) {
+    throw Exception('Error parsing asset file!');
+  }
+
+  return completer.future;
 }
