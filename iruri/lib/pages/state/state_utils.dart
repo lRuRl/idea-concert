@@ -4,17 +4,13 @@ import 'package:iruri/provider.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:iruri/pages/home/project_detail_components.dart';
+import 'package:iruri/components/palette.dart';
 
-import 'package:flutter_pdfview/flutter_pdfview.dart';
-import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
 
 // article
 import 'package:iruri/model/article.dart';
@@ -477,17 +473,41 @@ Widget contractTitle(BuildContext context) {
       ]));
 }
 
-Widget contractDetail(BuildContext context, Article data, int index) {
+Widget contractDetail(
+    BuildContext context, Article data, int index, bool _value) {
   return Container(
       padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       width: MediaQuery.of(context).size.width * 1,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Text("계약서 조항 ($index)",
-              style: TextStyle(fontWeight: FontWeight.w500),
-              textAlign: TextAlign.left),
-        )
+            padding: const EdgeInsets.all(10.0),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("계약서 조항 ($index)",
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                      textAlign: TextAlign.left),
+                  InkWell(
+                    child: Container(
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle, color: themeLightOrange),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: _value
+                            ? Icon(
+                                Icons.check,
+                                size: 10.0,
+                                color: Colors.white,
+                              )
+                            : Icon(
+                                Icons.check_box_outline_blank,
+                                size: 10.0,
+                                color: themeLightOrange,
+                              ),
+                      ),
+                    ),
+                  )
+                ]))
       ]));
 }
 
@@ -510,7 +530,7 @@ Widget customPDFViewer(BuildContext context, String pathPDF) {
 Widget eachContract(
     BuildContext context, String pathPDF, Article data, int index) {
   return Column(children: [
-    contractDetail(context, data, index),
+    contractDetail(context, data, index, true),
     customPDFViewer(context, pathPDF)
   ]);
 }
