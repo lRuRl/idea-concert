@@ -361,10 +361,7 @@ Widget listItemButton(BuildContext context) {
               ),
           child: Text("계약서 작성",
               style: TextStyle(
-                fontSize: 12,
-                color: Color.fromRGBO(0x1b, 0x30, 0x59, 1))),
-              )),
-
+                  fontSize: 12, color: Color.fromRGBO(0x1b, 0x30, 0x59, 1))),
           style: ElevatedButton.styleFrom(
             padding: EdgeInsets.symmetric(vertical: 4, horizontal: 88),
             elevation: 0,
