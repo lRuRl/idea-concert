@@ -473,68 +473,6 @@ Widget contractTitle(BuildContext context) {
       ]));
 }
 
-Widget contractDetail(
-    BuildContext context, Article data, int index, bool _value) {
-  return Container(
-      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-      width: MediaQuery.of(context).size.width * 1,
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("계약서 조항 ($index)",
-                      style: TextStyle(fontWeight: FontWeight.w500),
-                      textAlign: TextAlign.left),
-                  InkWell(
-                    child: Container(
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle, color: themeLightOrange),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: _value
-                            ? Icon(
-                                Icons.check,
-                                size: 10.0,
-                                color: Colors.white,
-                              )
-                            : Icon(
-                                Icons.check_box_outline_blank,
-                                size: 10.0,
-                                color: themeLightOrange,
-                              ),
-                      ),
-                    ),
-                  )
-                ]))
-      ]));
-}
-
-Widget customPDFViewer(BuildContext context, String pathPDF) {
-  return Container(
-      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-      width: MediaQuery.of(context).size.width * 1,
-      height: MediaQuery.of(context).size.height * 0.5,
-      child: PDFView(
-        filePath: pathPDF,
-        enableSwipe: true,
-        swipeHorizontal: true,
-        autoSpacing: false,
-        pageFling: true,
-        pageSnap: true,
-        fitPolicy: FitPolicy.BOTH,
-      ));
-}
-
-Widget eachContract(
-    BuildContext context, String pathPDF, Article data, int index) {
-  return Column(children: [
-    contractDetail(context, data, index, true),
-    customPDFViewer(context, pathPDF)
-  ]);
-}
-
 Widget saveContractButton(BuildContext context) {
   return ElevatedButton(
       onPressed: () {

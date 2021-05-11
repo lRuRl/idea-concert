@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:iruri/components/component.dart';
 import 'package:iruri/model/article.dart';
 import 'package:iruri/model/article_sample.dart';
 import 'package:iruri/pages/home/project_detail_components.dart';
 import 'package:iruri/pages/state/state_utils.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
-
-import 'package:flutter/material.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
-
-// provider
 
 class FillContractPage extends StatefulWidget {
   @override
@@ -81,18 +76,13 @@ class _FillContractPageState extends State<FillContractPage> {
                       child: projectCalendar(context, data),
                     ),
                     contractTitle(context),
-                    _isLoading
-                        ? Center(child: CircularProgressIndicator())
-                        : eachContract(context, pathPDF, data, 1),
-                    _isLoading
-                        ? Center(child: CircularProgressIndicator())
-                        : eachContract(context, pathPDF, data, 2),
+                    AgreeContract(pdfPath: pathPDF, index: 1),
+                    AgreeContract(pdfPath: pathPDF, index: 2),
                     Container(
                         width: MediaQuery.of(context).size.width * 1,
                         padding:
                             EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                         child: saveContractButton(context)),
-                        
                   ]),
             )));
   }

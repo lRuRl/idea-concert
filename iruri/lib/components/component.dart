@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/spacing.dart';
 import 'package:iruri/components/typhography.dart';
 import 'package:iruri/model/article.dart';
-import 'package:iruri/pages/home/project_detail.dart';
+import 'package:iruri/pages/state/state_utils.dart';
 // provider
 import 'package:provider/provider.dart';
 import 'package:iruri/provider.dart';
@@ -691,3 +692,93 @@ class ApprovalState extends StatelessWidget {
  * ∏
  *  그럼 화이팅 !
  */
+
+class AgreeContract extends StatefulWidget {
+  final String pdfPath;
+  final int index;
+  AgreeContract({this.pdfPath, this.index});
+  @override
+  _AgreeContractState createState() => _AgreeContractState();
+}
+
+class _AgreeContractState extends State<AgreeContract> {
+  bool _value = false;
+  int index;
+  bool _isLoading = true;
+
+  String pdfPath;
+  @override
+  void initState() {
+    super.initState();
+    index = widget.index;
+    pdfPath = widget.pdfPath;
+
+    createFileOfPdfUrl().then((f) {
+      setState(() {
+        pdfPath = f.path;
+        _isLoading = false;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      Container(
+          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          width: MediaQuery.of(context).size.width * 1,
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("계약서 조항 ($index)",
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                          textAlign: TextAlign.left),
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            _value = !_value;
+                          });
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle, color: themeLightOrange),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: _value
+                                ? Icon(
+                                    Icons.check,
+                                    size: 10.0,
+                                    color: Colors.white,
+                                  )
+                                : Icon(
+                                    Icons.check_box_outline_blank,
+                                    size: 10.0,
+                                    color: themeLightOrange,
+                                  ),
+                          ),
+                        ),
+                      ),
+                    ]))
+          ])),
+      Container(
+          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          width: MediaQuery.of(context).size.width * 1,
+          height: MediaQuery.of(context).size.height * 0.5,
+          child: _isLoading
+              ? Center(child: CircularProgressIndicator())
+              : PDFView(
+                  filePath: pdfPath,
+                  enableSwipe: true,
+                  swipeHorizontal: true,
+                  autoSpacing: false,
+                  pageFling: true,
+                  pageSnap: true,
+                  fitPolicy: FitPolicy.BOTH,
+                ))
+    ]);
+  }
+}
