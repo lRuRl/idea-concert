@@ -8,18 +8,14 @@ class ApplyListPage extends StatefulWidget {
 }
 
 List<Container> applyListitems;
-ListViewVertical() {
+ListViewVertical(BuildContext context) {
   applyListitems = List<Container>.generate(5, (index) {
-    return boxItem_apply(index, applyListitems);
+    return boxItem_apply(index, applyListitems, context);
   });
 }
 
 class _ApplyListPageState extends State<ApplyListPage> {
   ScrollController scrollController = new ScrollController();
-  @override
-  void initState() {
-    ListViewVertical();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +45,11 @@ class _ApplyListPageState extends State<ApplyListPage> {
 
                     width: MediaQuery.of(context).size.width * 1,
                     height: MediaQuery.of(context).size.height * 1.0,
-                    child: applyProject_vertical(context, applyListitems),
+                    child: applyProject_vertical(
+                        context,
+                        List<Container>.generate(5, (index) {
+                          return boxItem_apply(index, applyListitems, context);
+                        })),
                   ),
                 ],
               ),

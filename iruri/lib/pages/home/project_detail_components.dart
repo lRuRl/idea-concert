@@ -4,6 +4,7 @@ import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/spacing.dart';
 import 'package:iruri/components/typhography.dart';
 import 'package:iruri/model/article.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 Widget thumbnail(BuildContext context, Article data) {
   return Image.network(
@@ -17,59 +18,176 @@ Widget thumbnail(BuildContext context, Article data) {
 
 Widget noticeDetail(BuildContext context, Article data) {
   return Container(
-    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text("공고 상세보기",
-          style: TextStyle(fontWeight: FontWeight.w700),
-          textAlign: TextAlign.left),
-      Align(
-        alignment: Alignment.centerRight,
-        child: Position_Small(),
-      ),
-      Text(data.detail.content.title,
-          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20)),
-      Container(
-        padding: EdgeInsets.symmetric(vertical: 15),
-        child: Align(
-            alignment: Alignment.bottomCenter,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Row(children: <Text>[
-                  Text('마감일 ', style: articleWriterTextStyle),
-                  Text(
-                      'D' +
-                          DateTime.now()
-                              .difference(data.detail.dueDate)
-                              .inDays
-                              .toString(),
-                      style: articleDuedateTextStyle)
-                ]),
-                Text(data.detail.writer, style: articleWriterTextStyle),
-              ],
-            )),
-      )
-    ]),
+    child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Text("공고 상세보기",
+          //     style: TextStyle(fontWeight: FontWeight.w700),
+          //     textAlign: TextAlign.left),
+          Row(
+            children: [
+              Text(data.detail.content.title + " ",
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20)),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Position_Small(),
+              ),
+            ],
+          ),
+
+          Row(
+            children: [
+              Text(data.detail.writer + " | ",
+                  style: TextStyle(
+                      color: Color.fromRGBO(0x00, 0x00, 0x00, 1),
+                      fontWeight: FontWeight.w700,
+                      fontSize: 11)),
+              Text(data.detail.location,
+                  style: TextStyle(
+                      color: Color.fromRGBO(0x77, 0x77, 0x77, 1),
+                      fontWeight: FontWeight.w700,
+                      fontSize: 11)),
+            ],
+          ),
+          Text("로맨스 ・ 판타지",
+              style: TextStyle(
+                  color: Color.fromRGBO(0x77, 0x77, 0x77, 1),
+                  fontWeight: FontWeight.w700,
+                  fontSize: 11)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 3, horizontal: 6),
+                decoration: BoxDecoration(
+                  color: Color.fromRGBO(0xff, 0xff, 0xff, 1),
+                  border:
+                      Border.all(color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 1)),
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Icon(
+                      FeatherIcons.heart,
+                      size: 14,
+                    ),
+                    Text(
+                      " 30 ",
+                      style: TextStyle(fontSize: 13),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 15),
+                child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Row(children: <Text>[
+                          Text('마감일 ', style: articleWriterTextStyle),
+                          Text(
+                              'D-DAY ' +
+                                  DateTime.now()
+                                      .difference(data.detail.dueDate)
+                                      .inDays
+                                      .toString(),
+                              style: articleDuedateTextStyle)
+                        ]),
+                      ],
+                    )),
+              )
+            ],
+          )
+        ]),
   );
 }
 
 Widget projectCalendar(BuildContext context, Article data) {
   return Container(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    Text("프로젝트 일정",
-        style: TextStyle(fontWeight: FontWeight.w700),
-        textAlign: TextAlign.left),
-    Padding(
-        padding: const EdgeInsets.all(8.0),
-        child:
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          customBox(context,
-              "${data.detail.periods[0].month.toString()}월 ${data.detail.periods[0].day.toString()}일"),
-          Text(
-              "${data.detail.periods[1].difference(data.detail.periods[0]).inDays.toString()}일",
-              style: articleDuedateTextStyle),
-          customBox(context,
-              "${data.detail.periods[1].month.toString()}월 ${data.detail.periods[1].day.toString()}일"),
-        ]))
+    Expanded(
+      flex: 2,
+      child: Text("모집 조건",
+          style: TextStyle(fontWeight: FontWeight.w700),
+          textAlign: TextAlign.left),
+    ),
+    Expanded(
+        flex: 5,
+        child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Icon(
+                      FeatherIcons.edit,
+                      size: 20,
+                      color: Color.fromRGBO(0x82, 0x82, 0x82, 1),
+                    ),
+                    Text(
+                      "전자 서명",
+                      style: TextStyle(
+                          fontSize: 11,
+                          color: Color.fromRGBO(0x82, 0x82, 0x82, 1)),
+                    ),
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Icon(
+                      FeatherIcons.penTool,
+                      size: 20,
+                      color: Color.fromRGBO(0x82, 0x82, 0x82, 1),
+                    ),
+                    Text(
+                      "6개월 ~ 1년",
+                      style: TextStyle(
+                          fontSize: 11,
+                          color: Color.fromRGBO(0x82, 0x82, 0x82, 1)),
+                    ),
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Icon(
+                      FeatherIcons.calendar,
+                      size: 20,
+                      color: Color.fromRGBO(0x82, 0x82, 0x82, 1),
+                    ),
+                    Text(
+                      "월 ~ 금",
+                      style: TextStyle(
+                          fontSize: 11,
+                          color: Color.fromRGBO(0x82, 0x82, 0x82, 1)),
+                    ),
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Icon(
+                      FeatherIcons.clock,
+                      size: 20,
+                      color: Color.fromRGBO(0x82, 0x82, 0x82, 1),
+                    ),
+                    Text(
+                      "09:00 ~ 18:00",
+                      style: TextStyle(
+                          fontSize: 11,
+                          color: Color.fromRGBO(0x82, 0x82, 0x82, 1)),
+                    ),
+                  ],
+                ),
+              ],
+            )))
   ]));
 }
 
@@ -85,19 +203,42 @@ Widget projectDetailContent(BuildContext context, Article data) {
   ]));
 }
 
-Widget applyButton(){
+Widget applyButton(BuildContext context) {
   return ElevatedButton(
-          onPressed: () {},
-          child: Text("지원하기",
-              style: TextStyle(
-                fontSize: 12,
-              )),
-          style: ElevatedButton.styleFrom(
-            padding: EdgeInsets.only(top: 11, bottom: 11, left: 21, right: 21),
-            //fixedSize: Size(90, 30),
-            primary: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
-            onPrimary: Colors.white,
-          ));
+      onPressed: () {
+        showMyDialog(context);
+      },
+      child: Text("지원하기",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+      style: ElevatedButton.styleFrom(
+        padding: EdgeInsets.only(top: 11, bottom: 11, left: 11, right: 11),
+        //fixedSize: Size(90, 30),
+        primary: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
+        onPrimary: Colors.white,
+      ));
+}
+
+Widget scrapButton() {
+  return ElevatedButton(
+      onPressed: () {},
+      child: Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Icon(Icons.turned_in_not, size: 20),
+            Text("스크랩",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          ],
+        ),
+      ),
+      style: ElevatedButton.styleFrom(
+        padding: EdgeInsets.only(top: 11, bottom: 11, left: 21, right: 21),
+        //fixedSize: Size(90, 30),
+        primary: Colors.white,
+        side: BorderSide(color: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1), width: 1),
+        onSurface: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
+        onPrimary: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
+      ));
 }
 
 Widget customBox(BuildContext context, String text) {
@@ -111,5 +252,75 @@ Widget customBox(BuildContext context, String text) {
       borderRadius: BorderRadius.all(Radius.circular(12)),
     ),
     child: Center(child: Text(text, textAlign: TextAlign.center)),
+  );
+}
+
+showMyDialog(BuildContext context) {
+  return showDialog(
+    context: context,
+    builder: (context) {
+      return Dialog(
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+        backgroundColor: Colors.white,
+        elevation: 5.0,
+        child: Container(
+            width: MediaQuery.of(context).size.width * 0.85,
+            height: MediaQuery.of(context).size.height / 3.5,
+            padding: EdgeInsets.all(10.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Icon(FeatherIcons.checkCircle,
+                      size: 45, color: Color.fromRGBO(0xFF, 0x94, 0x3a, 1)),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "신청이 완료 되었습니다.",
+                        style: TextStyle(
+                            color: Color.fromRGBO(0x16, 0x16, 0x16, 1),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18),
+                      ),
+                      Text(""),
+                      Text(
+                        "자세한 지원 사항은 나의 페이지에서 확인 할 수 있습니다.",
+                        style: TextStyle(
+                            color: Color.fromRGBO(0x67, 0x67, 0x67, 1),
+                            fontWeight: FontWeight.w500,
+                            fontSize: 10),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                    flex: 1,
+                    child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text("확인",
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white)),
+                        style: ElevatedButton.styleFrom(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 40, vertical: 4),
+
+                          //fixedSize: Size(90, 30),
+                          primary: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
+                          onPrimary: Colors.white,
+                        )))
+              ],
+            )),
+      );
+    },
   );
 }

@@ -12,6 +12,8 @@ import 'package:iruri/pages/state/state_myproject.dart';
 import 'package:iruri/pages/state/state_applylist.dart';
 import 'package:iruri/pages/state/state_myproject.dart';
 import 'package:iruri/pages/state/state_projectlist.dart';
+import 'package:iruri/pages/state/state_detailpage.dart';
+
 // provider
 import 'package:iruri/provider.dart';
 import 'package:provider/provider.dart';
@@ -47,11 +49,11 @@ class _RoutesState extends State<Routes> {
     '/state/myproject': MyprojectPage(),
     '/state/applylist': ApplyListPage(),
     '/home/projectdetail': ProjectDetailPage(),
+    '/state/projectdetail': StateProjectDetailPage(),
   };
 
   @override
   Widget build(BuildContext context) {
-
     // provider
     final routerWatcher = context.watch<CustomRouter>();
 
@@ -69,18 +71,19 @@ class _RoutesState extends State<Routes> {
             )),
         bottomNavigationBar: bottomNavigationBar(context));
   }
+
   /*
    *  Flutter 에서 제공해주는 AppBar를 사용 
    *    탭 이동마다 맨 위 제목이 바뀌게 설정 - 2021.04.09
    */
   AppBar appBar(BuildContext context) {
-
     // provider
     final routerWatcher = context.watch<CustomRouter>();
     final routerReader = context.read<CustomRouter>();
 
     return AppBar(
       // title: Text(page[currentPageIndex]['name'], style: appBarTitleTextStyle),
+      centerTitle: true,
       title: Text(
         'IRURI',
         style: appBarTitleTextStyle,
@@ -103,13 +106,16 @@ class _RoutesState extends State<Routes> {
       ],
       // 2중으로 들어간 경우에는 뒤로가기 만들어주기
       leading: routerWatcher.currentPage.split('/').length > 2
-            ? IconButton(
-              icon: Icon(Icons.keyboard_arrow_left_rounded, color: themeGrayText),
-              onPressed: () => routerReader.navigateTo(routerWatcher.currentPage, routerWatcher.prevPage),
+          ? IconButton(
+              icon:
+                  Icon(Icons.keyboard_arrow_left_rounded, color: themeGrayText),
+              onPressed: () => routerReader.navigateTo(
+                  routerWatcher.currentPage, routerWatcher.prevPage),
             )
-            : SizedBox(),
+          : SizedBox(),
     );
   }
+
   /*
    *  Flutter 에서 제공해주는 BottomNavigationBar를 사용
    *  현재 각 label은 안보이게 설정하였음 - 2021.04.08 

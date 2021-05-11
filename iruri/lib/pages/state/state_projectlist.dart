@@ -10,11 +10,11 @@ class _ProjectListPageState extends State<ProjectListPage> {
   ScrollController scrollController = new ScrollController();
   ScrollController listScrollController = new ScrollController();
 
-  @override
-  void initState() {
-    ListViewHorizontal();
-    ListViewHorizontal_apply();
-  }
+  // @override
+  // void initState() {
+  //   ListViewHorizontal();
+  //   ListViewHorizontal_apply();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,11 @@ class _ProjectListPageState extends State<ProjectListPage> {
                 color: Color.fromRGBO(255, 255, 255, 1),
                 width: MediaQuery.of(context).size.width * 1,
                 height: MediaQuery.of(context).size.height * 0.35,
-                child: myProject(context, items),
+                child: myProject(
+                    context,
+                    List<Container>.generate(5, (index) {
+                      return boxItem(index, items, context);
+                    })),
               ),
               Container(
                 decoration: BoxDecoration(
@@ -51,7 +55,11 @@ class _ProjectListPageState extends State<ProjectListPage> {
                 padding: EdgeInsets.symmetric(horizontal: 15),
                 width: MediaQuery.of(context).size.width * 1,
                 height: MediaQuery.of(context).size.height * 0.35,
-                child: applyProject(context, items_apply),
+                child: applyProject(
+                    context,
+                    List<Container>.generate(5, (index) {
+                      return boxItem_apply(index, items, context);
+                    })),
               ),
             ],
           ),
@@ -60,15 +68,15 @@ class _ProjectListPageState extends State<ProjectListPage> {
 }
 
 List<Container> items;
-ListViewHorizontal() {
-  items = List<Container>.generate(5, (index) {
-    return boxItem(index, items);
-  });
-}
+// ListViewHorizontal() {
+//   items = List<Container>.generate(5, (index) {
+//     return boxItem(index, items);
+//   });
+// }
 
-List<Container> items_apply;
-ListViewHorizontal_apply() {
-  items_apply = List<Container>.generate(5, (index) {
-    return boxItem_apply(index, items);
-  });
-}
+// List<Container> items_apply;
+// ListViewHorizontal_apply() {
+//   items_apply = List<Container>.generate(5, (index) {
+//     return boxItem_apply(index, items);
+//   });
+// }

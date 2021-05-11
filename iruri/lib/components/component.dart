@@ -120,7 +120,7 @@ class HomeArticle extends StatelessWidget {
                               children: <Text>[
                                 Text('마감일 ', style: articleWriterTextStyle),
                                 Text(
-                                    'D' +
+                                    'D-DAY ' +
                                         DateTime.now()
                                             .difference(data.detail.dueDate)
                                             .inDays
@@ -173,6 +173,7 @@ class TagWrapper extends StatelessWidget {
           backgroundColor: colorMapper[tag],
           alignment: Alignment.center,
           elevation: 0.0, // no shadow
+
           padding: paddingH6V4),
       child: tag.substring(0, 1) == '승'
           ? Text(tag, style: articleTagTextStyle)
@@ -839,8 +840,8 @@ class ApprovalState extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return Container(
-        margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-        alignment: Alignment.topCenter,
+        // margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+        // alignment: Alignment.topCenter,
         width: size.width * 0.15,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
