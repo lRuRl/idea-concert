@@ -1,4 +1,3 @@
-const { ObjectID } = require('bson');
 const mongoose = require('mongoose');
 
 // define schema
@@ -27,9 +26,20 @@ const detailSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    periods: [Date],
-    condition: conditionSchema,
-    content: contentSchema,
+    period: {
+        from: { type: Date, default: Date.now },
+        to: { type: Date, default: Date.now }
+    },
+    condition: {
+        // don't create objectID in sub document
+        _id: false,
+        type: conditionSchema
+    },
+    content: {
+        // don't create objectID in sub document
+        _id: false,
+        type: contentSchema
+    },
     writer: String,
     location: String,
     applicants: [String]
@@ -42,9 +52,13 @@ const articleSchema = new mongoose.Schema({
     //     required: true,
     //     unique: true
     // },
-    members: [String],
-    contracts: [String],
-    detail: detailSchema
+    members: [{ type: String }],
+    contracts: [{ type: String }],
+    detail: {
+        type: detailSchema,
+        // don't create objectID in sub document
+        _id: false
+    }
 });
 
 // export model

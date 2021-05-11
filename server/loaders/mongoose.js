@@ -9,7 +9,7 @@ module.exports = async() => {
     const connect = await mongoose.connect(config.dbURI, {
        useNewUrlParser: true,
        useUnifiedTopology: true,
-       useFindAndModify: true 
+       useFindAndModify: false
     });
 
     return connect.connection.db;
