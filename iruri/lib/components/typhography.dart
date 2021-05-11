@@ -22,6 +22,8 @@ TextStyle articleWriterTextStyle = TextStyle(
     fontSize: 12.0, fontWeight: FontWeight.normal, color: themeGrayText);
 TextStyle articleDuedateTextStyle =
     TextStyle(fontSize: 12.0, fontWeight: FontWeight.w600, color: themeOrange);
+TextStyle articleDuedateTextStyle2 =
+    TextStyle(fontSize: 10.0, fontWeight: FontWeight.w600, color: themeOrange);
 
 // Markdown standard
 // @param FontWeight
