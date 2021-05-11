@@ -424,13 +424,27 @@ class _MyProfileState extends State<MyProfile> {
               barrierDismissible: false,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  content: Text("수정이 완료되었습니다"),
-                  actions: <Widget>[
-                    FlatButton(
-                      child: Text('확인'),
-                      onPressed: () => changeIndex(),
+                  title: Center(child: Text('수정이 완료되었습니다')),
+                  content: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 60),
+                    child: Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          changeIndex();
+                        },
+                        child: Text("확인",
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white)),
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                          primary: themeDeepBlue,
+                          onPrimary: Colors.white,
+                        )
+                      )
                     ),
-                  ],
+                  )
                 );
               }),
           child: Text("저장하기", style: TextStyle(color: Colors.white)),
@@ -447,19 +461,48 @@ class _MyProfileState extends State<MyProfile> {
           barrierDismissible: false,
           builder: (BuildContext context) {
             return AlertDialog(
-              content: Text("수정하시겠습니까?"),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text('예'),
-                  onPressed: () => changeIndex(),
-                ),
-                FlatButton(
-                  child: Text('아니오'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                )
-              ],
+              title: Center(child: Text('수정하시겠습니까')),
+              content: 
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                          margin: EdgeInsets.symmetric(horizontal: 10),
+                          child: 
+                          ElevatedButton(
+                          onPressed: () { Navigator.pop(context); },
+                          style: ElevatedButton.styleFrom(
+                            primary: themeDeepBlue,
+                          ),
+                          child: Text("취소", 
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white
+                            )),
+                          ),
+                        )
+                      ),
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 10),
+                        child: 
+                        ElevatedButton(
+                          onPressed: () { changeIndex(); },
+                          style: ElevatedButton.styleFrom(
+                            primary: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
+                          ),
+                          child: Text("확인",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white
+                            )),
+                          )
+                        )
+                      ),
+                    ],
+                  )
             );
           }),
     );
@@ -699,7 +742,7 @@ class Position_Small extends StatelessWidget {
                             crossAxisSpacing: 3),
                         itemCount: data.length,
                         itemBuilder: (context, index) => TagWrapper(
-                              onPressed: () => _showDialog(context),
+                              onPressed: () => print("tag pressed"),//_showDialog(context),
                               tag: data[index],
                             ))),
               )
@@ -708,6 +751,7 @@ class Position_Small extends StatelessWidget {
   }
 }
 
+/*
 void _showDialog(context) { 
     showDialog(
       context: context,
@@ -823,7 +867,7 @@ void _showDialog(context) {
       },
     );
   }
-
+ */
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
