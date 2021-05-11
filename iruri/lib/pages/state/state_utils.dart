@@ -3,6 +3,7 @@ import 'package:iruri/components/component.dart';
 import 'package:iruri/provider.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:iruri/pages/home/project_detail_components.dart';
 
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:path_provider/path_provider.dart';
@@ -460,37 +461,73 @@ Widget nicknameEdit(String nickname) {
       ));
 }
 
-Widget contractDetail(BuildContext context, Article data, String pathPDF) {
+Widget contractTitle(BuildContext context) {
   return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(width: 5, color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 1)),
+        ),
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      width: MediaQuery.of(context).size.width * 1,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    Text("계약서 작성",
-        style: TextStyle(fontWeight: FontWeight.w700),
-        textAlign: TextAlign.left),
-    Padding(
-        padding: const EdgeInsets.all(10.0), child: contractContent(data, 1, pathPDF))
-  ]));
+        Text("계약서 작성",
+            style: TextStyle(fontWeight: FontWeight.w700),
+            textAlign: TextAlign.left),
+      ]));
 }
 
-Widget contractContent(Article data, int index, String pathPDF) {
+Widget contractDetail(BuildContext context, Article data, int index) {
   return Container(
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      width: MediaQuery.of(context).size.width * 1,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    Text("계약서 조항 ($index)",
-        style: TextStyle(fontWeight: FontWeight.normal),
-        textAlign: TextAlign.left),
-    Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: PDFView(
-          filePath: pathPDF,
-          enableSwipe: true,
-          swipeHorizontal: true,
-          autoSpacing: false,
-          pageFling: true,
-          pageSnap: true,
-          fitPolicy: FitPolicy.BOTH,
-       
-        ))
-  ]));
-  // <key>io.flutter.embedded_views_preview</key> --> iOS에서 Info.plist에 추가
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text("계약서 조항 ($index)",
+              style: TextStyle(fontWeight: FontWeight.w500),
+              textAlign: TextAlign.left),
+        )
+      ]));
+}
+
+Widget customPDFViewer(BuildContext context, String pathPDF) {
+  return Container(
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      width: MediaQuery.of(context).size.width * 1,
+      height: MediaQuery.of(context).size.height * 0.5,
+      child: PDFView(
+        filePath: pathPDF,
+        enableSwipe: true,
+        swipeHorizontal: true,
+        autoSpacing: false,
+        pageFling: true,
+        pageSnap: true,
+        fitPolicy: FitPolicy.BOTH,
+      ));
+}
+
+Widget eachContract(
+    BuildContext context, String pathPDF, Article data, int index) {
+  return Column(children: [
+    contractDetail(context, data, index),
+    customPDFViewer(context, pathPDF)
+  ]);
+}
+
+Widget saveContractButton(BuildContext context) {
+  return ElevatedButton(
+      onPressed: () {
+        showMyDialog(context, "저장이 완료되었습니다.", "");
+      },
+      child: Text("계약서 저장하기",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+      style: ElevatedButton.styleFrom(
+        padding: EdgeInsets.only(top: 11, bottom: 11, left: 11, right: 11),
+        //fixedSize: Size(90, 30),
+        primary: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
+        onPrimary: Colors.white,
+      ));
 }
 
 Future<File> createFileOfPdfUrl() async {

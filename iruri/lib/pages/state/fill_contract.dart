@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:iruri/model/article.dart';
 import 'package:iruri/model/article_sample.dart';
@@ -31,7 +30,6 @@ class _FillContractPageState extends State<FillContractPage> {
         pathPDF = f.path;
         _isLoading = false;
       });
-
     });
 
     // fromAsset('assets/example.pdf', 'example.pdf').then((f) {
@@ -82,34 +80,18 @@ class _FillContractPageState extends State<FillContractPage> {
                       height: MediaQuery.of(context).size.height * 0.15,
                       child: projectCalendar(context, data),
                     ),
+                    contractTitle(context),
+                    _isLoading
+                        ? Center(child: CircularProgressIndicator())
+                        : eachContract(context, pathPDF, data, 1),
+                    _isLoading
+                        ? Center(child: CircularProgressIndicator())
+                        : eachContract(context, pathPDF, data, 2),
                     Container(
-                        decoration: BoxDecoration(
-                          border: Border(
-                            top: BorderSide(
-                                width: 5,
-                                color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 1)),
-                          ),
-                        ),
+                        width: MediaQuery.of(context).size.width * 1,
                         padding:
                             EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                        width: MediaQuery.of(context).size.width * 1,
-                        height: MediaQuery.of(context).size.height * 0.5,
-                        child: _isLoading
-                            ? Center(child: CircularProgressIndicator())
-                            : PDFView(
-                                filePath: pathPDF,
-                                enableSwipe: true,
-                                swipeHorizontal: true,
-                                autoSpacing: false,
-                                pageFling: true,
-                                pageSnap: true,
-                                fitPolicy: FitPolicy.BOTH,
-                                onRender: (_pages) {
-                                  setState(() {
-                                    pages = _pages;
-                                  });
-                                },
-                              ))
+                        child: saveContractButton(context)),
                   ]),
             )));
   }

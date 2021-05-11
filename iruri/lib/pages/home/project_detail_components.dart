@@ -206,7 +206,8 @@ Widget projectDetailContent(BuildContext context, Article data) {
 Widget applyButton(BuildContext context) {
   return ElevatedButton(
       onPressed: () {
-        showMyDialog(context);
+        showMyDialog(
+            context, "신청이 완료 되었습니다.", "자세한 지원 사항은 나의 페이지에서 확인 할 수 있습니다.");
       },
       child: Text("지원하기",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
@@ -255,7 +256,7 @@ Widget customBox(BuildContext context, String text) {
   );
 }
 
-showMyDialog(BuildContext context) {
+showMyDialog(BuildContext context, String str1, String str2) {
   return showDialog(
     context: context,
     builder: (context) {
@@ -282,7 +283,7 @@ showMyDialog(BuildContext context) {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "신청이 완료 되었습니다.",
+                        str1,
                         style: TextStyle(
                             color: Color.fromRGBO(0x16, 0x16, 0x16, 1),
                             fontWeight: FontWeight.w600,
@@ -290,7 +291,7 @@ showMyDialog(BuildContext context) {
                       ),
                       Text(""),
                       Text(
-                        "자세한 지원 사항은 나의 페이지에서 확인 할 수 있습니다.",
+                        str2,
                         style: TextStyle(
                             color: Color.fromRGBO(0x67, 0x67, 0x67, 1),
                             fontWeight: FontWeight.w500,
