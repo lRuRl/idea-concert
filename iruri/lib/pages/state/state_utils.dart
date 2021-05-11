@@ -4,6 +4,17 @@ import 'package:iruri/provider.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:async';
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
+
 // article
 import 'package:iruri/model/article.dart';
 import 'package:iruri/model/article_sample.dart';
@@ -449,24 +460,73 @@ Widget nicknameEdit(String nickname) {
       ));
 }
 
-Widget contractDetail(BuildContext context, Article data) {
+Widget contractDetail(BuildContext context, Article data, String pathPDF) {
   return Container(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
     Text("계약서 작성",
         style: TextStyle(fontWeight: FontWeight.w700),
         textAlign: TextAlign.left),
     Padding(
-        padding: const EdgeInsets.all(10.0), child: contractContent(data, 1))
+        padding: const EdgeInsets.all(10.0), child: contractContent(data, 1, pathPDF))
   ]));
 }
 
-Widget contractContent(Article data, int index) {
+Widget contractContent(Article data, int index, String pathPDF) {
   return Container(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
     Text("계약서 조항 ($index)",
         style: TextStyle(fontWeight: FontWeight.normal),
         textAlign: TextAlign.left),
-    Padding(padding: const EdgeInsets.all(10.0), child: Text("계약서 내용 첨부"))
+    Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: PDFView(
+          filePath: pathPDF,
+          enableSwipe: true,
+          swipeHorizontal: true,
+          autoSpacing: false,
+          pageFling: true,
+          pageSnap: true,
+          fitPolicy: FitPolicy.BOTH,
+       
+        ))
   ]));
   // <key>io.flutter.embedded_views_preview</key> --> iOS에서 Info.plist에 추가
+}
+
+Future<File> createFileOfPdfUrl() async {
+  Completer<File> completer = Completer();
+  try {
+    final url = "http://www.africau.edu/images/default/sample.pdf";
+    final filename = url.substring(url.lastIndexOf("/") + 1);
+    var request = await HttpClient().getUrl(Uri.parse(url));
+    var response = await request.close();
+    var bytes = await consolidateHttpClientResponseBytes(response);
+    var dir = await getApplicationDocumentsDirectory();
+    File file = File("${dir.path}/$filename");
+
+    await file.writeAsBytes(bytes, flush: true);
+    completer.complete(file);
+  } catch (e) {
+    throw Exception('Error parsing asset file!');
+  }
+
+  return completer.future;
+}
+
+Future<File> fromAsset(String asset, String filename) async {
+  // To open from assets, you can copy them to the app storage folder, and the access them "locally"
+  Completer<File> completer = Completer();
+
+  try {
+    var dir = await getApplicationDocumentsDirectory();
+    File file = File("${dir.path}/$filename");
+    var data = await rootBundle.load(asset);
+    var bytes = data.buffer.asUint8List();
+    await file.writeAsBytes(bytes, flush: true);
+    completer.complete(file);
+  } catch (e) {
+    throw Exception('Error parsing asset file!');
+  }
+
+  return completer.future;
 }
