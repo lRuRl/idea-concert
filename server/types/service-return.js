@@ -30,12 +30,20 @@ var onGetSuccess = (body) => {
 
 var onGetFailure = (err) => {
     return {
-        status: 404,
+        status: 500,
         result: {
             message: "[GET] msg received, not found",
             result: err
         }
     };
+}
+
+var onGetNotFound = {
+    status: 404,
+    result: {
+        message: "[GET] msg received, not found",
+        result: ""
+    }
 }
 
 var onUpdateSuccess = (body) => ({
@@ -54,7 +62,7 @@ var onUpdateFailure = (err) => ({
     }
 });
 
-var onUpdateFailureNotFound = {
+var onUpdateNotFound = {
     status: 404,
     result: {
         message: "[PATCH] msg received, id not found",
@@ -88,6 +96,6 @@ var onDeleteNotFound = {
 
 // export
 module.exports = {
-    onPostSuccess, onPostFailure, onGetSuccess, onGetFailure, onUpdateSuccess,
-    onUpdateFailure, onUpdateFailureNotFound, onDeleteSuccess, onDeleteFailure, onDeleteNotFound
+    onPostSuccess, onPostFailure, onGetSuccess, onGetFailure, onGetNotFound, onUpdateSuccess,
+    onUpdateFailure, onUpdateNotFound, onDeleteSuccess, onDeleteFailure, onDeleteNotFound
 };
