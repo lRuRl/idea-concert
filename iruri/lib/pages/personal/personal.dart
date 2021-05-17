@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:iruri/components/component.dart';
 import 'package:iruri/components/palette.dart';
 import 'package:flutter/services.dart';
+import 'package:iruri/pages/signup/login.dart';
+import 'package:iruri/provider.dart';
+import 'package:provider/provider.dart';
+
 class PersonalPage extends StatefulWidget {
   @override
   _PersonalPageState createState() => _PersonalPageState();
@@ -68,10 +72,26 @@ class _PersonalPageState extends State<PersonalPage> {
               height: MediaQuery.of(context).size.height * 0.12,
               child: managePortfolio(),
             ),
+            logout()
           ],
         ),
       ),
     );
+  }
+
+  Widget logout() {
+    return Container(
+        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+        width: MediaQuery.of(context).size.width * 1,
+        child: TextButton(
+          style: TextButton.styleFrom(
+            primary: Colors.blue,
+            onSurface: Colors.red,
+          ),
+          onPressed: () => Provider.of<CustomRouter>(context, listen: false)
+              .setRegistrationStatus(false),
+          child: Text('TextButton'),
+        ));
   }
 
   Widget personalInfo() {
@@ -197,7 +217,8 @@ class _PersonalPageState extends State<PersonalPage> {
                                   color: themeLightGrayOpacity20, width: 1),
                               borderRadius: BorderRadius.circular(30)),
                           fillColor: Colors.white,
-                          labelStyle: TextStyle(color: themeGrayText, fontSize: 13),
+                          labelStyle:
+                              TextStyle(color: themeGrayText, fontSize: 13),
                           labelText: 'URL 또는 드라이브 링크'),
                     )),
                 ElevatedButton(
@@ -212,4 +233,3 @@ class _PersonalPageState extends State<PersonalPage> {
     ]);
   }
 }
-

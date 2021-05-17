@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iruri/pages/signup/login.dart';
 // provicer
 import 'package:iruri/provider.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +11,7 @@ void main() {
       // use provider !
       MultiProvider(
     providers: [
-      ChangeNotifierProvider(create: (context) => CustomRouter()),
+      ChangeNotifierProvider(create: (context) => CustomRouter(false)),
     ],
     child: MyApp(),
   ));
@@ -21,8 +22,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       // 우측 상단에 DEBUG 표시 제거
+
       debugShowCheckedModeBanner: false,
-      home: Routes(),
+      home: Provider.of<CustomRouter>(context).isLoggedin
+          ? Routes()
+          : LoginPage(),
     );
   }
 }

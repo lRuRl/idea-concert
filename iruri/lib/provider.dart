@@ -5,14 +5,23 @@ class CustomRouter with ChangeNotifier {
   String _currPage = '/';
   String _prevPage = '/';
   dynamic _data;
+  bool isLoggedin = false;
 
   int get index => _tapIndex;
   String get currentPage => _currPage;
   String get prevPage => _prevPage;
   dynamic get data => _data != null ? _data : 'undefined';
 
+  CustomRouter(this.isLoggedin);
+
   void setIndex(int index) {
     _tapIndex = index;
+    notifyListeners();
+  }
+
+  void setRegistrationStatus(bool status) {
+    isLoggedin = status;
+    setIndex(0);
     notifyListeners();
   }
 
