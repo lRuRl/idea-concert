@@ -125,3 +125,41 @@ Widget findInfo(BuildContext context) {
             )
           ]));
 }
+
+Widget selectLogin(BuildContext context) {
+  return Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            snsIcon(context, "구글"),
+            snsIcon(context, "네이버"),
+            snsIcon(context, "카카오톡"),
+            snsIcon(context, "애플"),
+          ]));
+}
+
+Widget snsIcon(BuildContext context, String type) {
+  return Column(
+    children: [
+      InkWell(
+          onTap: () {
+            
+          },
+          child: Container(
+              child: ClipRRect(
+            child: Image.asset(
+              'assets/${type}.png',
+              width: MediaQuery.of(context).size.width * 0.06,
+              height: MediaQuery.of(context).size.height * 0.05,
+            ),
+          ))),
+      Text(
+        "${type} 계정으로\n로그인",
+        style: TextStyle(fontSize: 10),
+        textAlign: TextAlign.center,
+      )
+    ],
+  );
+}

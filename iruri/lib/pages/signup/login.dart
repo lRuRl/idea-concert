@@ -28,6 +28,7 @@ class _LoginPageState extends State<LoginPage> {
           child: SingleChildScrollView(
             controller: scrollController,
             child: Column(
+
               children: <Widget>[
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.2,
@@ -36,7 +37,8 @@ class _LoginPageState extends State<LoginPage> {
                 appName(context),
                 getUserInfo(context),
                 loginButton(context),
-                findInfo(context)
+                findInfo(context),
+                selectLogin(context)
               ],
             ),
           ),

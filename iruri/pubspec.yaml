@@ -39,7 +39,10 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   flutter_pdfview: ^1.0.4
-  http: ^0.12.1
+  http: 0.12.1
+  flutter_kakao_login: ^3.2.1
+  kakao_flutter_sdk: ^0.6.3
+
 dev_dependencies:
 
   flutter_test:
@@ -64,7 +67,12 @@ flutter:
   assets:
     - Icon-192.png
     - favicon.png
+    - assets/애플.png
+    - assets/카카오톡.png
+    - assets/구글.png
+    - assets/네이버.png
     - assets/default.png
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
