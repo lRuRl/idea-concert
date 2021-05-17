@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iruri/components/component.dart';
 import 'package:iruri/provider.dart';
-//import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:iruri/pages/home/project_detail_components.dart';
 import 'package:iruri/components/palette.dart';

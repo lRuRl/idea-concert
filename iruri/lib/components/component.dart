@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-//import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
 import 'package:iruri/components/palette.dart';
@@ -1005,7 +1005,7 @@ class _AgreeContractState extends State<AgreeContract> {
                       ),
                     ]))
           ])),
-      /*Container(
+      Container(
           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
           width: MediaQuery.of(context).size.width * 1,
           height: MediaQuery.of(context).size.height * 0.5,
@@ -1019,7 +1019,7 @@ class _AgreeContractState extends State<AgreeContract> {
                   pageFling: true,
                   pageSnap: true,
                   fitPolicy: FitPolicy.BOTH,
-                ))*/
+                ))
     ]);
   }
 }
