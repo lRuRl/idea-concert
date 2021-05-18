@@ -47,7 +47,9 @@ class HomeArticle extends StatelessWidget {
            */
           Expanded(
             flex: 2,
-            child: ImageWrapper(imagePath: data.detail.content.imagePath),
+            child: data.imagePath != null
+                ? ImageWrapper(imagePath: data.imagePath)
+                : Image.asset('assets/default.png'),
           ),
           SizedBox(width: 20),
           // CONTENTS

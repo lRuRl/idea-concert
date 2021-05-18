@@ -8,7 +8,7 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 Widget thumbnail(BuildContext context, Article data) {
   return Image.network(
-    data.detail.content.imagePath,
+    data.imagePath,
     alignment: Alignment.center,
     errorBuilder: (context, error, stackTrace) =>
         Icon(Icons.error_outline_rounded, size: 24, color: themeGrayText),

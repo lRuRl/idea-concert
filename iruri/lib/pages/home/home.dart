@@ -4,7 +4,9 @@ import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/spacing.dart';
 import 'package:iruri/components/text_form_field.dart';
 import 'package:iruri/components/typhography.dart';
+import 'package:iruri/model/article.dart';
 import 'package:iruri/model/article_sample.dart';
+import 'package:iruri/util/datat_article.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -34,7 +36,8 @@ class _HomePageState extends State<HomePage> {
   ScrollController scrollController; // ScrollController 로 스크롤 높이 등을 조절할 수 있습니다.
   TextEditingController textEditingController;
   // var tags;
-  // var fetchedData;
+  var fetchedData;
+  ArticleAPI api = new ArticleAPI();
 
   @override
   void initState() {
@@ -42,7 +45,8 @@ class _HomePageState extends State<HomePage> {
     // controller init
     scrollController = new ScrollController();
     textEditingController = new TextEditingController();
-    // TODO: fetch Data
+    // fetchedData added : 2021/05/18 @seunghwanly
+    fetchedData = api.findAll();
   }
 
   @override
@@ -59,7 +63,21 @@ class _HomePageState extends State<HomePage> {
             // TAG CONTAINER
             tagContainer(),
             // RECRUIT CONTAINER
-            recruitContainer()
+            FutureBuilder(
+              future: fetchedData,
+              builder: (context, snapshot) {
+                print(snapshot.data);
+                if(!snapshot.hasData) {
+                  return Center(
+                    child: Image.asset('assets/loading.gif', width: 35, height: 35)
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('500 - server'));
+                } else{
+                  return recruitContainer(snapshot.data);
+                }
+              },
+            )
           ],
         ),
       ),
@@ -218,7 +236,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
   
-  Widget recruitContainer() {  
+  Widget recruitContainer(List<Article> data) {  
     return Column(
       children: <Widget>[
         Align(
@@ -241,10 +259,10 @@ class _HomePageState extends State<HomePage> {
             child: ListView.builder(
               controller: scrollController,
               shrinkWrap: true, // 자동으로 길이를 조정해주는 느낌
-              itemCount: articleSampleData.length, // 리스트 뷰안에 있는 자식 객체 수
+              itemCount: data.length, // 리스트 뷰안에 있는 자식 객체 수
               itemBuilder: (context, index) {
                 return HomeArticle(
-                  data: articleSampleData[index],
+                  data: data[index],
                 );
               },
             ))
