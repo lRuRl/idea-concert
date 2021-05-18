@@ -9,6 +9,9 @@ import 'package:iruri/model/article_sample.dart';
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
+
+  HomePage({Key key, this.title, this.title2}) : super(key: key);
+  final String title, title2;
 }
 
 /*
@@ -57,7 +60,7 @@ class _HomePageState extends State<HomePage> {
             // SEARCH CONTAINER
             searchContainer(),
             // TAG CONTAINER
-            tagContainer(),
+            tagGenreContainer(),
             // RECRUIT CONTAINER
             recruitContainer()
           ],
@@ -132,93 +135,93 @@ class _HomePageState extends State<HomePage> {
    *  그럼 화이팅 !
    */
 
-  // 수림 추가
-  Widget tagContainer() {
-    return Column(
+  String tagValueChoose, genreValueChoose;
+  List tagListItem = ['태그', '글', '뎃셍', '그림', '캐릭터', '콘티', '채색'],
+      genreListItem = [
+        '장르',
+        '드라마',
+        '판타지',
+        '액션',
+        '무협',
+        '로맨스',
+        '학원물',
+        '코믹',
+        '일상',
+        '스포츠',
+        '시대물',
+        '호러',
+        'SF'
+      ];
+
+  @override
+  Widget tagGenreContainer() {
+    return Row(
       children: <Widget>[
         Container(
-            margin: EdgeInsets.only(left: 15.0),
-            child: Text('태그',
-                style: TextStyle(
-                    fontSize: 18, fontWeight: FontWeight.bold))), //태그 글씨
-        Container(
-          margin: EdgeInsets.only(bottom: 3, left: 5, right: 5, top: 2),
-          height: 80,
-          width: 345,
+          padding: EdgeInsets.only(left: 16, right: 16),
           decoration: BoxDecoration(
-              // '태그' 회색 테투리 박스
-              color: Color.fromRGBO(255, 255, 255, 1),
-              border: Border.all(
-                  width: 1, color: Color.fromRGBO(196, 196, 196, 0.13)),
-              borderRadius: BorderRadius.circular(20)),
-          child: Row(
-            //버튼 6개
-            mainAxisAlignment:
-                MainAxisAlignment.spaceEvenly, //6개의 버튼이 같은 간격을 가지도록 정렬
-            children: <Widget>[
-              Column(children: <Widget>[
-                Container(
-                    height: 30,
-                    width: 30,
-                    decoration: BoxDecoration(
-                        color: Color.fromRGBO(196, 196, 196, 0.13), //회색 네모 박스
-                        borderRadius: BorderRadius.circular(12))),
-                Container(
-                    child: Text('# 글', style: TextStyle(fontSize: 10))) //글씨(#글)
-              ]),
-              Column(children: <Widget>[
-                Container(
-                    height: 30,
-                    width: 30,
-                    decoration: BoxDecoration(
-                        color: Color.fromRGBO(196, 196, 196, 0.13),
-                        borderRadius: BorderRadius.circular(12))),
-                Container(child: Text('# 뎃셍', style: TextStyle(fontSize: 10)))
-              ]),
-              Column(children: <Widget>[
-                Container(
-                    height: 30,
-                    width: 30,
-                    decoration: BoxDecoration(
-                        color: Color.fromRGBO(196, 196, 196, 0.13),
-                        borderRadius: BorderRadius.circular(12))),
-                Container(child: Text('# 그림', style: TextStyle(fontSize: 10)))
-              ]),
-              Column(children: <Widget>[
-                Container(
-                    height: 30,
-                    width: 30,
-                    decoration: BoxDecoration(
-                        color: Color.fromRGBO(196, 196, 196, 0.13),
-                        borderRadius: BorderRadius.circular(12))),
-                Container(child: Text('# 캐릭터', style: TextStyle(fontSize: 10)))
-              ]),
-              Column(children: <Widget>[
-                Container(
-                    height: 30,
-                    width: 30,
-                    decoration: BoxDecoration(
-                        color: Color.fromRGBO(196, 196, 196, 0.13),
-                        borderRadius: BorderRadius.circular(12))),
-                Container(child: Text('# 콘티', style: TextStyle(fontSize: 10)))
-              ]),
-              Column(children: <Widget>[
-                Container(
-                    height: 30,
-                    width: 30,
-                    decoration: BoxDecoration(
-                        color: Color.fromRGBO(196, 196, 196, 0.13),
-                        borderRadius: BorderRadius.circular(12))),
-                Container(child: Text('# 채색', style: TextStyle(fontSize: 10)))
-              ]),
-            ],
-          ),
+              border: Border.all(color: themeLightGrayOpacity20, width: 1),
+              borderRadius: BorderRadius.circular(15)),
+          child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: DropdownButton(
+                hint: Text("태그"),
+                dropdownColor: lightWhite,
+                icon: Icon(Icons.arrow_drop_down),
+                iconSize: 30,
+                isExpanded: true,
+                underline: SizedBox(),
+                style: bodyTextStyle,
+                value: tagValueChoose,
+                onChanged: (tagnewValue) {
+                  setState(() {
+                    tagValueChoose = tagnewValue;
+                  });
+                },
+                items: tagListItem.map((tagvalueItem) {
+                  return DropdownMenuItem(
+                    value: tagvalueItem,
+                    child: Text(tagvalueItem),
+                  );
+                }).toList(),
+              )),
         ),
+        Container(
+          padding: EdgeInsets.only(left: 16, right: 16),
+          decoration: BoxDecoration(
+            border: Border.all(color: themeLightGrayOpacity20, width:1),
+            borderRadius: BorderRadius.circular(15)
+          ),
+          child:Padding(
+            padding: const EdgeInsets.all(16.0),
+              child: DropdownButton(
+              hint: Text("장르"),
+              dropdownColor: lightWhite,
+              icon: Icon(Icons.arrow_drop_down),
+              iconSize:30,
+              isExpanded: true,
+              underline:SizedBox(),
+              style: bodyTextStyle,
+              value: genreValueChoose,
+              onChanged: (genrenewValue) {
+              setState(() {
+                genreValueChoose = genrenewValue;
+             });
+            },
+            items: genreListItem.map((genrevalueItem) {
+              return DropdownMenuItem(
+                value: genrevalueItem,
+                child: Text(genrevalueItem),
+              );
+            }).toList(),
+          )
+        ),),
       ],
     );
   }
-  
-  Widget recruitContainer() {  
+}
+
+  Widget recruitContainer() {
     return Column(
       children: <Widget>[
         Align(

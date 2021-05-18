@@ -143,7 +143,12 @@ class _PersonalPageState extends State<PersonalPage> {
     return id;
   }
 
-  final String mobileID = await getMobiledID(); //mobileID에 ID 저장
+  String mobileID;
+  @override
+  initState() {
+    super.initState();
+    mobileID = await getMobileID();
+  }
 
   Widget personalCode() {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
