@@ -617,26 +617,33 @@ class _MyProfileState extends State<MyProfile> {
 
   //프로필 정보 화면 초기상태
   Column showProfileContent(final width, final height, Future<Info> testInput) {
+    var profile_index = 0;
+
+     FutureBuilder<Info>( // 올바른 index를 추출하기 위함
+      future: testInput,
+      builder: (context, snapshot) {
+        for(int i = 0;i<snapshot.data.result.length;i++){
+          if(snapshot.data.result[i].sId == this._id)
+            profile_index = i;
+        }
+        // By default, show a loading spinner.
+        return CircularProgressIndicator();
+      },
+    );
+
     return Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
         children: [
-          
       Container(
         margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
         alignment: Alignment.topCenter,
         child: FutureBuilder<Info>(
                 future: testInput,
                 builder: (context, snapshot) {
-                  for(int i = 0;i<snapshot.data.result.length;i++){
-                    if(snapshot.data.result[i].sId == this._id){
-                      this.profile_index = i;
-                    }
-                  }
                   if (snapshot.hasData) {
-                    return Text(snapshot.data.result[this.profile_index].info.nickname, style: TextStyle(fontSize: 11),);
+                    return Text(snapshot.data.result[profile_index].info.nickname, style: TextStyle(fontSize: 11),);
                   } else if (snapshot.hasError) {
                     return Text("${snapshot.error}");
                   }
-
                   // By default, show a loading spinner.
                   return CircularProgressIndicator();
                 },
@@ -649,13 +656,8 @@ class _MyProfileState extends State<MyProfile> {
         child: FutureBuilder<Info>(
                 future: testInput,
                 builder: (context, snapshot) {
-                  for(int i = 0;i<snapshot.data.result.length;i++){
-                    if(snapshot.data.result[i].sId == this._id){
-                      this.profile_index = i;
-                    }
-                  }
                   if (snapshot.hasData) {
-                    return Text(snapshot.data.result[this.profile_index].info.phoneNumber, style: TextStyle(fontSize: 11),);
+                    return Text(snapshot.data.result[profile_index].info.phoneNumber, style: TextStyle(fontSize: 11),);
                   } else if (snapshot.hasError) {
                     return Text("${snapshot.error}");
                   }
@@ -670,13 +672,8 @@ class _MyProfileState extends State<MyProfile> {
         child: FutureBuilder<Info>(
               future: testInput,
               builder: (context, snapshot) {
-                for(int i = 0;i<snapshot.data.result.length;i++){
-                  if(snapshot.data.result[i].sId == this._id){
-                    this.profile_index = i;
-                  }
-                }
                 if (snapshot.hasData) {
-                  return Text(snapshot.data.result[this.profile_index].info.email, style: TextStyle(fontSize: 11),);
+                  return Text(snapshot.data.result[profile_index].info.email, style: TextStyle(fontSize: 11),);
                 } else if (snapshot.hasError) {
                    return Text("${snapshot.error}");
                 }
