@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iruri/components/palette.dart';
-import 'package:iruri/pages/signup/login_utils.dart';
+import 'package:iruri/pages/signup/signin_util.dart';
 import 'package:iruri/provider.dart';
 import 'package:provider/provider.dart';
 

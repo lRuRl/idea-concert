@@ -28,6 +28,7 @@ class CustomRouter with ChangeNotifier {
   void navigateTo(String from, String dest, {dynamic data}) {
     _prevPage = from;
     _currPage = dest;
+
     // data
     _data = data;
     notifyListeners();

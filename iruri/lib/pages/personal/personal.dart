@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iruri/components/component.dart';
 import 'package:iruri/components/palette.dart';
 import 'package:flutter/services.dart';
-import 'package:iruri/pages/signup/login.dart';
+import 'package:iruri/pages/signup/signin.dart';
 import 'package:iruri/provider.dart';
 import 'package:provider/provider.dart';
 
@@ -90,7 +90,7 @@ class _PersonalPageState extends State<PersonalPage> {
           ),
           onPressed: () => Provider.of<CustomRouter>(context, listen: false)
               .setRegistrationStatus(false),
-          child: Text('TextButton'),
+          child: Text('로그아웃', style: TextStyle(color: greyText)),
         ));
   }
 

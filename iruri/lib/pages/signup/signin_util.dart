@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iruri/components/palette.dart';
+import 'package:iruri/pages/signup/signup.dart';
 import 'package:iruri/provider.dart';
 import 'package:provider/provider.dart';
 
@@ -94,6 +95,7 @@ Widget loginButton(BuildContext context) {
 }
 
 Widget findInfo(BuildContext context) {
+
   return Container(
       width: MediaQuery.of(context).size.width * 0.8,
       padding: EdgeInsets.symmetric(horizontal: 25),
@@ -102,15 +104,18 @@ Widget findInfo(BuildContext context) {
           children: <Widget>[
             TextButton(
               style: TextButton.styleFrom(
-                onSurface: Colors.black87,
+                primary: themeGrayText
               ),
-              onPressed: null,
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => SignUpPage()));
+              },
               child: Text('회원가입'),
             ),
             Text('|', style: TextStyle(color: themeGrayText)),
             TextButton(
               style: TextButton.styleFrom(
-                onSurface: Colors.black87,
+                primary: themeGrayText
               ),
               onPressed: null,
               child: Text('아이디 찾기'),
@@ -118,7 +123,7 @@ Widget findInfo(BuildContext context) {
             Text('|', style: TextStyle(color: themeGrayText)),
             TextButton(
               style: TextButton.styleFrom(
-                onSurface: Colors.black87,
+                primary: themeGrayText
               ),
               onPressed: null,
               child: Text('비밀번호 찾기'),
@@ -144,9 +149,7 @@ Widget snsIcon(BuildContext context, String type) {
   return Column(
     children: [
       InkWell(
-          onTap: () {
-            
-          },
+          onTap: () {},
           child: Container(
               child: ClipRRect(
             child: Image.asset(

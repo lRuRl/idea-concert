@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:iruri/pages/signup/login.dart';
+import 'package:iruri/pages/signup/signin.dart';
 // provicer
 import 'package:iruri/provider.dart';
 import 'package:provider/provider.dart';
