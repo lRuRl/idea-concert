@@ -16,6 +16,7 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
   @override
   Widget build(BuildContext context) {
     Article data = context.watch<CustomRouter>().data;
+    String mode = 'user';
 
     return Scaffold(
         // body
@@ -76,7 +77,7 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                         Expanded(flex: 1, child: SizedBox()),
                         Expanded(
                           flex: 12,
-                          child: applyButton(context),
+                          child: applyButton(context, mode),
                         )
                       ],
                     ),
