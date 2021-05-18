@@ -258,7 +258,8 @@ class _MyProfileState extends State<MyProfile> {
     _image = null;
     //need to be personal info which should be already stored in DB
     //내 temporary 이미지 path
-    imagePath = "/data/user/0/com.example.iruri/cache/image_picker4896229670943898999.jpg";
+    //imagePath = "/data/user/0/com.example.iruri/cache/image_picker4896229670943898999.jpg";
+    imagePath = "";
   }
 
   changeIndex() {
