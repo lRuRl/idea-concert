@@ -23,9 +23,9 @@ class _PersonalPageState extends State<PersonalPage> {
               ),
               padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
               width: MediaQuery.of(context).size.width * 1,
-              height: MediaQuery.of(context).size.height * 0.6,
+              height: MediaQuery.of(context).size.height * 0.55,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
                     color: Color.fromRGBO(255, 255, 255, 1),
