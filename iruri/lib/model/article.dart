@@ -1,22 +1,34 @@
-/*
- *  게시글 : article document -> DB와 맞추기
- *
+/**
+ *  image는 데이터베이스에서 가져올 때 Buffer가 저장되는 곳 입니다.
+ *  imagePath는 post할 때 데이터베이스에 저장되는 경로입니다.
+ *  DateTime을 모두 String으로 변경하였습니다.
+ *  Period class가 추가되었습니다.
+ * 
+ *  @seunghwanly 
  */
-
 class Article {
   final String id; // needs to be converted to <ObjectID>
   final List<String> members;
   final List<String> contracts;
   final Detail detail;
   final String imagePath;
+  final String image;
 
-  Article({this.id, this.contracts, this.members, this.detail, this.imagePath});
+  Article(
+      {this.id,
+      this.contracts,
+      this.members,
+      this.detail,
+      this.imagePath,
+      this.image});
 
   factory Article.fromJson(Map<String, dynamic> json) {
     return Article(
         id: json['_id'],
-        contracts: List.from(json['contracts']),
-        members: List.from(json['members']),
+        image: json['image'],
+        contracts:
+            json['contracts'] != null ? List.from(json['contracts']) : [],
+        members: json['members'] != null ? List.from(json['members']) : [],
         imagePath: json['imagePath'],
         detail: Detail.fromJson(json['detail']));
   }
@@ -33,8 +45,10 @@ class Article {
 // Detail Class
 class Detail {
   final String status;
-  final DateTime reportedDate;
-  final DateTime dueDate;
+  // final DateTime reportedDate;
+  // final DateTime dueDate;
+  final String reportedDate;
+  final String dueDate;
   final Period period;
   final Condition condition;
   final Content content;
@@ -56,9 +70,11 @@ class Detail {
   factory Detail.fromJson(Map<String, dynamic> json) => Detail(
       period: Period.fromJson(json['period']),
       applicants: List.from(json['applicants']),
-      reportedDate:
-          DateTime.parse(json['reportedDate']), // "2021-04-21T00:02:00.000Z"
-      dueDate: DateTime.parse(json['dueDate']),
+      // reportedDate:
+      //     DateTime.parse(json['reportedDate']), // "2021-04-21T00:02:00.000Z"
+      // dueDate: DateTime.parse(json['dueDate']),
+      reportedDate: json['reportedDate'],
+      dueDate: json['dueDate'],
       status: json['status'],
       condition: Condition.fromJson(json['condition']),
       content: Content.fromJson(json['content']),
@@ -68,8 +84,10 @@ class Detail {
   Map<String, dynamic> toJson() => {
         'period': period.toJson(),
         'applicants': applicants,
-        'reportedDate': reportedDate.toIso8601String(),
-        'dueDate': dueDate.toIso8601String(),
+        // 'reportedDate': DateFormat("yyyy-MM-ddTHH:mm:ss").format(reportedDate),
+        // 'dueDate': DateFormat("yyyy-MM-ddTHH:mm:ss").format(dueDate),
+        "reportedDate": reportedDate,
+        "dueDate": dueDate,
         'status': status,
         'condition': condition.toJson(),
         'content': content.toJson(),
@@ -91,7 +109,7 @@ class Condition {
       projectType: json['projectType'],
       wage: json['wage']);
 
-  Map<String, dynamic> toJson() =>
+  Map<String, String> toJson() =>
       {'contractType': contractType, 'projectType': projectType, 'wage': wage};
 }
 
@@ -123,14 +141,22 @@ class Content {
 }
 
 class Period {
-  final DateTime from;
-  final DateTime to;
+  // final DateTime from;
+  // final DateTime to;
+  final String from;
+  final String to;
 
   Period({this.from, this.to});
 
   factory Period.fromJson(Map<String, dynamic> json) => Period(
-      from: DateTime.parse(json['from']), to: DateTime.parse(json['to']));
+      // from: DateTime.parse(json['from']), to: DateTime.parse(json['to'])
+      from: json['from'],
+      to: json['to']);
 
-  Map<String, dynamic> toJson() =>
-      {'from': from.toIso8601String(), 'to': to.toIso8601String()};
+  Map<String, String> toJson() => {
+        // 'from': DateFormat("yyyy-MM-ddTHH:mm:ss").format(from),
+        // 'to': DateFormat("yyyy-MM-ddTHH:mm:ss").format(to)
+        "from": from,
+        "to": to
+      };
 }

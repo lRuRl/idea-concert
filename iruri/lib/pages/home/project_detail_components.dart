@@ -90,11 +90,12 @@ Widget noticeDetail(BuildContext context, Article data) {
                         Row(children: <Text>[
                           Text('마감일 ', style: articleWriterTextStyle),
                           Text(
-                              'D-DAY ' +
-                                  DateTime.now()
-                                      .difference(data.detail.dueDate)
-                                      .inDays
-                                      .toString(),
+                            'D-DAY',
+                              // 'D-DAY ' +
+                              //     DateTime.now()
+                              //         .difference(data.detail.dueDate)
+                              //         .inDays
+                              //         .toString(),
                               style: articleDuedateTextStyle)
                         ]),
                       ],

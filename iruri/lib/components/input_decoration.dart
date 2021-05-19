@@ -71,7 +71,7 @@ InputDecoration borderTextInputBox(
                 icon: Icon(FeatherIcons.xCircle,
                     size: 20,
                     color: validate == 0
-                        ? subSecondLine
+                        ? themeGrayText
                         : validate == 1
                             ? onSuccess
                             : onError),

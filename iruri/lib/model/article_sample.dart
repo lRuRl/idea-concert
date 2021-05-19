@@ -13,11 +13,11 @@ List<Article> articleSampleData = [
       contracts: [],
       detail: Detail(
         status: '신청중',
-        reportedDate: DateTime(2021, 04, 21, 00, 02),
-        dueDate: DateTime(2021, 04, 30, 23, 59),
+        reportedDate: DateTime(2021, 04, 21, 00, 02).toIso8601String(),
+        dueDate: DateTime(2021, 04, 30, 23, 59).toIso8601String(),
         period: Period(
-            from: DateTime(2021, 05, 01, 00, 00),
-            to: DateTime(2021, 11, 01, 00, 00)),
+            from: DateTime(2021, 05, 01, 00, 00).toIso8601String(),
+            to: DateTime(2021, 11, 01, 00, 00).toIso8601String()),
         condition: Condition(
             contractType: '외주', projectType: '전속계약', wage: '91,100,000'),
         content: Content(

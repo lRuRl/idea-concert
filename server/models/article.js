@@ -48,6 +48,7 @@ const detailSchema = new mongoose.Schema({
 const articleSchema = new mongoose.Schema({
     // 💡 MongoDB does not allow overwriting the default _id
     imagePath: String,
+    image: String,
     members: [{ type: String }],
     contracts: [{ type: String }],
     detail: {

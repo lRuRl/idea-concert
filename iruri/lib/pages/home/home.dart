@@ -5,8 +5,7 @@ import 'package:iruri/components/spacing.dart';
 import 'package:iruri/components/text_form_field.dart';
 import 'package:iruri/components/typhography.dart';
 import 'package:iruri/model/article.dart';
-import 'package:iruri/model/article_sample.dart';
-import 'package:iruri/util/datat_article.dart';
+import 'package:iruri/util/data_article.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -66,7 +65,6 @@ class _HomePageState extends State<HomePage> {
             FutureBuilder(
               future: fetchedData,
               builder: (context, snapshot) {
-                print(snapshot.data);
                 if(!snapshot.hasData) {
                   return Center(
                     child: Image.asset('assets/loading.gif', width: 35, height: 35)

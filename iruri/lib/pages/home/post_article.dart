@@ -1,3 +1,6 @@
+import 'dart:io';
+// DateFormat
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -5,11 +8,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:iruri/components/input_decoration.dart';
 import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/spacing.dart';
-import 'package:iruri/components/text_form_field.dart';
 import 'package:iruri/components/typhography.dart';
 import 'package:iruri/model/article.dart';
 import 'package:iruri/pages/home/muliple_choice_chip.dart';
-import 'dart:io';
+import 'package:iruri/util/data_article.dart';
 
 class PostArticle extends StatefulWidget {
   /*
@@ -24,12 +26,12 @@ class PostArticle extends StatefulWidget {
 class _PostArticleState extends State<PostArticle> {
   // form key
   final _formKey = GlobalKey<FormBuilderState>();
-
   // controller
   ScrollController controller;
-
   // upload Data
-  File _thumbnail;
+  ArticleAPI api;
+  Article uploadData;
+  File thumbnail;
   /**
    *  key의 currentState를 이용해 보려고 하였는데 방법을 찾지못해
    *  TextEditingController로 대체합니다.
@@ -95,113 +97,35 @@ class _PostArticleState extends State<PostArticle> {
   ];
 
   String location;
-
-  void applicantTypeChanged(Map<String, Map<String, bool>> map) {
-    setState(() {
-      applicantType = map;
-    });
-  }
-
-  void genreTypeChanged(Map<String, Map<String, bool>> map) {
-    setState(() {
-      genreType = map;
-    });
-  }
-
-  bool validateGenre() {
-    int genre = 0;
-    genreType.forEach((outerKey, innerKey) {
-      if (innerKey.values.first) genre++;
-    });
-    return genre > 0 ? true : false;
-  }
-
-  bool validateApplicant() {
-    int applicant = 0;
-    applicantType.forEach((outerKey, innerKey) {
-      if (innerKey.values.first) applicant++;
-    });
-    return applicant > 0 ? true : false;
-  }
-
-  void setValidationState(String key, int state) {
-    setState(() {
-      _formTextField[key]["state"] = state;
-    });
-    // print("$key state is set to $state");
-  }
-
-  // ignore: slash_for_doc_comments
-  /**
-   *  전체 Form을 올바르게 입력했는지 확인
-   *  전체 올바르게 입력 완료한 경우, 모든 state는 +1
-   *  올바르게 입력 안된 경우에는 state -1
-   *  state 같은 경우, 입력하는 칸에만 해당
-   */
-  void validateWholeForm() {
-    if (_formKey.currentState.saveAndValidate() &&
-        validateApplicant() &&
-        validateGenre()) {
-      // set states to +1
-      _formKey.currentState.value.forEach((key, value) {
-        setValidationState(key, 1);
-      });
-      setValidationState('applicant', 1);
-      setValidationState("genre", 1);
-
-      print(_formKey.currentState.value);
-    } else {
-      // FAIL TO VALIDATE
-      // check current form values
-      // set states to -1
-      _formTextField.entries.forEach((element) {
-        if (element.value.values.first.runtimeType == TextEditingController) {
-          int length = element.value.values.first.text.length;
-          if (length == 0)
-            setValidationState(element.key, -1);
-          else
-            setValidationState(element.key, 1);
-        }
-      });
-      // check multiChoices
-      if (!validateApplicant()) setValidationState("applicant", -1);
-      if (!validateGenre()) setValidationState("genre", -1);
-      print("validation failed");
-    }
-  }
-
-  void setItemFromDropDown(String item) => location = item;
-
-  // thumbnail upload button pressed
-  void onThumbnailUploadPressed() async {
-    final pickedFile =
-        await ImagePicker().getImage(source: ImageSource.gallery);
-    setState(() {
-      if (pickedFile != null) {
-        _thumbnail = File(pickedFile.path);
-      } else {
-        print("no image selected");
-      }
-    });
-  }
+  //  style
+  var formTextStyle = notoSansTextStyle(
+      fontSize: 16, fontWeight: FontWeight.w500, textColor: greyText);
+  // validator
+  formValidator(BuildContext context) => FormBuilderValidators.compose([
+        FormBuilderValidators.required(context, errorText: "필수항목입니다."),
+      ]);
 
   @override
   void initState() {
     super.initState();
+    // api
+    api = new ArticleAPI();
     // controller
     controller = new ScrollController();
     // data
     _formTextField = new Map<String, Map<String, dynamic>>.from({
-      "title": {"controller": TextEditingController(), "state": 0},
       "dueDate": {"controller": TextEditingController(), "state": 0},
-      "period": {"controller": TextEditingController(), "state": 0},
+      // multi choices
+      "applicants": {"controller": null, "state": 0},
+      "genres": {"controller": null, "state": 0},
+      // Condition
+      "projectType": {"controller": TextEditingController(), "state": 0},
+      "contractType": {"controller": TextEditingController(), "state": 0},
+      "wage": {"controller": TextEditingController(), "state": 0},
+      // Content
+      "title": {"controller": TextEditingController(), "state": 0},
       "desc": {"controller": TextEditingController(), "state": 0},
       "prefer": {"controller": TextEditingController(), "state": 0},
-      // for multi choices
-      "applicant": {"controller": null, "state": 0},
-      "genre": {"controller": null, "state": 0},
-      // dropdown
-      "location": {"controller": null, "state": 0}
     });
   }
 
@@ -236,6 +160,22 @@ class _PostArticleState extends State<PostArticle> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             SizedBox(height: 20),
+                            // project name
+                            FormBuilderTextField(
+                              controller: _formTextField["title"]["controller"],
+                              name: "title",
+                              enableInteractiveSelection: true,
+                              decoration: borderTextInputBox(
+                                  displaySuffixIcon: true,
+                                  onPressed: () => resetFormField("title"),
+                                  icon: Icon(FeatherIcons.tag,
+                                      size: 24, color: themeGrayText),
+                                  labelText: "프로젝트 제목",
+                                  hintText: "20자 이내로 제목을 입력해주세요",
+                                  validate: _formTextField["title"]["state"]),
+                              validator: formValidator(context),
+                            ),
+                            SizedBox(height: 20),
                             // thumbnail  - img
                             Stack(
                               alignment: AlignmentDirectional.topEnd,
@@ -247,8 +187,8 @@ class _PostArticleState extends State<PostArticle> {
                                       border: Border.all(color: subLine),
                                       borderRadius: BorderRadius.circular(8),
                                       image: DecorationImage(
-                                          image: _thumbnail != null
-                                              ? FileImage(_thumbnail)
+                                          image: thumbnail != null
+                                              ? FileImage(thumbnail)
                                               : AssetImage(
                                                   "assets/default.png"),
                                           fit: BoxFit.cover)),
@@ -275,55 +215,61 @@ class _PostArticleState extends State<PostArticle> {
                               ],
                             ),
                             SizedBox(height: 20),
-                            // project name
-                            FormBuilderTextField(
-                              controller: _formTextField["title"]["controller"],
-                              name: "title",
-                              decoration: borderTextInputBox(
-                                  displaySuffixIcon: true,
-                                  onPressed: () => _formTextField["title"]
-                                          ["controller"]
-                                      .text = "",
-                                  icon: Icon(FeatherIcons.tag,
-                                      size: 24, color: themeGrayText),
-                                  labelText: "프로젝트 제목",
-                                  hintText: "20자 이내로 제목을 입력해주세요",
-                                  validate: _formTextField["title"]["state"]),
-                              validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(context),
-                                // 20자 최대
-                                FormBuilderValidators.maxLength(context, 20)
-                              ]),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
                             // period - date picker
                             FormBuilderDateTimePicker(
                               controller: _formTextField["dueDate"]
                                   ["controller"],
                               name: "dueDate",
                               inputType: InputType.both,
+                              format: DateFormat('yyyy-MM-dd hh:mm, EEE'),
                               decoration: borderTextInputBox(
-                                  onPressed: () => _formTextField["dueDate"]
-                                          ["controller"]
-                                      .text = "",
-                                  displaySuffixIcon: true,
+                                  onPressed: () => resetFormField("dueDate"),
+                                  displaySuffixIcon: false,
                                   icon: Icon(FeatherIcons.calendar,
                                       size: 24, color: themeGrayText),
                                   labelText: "프로젝트 공고 마감일",
                                   validate: _formTextField["dueDate"]["state"]),
-                              validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(context),
-                              ]),
-                              //locale: Locale.fromSubtags(languageCode: "fr"),
+                              validator: formValidator(context),
                             ),
                             SizedBox(
                               height: 20,
                             ),
+                            Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SizedBox(
+                                      width: size.width * 0.4,
+                                      child: FormBuilderDateTimePicker(
+                                          name: "periodfrom",
+                                          format: DateFormat('yyyy-MM-dd'),
+                                          inputType: InputType.date,
+                                          decoration: borderTextInputBox(
+                                            displaySuffixIcon: false,
+                                            labelText: "시작일",
+                                          ),
+                                          validator: formValidator(context))),
+                                  SizedBox(
+                                    width: size.width * 0.4,
+                                    child: FormBuilderDateTimePicker(
+                                      name: "periodto",
+                                      format: DateFormat('yyyy-MM-dd'),
+                                      inputType: InputType.date,
+                                      decoration: borderTextInputBox(
+                                        displaySuffixIcon: false,
+                                        labelText: "종료일",
+                                      ),
+                                      validator: formValidator(context),
+                                    ),
+                                  ),
+                                ]),
+                            SizedBox(
+                              height: 20,
+                            ),
                             // genre - multi choice
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            Wrap(
+                              direction: Axis.vertical,
+                              spacing: 5.0,
                               children: <Widget>[
                                 Wrap(
                                   crossAxisAlignment: WrapCrossAlignment.center,
@@ -333,25 +279,21 @@ class _PostArticleState extends State<PostArticle> {
                                     SizedBox(
                                       width: 20,
                                     ),
-                                    Text("프로젝트 장르 선택",
-                                        style: notoSansTextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                            textColor: greyText))
+                                    Text("프로젝트 장르 선택", style: formTextStyle)
                                   ],
                                 ),
                                 Container(
                                     padding: paddingH20V5,
-                                    width: size.width,
+                                    width: size.width * 0.9,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(8),
                                         border: Border.all(
                                             width: 3,
-                                            color: _formTextField["genre"]
+                                            color: _formTextField["genres"]
                                                         ["state"] ==
                                                     0
                                                 ? Colors.transparent
-                                                : _formTextField["genre"]
+                                                : _formTextField["genres"]
                                                             ["state"] ==
                                                         1
                                                     ? onSuccess
@@ -367,28 +309,25 @@ class _PostArticleState extends State<PostArticle> {
                             ),
                             // desc - text
                             FormBuilderTextField(
-                              controller: _formTextField["desc"]["controller"],
-                              name: "desc",
-                              decoration: borderTextInputBox(
-                                  displaySuffixIcon: true,
-                                  onPressed: () => _formTextField["desc"]
-                                          ["controller"]
-                                      .text = "",
-                                  icon: Icon(FeatherIcons.edit3,
-                                      size: 24, color: themeGrayText),
-                                  labelText: "프로젝트 설명",
-                                  validate: _formTextField["desc"]["state"]),
-                              maxLines: null,
-                              validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(context),
-                              ]),
-                            ),
+                                controller: _formTextField["desc"]
+                                    ["controller"],
+                                name: "desc",
+                                enableInteractiveSelection: true,
+                                decoration: borderTextInputBox(
+                                    displaySuffixIcon: true,
+                                    onPressed: () => resetFormField("desc"),
+                                    icon: Icon(FeatherIcons.edit3,
+                                        size: 24, color: themeGrayText),
+                                    labelText: "프로젝트 설명",
+                                    validate: _formTextField["desc"]["state"]),
+                                maxLines: null,
+                                validator: formValidator(context)),
                             SizedBox(
                               height: 20,
                             ),
                             // applicant - multi choice
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            Wrap(
+                              direction: Axis.vertical,
                               children: <Widget>[
                                 Wrap(
                                   crossAxisAlignment: WrapCrossAlignment.center,
@@ -400,25 +339,22 @@ class _PostArticleState extends State<PostArticle> {
                                     ),
                                     Text(
                                       "프로젝트 지원자 선택",
-                                      style: notoSansTextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                          textColor: greyText),
+                                      style: formTextStyle,
                                     )
                                   ],
                                 ),
                                 Container(
                                     padding: paddingH20V5,
-                                    width: size.width,
+                                    width: size.width * 0.9,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(8),
                                         border: Border.all(
                                             width: 3,
-                                            color: _formTextField["genre"]
+                                            color: _formTextField["applicants"]
                                                         ["state"] ==
                                                     0
                                                 ? Colors.transparent
-                                                : _formTextField["genre"]
+                                                : _formTextField["applicants"]
                                                             ["state"] ==
                                                         1
                                                     ? onSuccess
@@ -430,46 +366,72 @@ class _PostArticleState extends State<PostArticle> {
                                             applicantTypeChanged)),
                               ],
                             ),
+                            // Condition - contractType
+                            FormBuilderTextField(
+                                name: "contractType",
+                                enableInteractiveSelection: true,
+                                decoration: borderTextInputBox(
+                                    displaySuffixIcon: false,
+                                    icon: Icon(FeatherIcons.type,
+                                        size: 24, color: themeGrayText),
+                                    labelText: "프로젝트 계약종류",
+                                    validate: _formTextField["contractType"]
+                                        ["state"]),
+                                validator: formValidator(context)),
+                            SizedBox(height: 20),
+                            FormBuilderTextField(
+                                name: "projectType",
+                                enableInteractiveSelection: true,
+                                decoration: borderTextInputBox(
+                                    displaySuffixIcon: false,
+                                    icon: Icon(FeatherIcons.type,
+                                        size: 24, color: themeGrayText),
+                                    labelText: "프로젝트 종류",
+                                    validate: _formTextField["projectType"]
+                                        ["state"]),
+                                validator: formValidator(context)),
+                            SizedBox(height: 20),
+                            FormBuilderTextField(
+                                name: "wage",
+                                enableInteractiveSelection: true,
+                                decoration: borderTextInputBox(
+                                    displaySuffixIcon: false,
+                                    icon: Icon(FeatherIcons.dollarSign,
+                                        size: 24, color: themeGrayText),
+                                    labelText: "급여(월)",
+                                    validate: _formTextField["wage"]["state"]),
+                                validator: formValidator(context)),
+                            SizedBox(height: 20),
                             // prefer - text
                             FormBuilderTextField(
-                              name: "prefer",
-                              decoration: borderTextInputBox(
-                                  displaySuffixIcon: true,
-                                  onPressed: () => _formTextField["prefer"]
-                                          ["controller"]
-                                      .text = "",
+                                name: "prefer",
+                                enableInteractiveSelection: true,
+                                decoration: borderTextInputBox(
+                                  displaySuffixIcon: false,
                                   icon: Icon(FeatherIcons.heart,
                                       size: 24, color: themeGrayText),
                                   labelText: "프로젝트 우대사항",
-                                  validate: _formTextField["prefer"]["state"]),
-                              validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(context),
-                                // 20자 최대
-                                FormBuilderValidators.maxLength(context, 20)
-                              ]),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
+                                ),
+                                validator: formValidator(context)),
+                            SizedBox(height: 20),
                             // location - scroll
                             FormBuilderDropdown(
-                              name: "location",
-                              items: locations
-                                  .map((location) => DropdownMenuItem(
-                                        value: location,
-                                        child: Text('$location'),
-                                      ))
-                                  .toList(),
-                              allowClear: true,
-                              clearIcon: Icon(FeatherIcons.xCircle, size: 20,),
-                              decoration: borderTextInputBox(
-                                  displaySuffixIcon: false,
-                                  icon: Icon(FeatherIcons.mapPin,
-                                      size: 24, color: themeGrayText), labelText: '프로젝트 근무지역'),
-                              validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(context),
-                              ]),
-                            ),
+                                onChanged: (value) => setState(() {
+                                      location = value;
+                                    }),
+                                name: "location",
+                                items: locations
+                                    .map((location) => DropdownMenuItem(
+                                          value: location,
+                                          child: Text('$location'),
+                                        ))
+                                    .toList(),
+                                decoration: borderTextInputBox(
+                                    displaySuffixIcon: false,
+                                    icon: Icon(FeatherIcons.mapPin,
+                                        size: 24, color: themeGrayText),
+                                    labelText: '프로젝트 근무지역'),
+                                validator: formValidator(context)),
                           ])),
                   SizedBox(
                     height: 30,
@@ -480,7 +442,11 @@ class _PostArticleState extends State<PostArticle> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8)),
                           padding: paddingH20V5),
-                      onPressed: () => validateWholeForm(),
+                      onPressed: () => uploadTask()
+                          .then((value) => Navigator.pop(context))
+                          .then((value) => ScaffoldMessenger.of(context)
+                              .showSnackBar(SnackBar(
+                                  content: Text('새로운 게시글이 등록되었습니다 !')))),
                       child: Text(
                         "지원하기",
                         style: notoSansTextStyle(
@@ -493,5 +459,174 @@ class _PostArticleState extends State<PostArticle> {
             ),
           )),
     );
+  }
+
+  void resetFormField(String field) {
+    setState(() {
+      _formTextField[field]["controller"].text = "";
+    });
+  }
+
+  void applicantTypeChanged(Map<String, Map<String, bool>> map) {
+    setState(() {
+      applicantType = map;
+    });
+  }
+
+  void genreTypeChanged(Map<String, Map<String, bool>> map) {
+    setState(() {
+      genreType = map;
+    });
+  }
+
+  void onThumbnailUploadPressed() async {
+    final pickedFile = await ImagePicker().getImage(
+        source: ImageSource.gallery,
+        // downsize image
+        maxHeight: 600,
+        maxWidth: 450);
+    setState(() {
+      if (pickedFile != null) {
+        thumbnail = File(pickedFile.path);
+      } else {
+        print("no image selected");
+      }
+    });
+  }
+
+  List<String> pickedApplicants() {
+    List<String> res = [];
+    applicantType.forEach((outerKey, innerKey) {
+      if (innerKey.values.first) res.add(outerKey);
+    });
+    return res;
+  }
+
+  List<String> pickedGenres() {
+    List<String> res = [];
+    genreType.forEach((outerKey, innerKey) {
+      if (innerKey.values.first) res.add(outerKey);
+    });
+    return res;
+  }
+
+  // ignore: slash_for_doc_comments
+  void setItemFromDropDown(String item) => location = item;
+
+  void setUploadData() {
+    // save current state
+    if (this.thumbnail != null) {
+      setState(() {
+        uploadData = new Article(
+            contracts: [],
+            members: [],
+            imagePath: thumbnail.path,
+            image: null,
+            detail: new Detail(
+                location: location,
+                writer: 'tester',
+                applicants: [],
+                status: '모집중',
+                reportedDate: DateFormat('yyyy-MM-ddTHH:mm:ss.mmm')
+                    .format(new DateTime.now())
+                    .toString(),
+                dueDate: DateFormat('yyyy-MM-ddTHH:mm:ss.mmm')
+                    .format(_formKey.currentState.value["dueDate"])
+                    .toString(),
+                period: new Period(
+                    from: DateFormat('yyyy-MM-ddTHH:mm:ss.mmm')
+                        .format(_formKey.currentState.value["periodfrom"])
+                        .toString(),
+                    to: DateFormat('yyyy-MM-ddTHH:mm:ss.mmm')
+                        .format(_formKey.currentState.value["periodto"])
+                        .toString()),
+                condition: new Condition(
+                  projectType: _formKey.currentState.value["projectType"],
+                  contractType: _formKey.currentState.value["contractType"],
+                  wage: _formKey.currentState.value["wage"],
+                ),
+                content: new Content(
+                    title: _formKey.currentState.value["title"],
+                    desc: _formKey.currentState.value["desc"],
+                    prefer: _formKey.currentState.value["prefer"],
+                    tags: pickedApplicants(),
+                    genres: pickedGenres())));
+      });
+    } else
+      throw Exception('thumbnail not uploaded');
+  }
+
+  // thumbnail upload button pressed
+  void setValidationState(String key, int state) {
+    setState(() {
+      _formTextField[key]["state"] = state;
+    });
+    // print("$key state is set to $state");
+  }
+
+  Future<void> uploadTask() async {
+    // 1. valid
+    // 2. setState
+    var validRes = validateWholeForm();
+    print('validRes : ' + validRes.toString());
+    if (validRes) {
+      // 3. post
+      return await api.postNewArticle(uploadData, thumbnail.path);
+    } else {
+      print('validation failed');
+    }
+  }
+
+  bool validateApplicant() {
+    int applicant = 0;
+    applicantType.forEach((outerKey, innerKey) {
+      if (innerKey.values.first) applicant++;
+    });
+    return applicant > 0 ? true : false;
+  }
+
+  bool validateGenre() {
+    int genre = 0;
+    genreType.forEach((outerKey, innerKey) {
+      if (innerKey.values.first) genre++;
+    });
+    return genre > 0 ? true : false;
+  }
+
+  /**
+   *  전체 Form을 올바르게 입력했는지 확인
+   *  전체 올바르게 입력 완료한 경우, 모든 state는 +1
+   *  올바르게 입력 안된 경우에는 state -1
+   *  state 같은 경우, 입력하는 칸에만 해당
+   */
+  bool validateWholeForm() {
+    if (_formKey.currentState.saveAndValidate() &&
+        validateApplicant() &&
+        validateGenre() &&
+        this.thumbnail != null) {
+      print('validation success');
+      setUploadData();
+      return true;
+    } else {
+      print('validation failed');
+      // FAIL TO VALIDATE
+      // check current form values
+      // set states to -1
+      for (final field in _formTextField.entries) {
+        final key = field.key;
+        final value = field.value;
+        if (value["controller"].runtimeType == TextEditingController) {
+          if (value["controller"].text.length > 0)
+            setValidationState(key, 1);
+          else
+            setValidationState(key, -1);
+        }
+      }
+      // check multiChoices
+      if (!validateApplicant()) setValidationState("applicants", -1);
+      if (!validateGenre()) setValidationState("genres", -1);
+      print("validation failed" + _formKey.currentState.value.toString());
+      return false;
+    }
   }
 }
