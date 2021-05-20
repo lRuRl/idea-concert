@@ -48,8 +48,8 @@ module.exports = class ArticleSerive {
                     content : {
                         title : title,
                         desc : desc,
-                        tags : tags != null ? JSON.parse(tags) : null,
-                        genres : genres != null ? JSON.parse(genres) : null,
+                        tags : tags != null ? JSON.parse(tags) : [],
+                        genres : genres != null ? JSON.parse(genres) : [],
                         prefer : prefer
                     }
                 }
