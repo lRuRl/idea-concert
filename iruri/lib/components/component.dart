@@ -53,6 +53,7 @@ class HomeArticle extends StatelessWidget {
            */
           Expanded(
             flex: 2,
+            flex: 4,
             child: data.imagePath != null
                 ? ImageWrapper(image: data.image)
                 : Image.asset('assets/default.png'),
