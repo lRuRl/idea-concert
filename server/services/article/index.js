@@ -1,9 +1,11 @@
 const { onPostSuccess, onPostFailure, onGetFailure, onGetSuccess,
     onUpdateSuccess, onUpdateFailure, onUpdateNotFound, onDeleteSuccess,
-    onDeleteNotFound, onDeleteFailure
+    onDeleteNotFound, onDeleteFailure, onGetNotFound
 } = require('../../types/service-return');
 // get model
 const Article = require('../../models/article');
+const { json } = require('express');
+const { ArticleImage, ArticleImageChunk } = require('../../models/file');
 
 module.exports = class ArticleSerive {
     // constructor
@@ -22,12 +24,35 @@ module.exports = class ArticleSerive {
             const {
                 members, contracts, detail
             } = body;
+            const {
+                status, reportedDate, dueDate, period, condition, content, writer, location, applicants
+            } = detail;
+            const {
+                title, desc, tags, genres, prefer
+            } = content;
             // create object
             const uploadData = await Article.create({
-                imagePath : file,
-                members: members,
-                contracts: contracts,
-                detail: detail
+                imagePath: file,
+                image: null,
+                members: members != null ? JSON.parse(members) : [],
+                contracts: contracts != null ? JSON.parse(contracts) : [],
+                detail: {
+                    status : status,
+                    reportedDate : reportedDate,
+                    dueDate : dueDate,
+                    period : period,
+                    condition : condition,
+                    writer : writer,
+                    location : location,
+                    applicants : applicants != null ? JSON.parse(applicants) : [],
+                    content : {
+                        title : title,
+                        desc : desc,
+                        tags : tags != null ? JSON.parse(tags) : [],
+                        genres : genres != null ? JSON.parse(genres) : [],
+                        prefer : prefer
+                    }
+                }
             });
             // db query
             await uploadData.save();
@@ -42,7 +67,36 @@ module.exports = class ArticleSerive {
         try {
             // db query
             const res = await Article.find();
-            return onGetSuccess(res);
+            var updatedRes = []
+            // get Image
+            async function updateImageProperty(res, updatedRes) {
+                // iterable
+                for (const document of res) {
+                    const updateDocument = Object.create(document);
+                    const { imagePath } = document;
+                    if (imagePath != null) {
+                        const searchImageFile = await ArticleImage.findOne({ filename: imagePath });
+                        if (searchImageFile != null) {
+                            // get chunks
+                            const searchImageChunk = await ArticleImageChunk.find({ files_id: searchImageFile._id });
+                            var buffer = '';
+                            searchImageChunk.map((doc) => buffer += Buffer.from(doc.data, 'binary').toString('base64'));
+                            // put 'image' key and value
+                            updateDocument['image'] = buffer;
+                            updatedRes.push(updateDocument);
+                            console.log(JSON.stringify(updatedRes));
+                            
+                        }
+                    } else {
+                        updatedRes.push(document);
+                    }
+                }
+
+                return updatedRes;
+            }
+            const response = await updateImageProperty(res, updatedRes);
+            if (!response) return onGetNotFound;
+            return onGetSuccess(updatedRes);
         } catch (error) {
             console.error(error);
             return onGetFailure(err);

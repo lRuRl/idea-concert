@@ -68,6 +68,7 @@ class _RoutesState extends State<Routes> {
             // used in keyboard dismiss and so on
             onTap: () => FocusScope.of(context).requestFocus(new FocusNode()),
             child: Container(
+              color: Colors.white,  // background color added
               // child: page[currentPageIndex]['page'],
               // use Provier<CustomRouter>
               child: page[routerWatcher.currentPage],

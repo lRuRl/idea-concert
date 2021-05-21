@@ -32,6 +32,8 @@ dependencies:
   # form builder
   advance_pdf_viewer: ^1.2.0
   flutter_form_builder: ^6.0.0
+  # http
+  http: ^0.12.1
   flutter:
     sdk: flutter
 
@@ -39,7 +41,6 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   flutter_pdfview: ^1.0.4
-  http: ^0.12.1
   modal_bottom_sheet: ^2.0.0
 dev_dependencies:
 
@@ -66,6 +67,7 @@ flutter:
     - Icon-192.png
     - favicon.png
     - assets/default.png
+    - assets/loading.gif
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

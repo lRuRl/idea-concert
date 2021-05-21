@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:flutter/services.dart';
@@ -53,7 +55,9 @@ class HomeArticle extends StatelessWidget {
            */
           Expanded(
             flex: 2,
-            child: ImageWrapper(imagePath: data.detail.content.imagePath),
+            child: data.imagePath != null
+                ? ImageWrapper(image: data.image)
+                : Image.asset('assets/default.png'),
           ),
           SizedBox(width: 20),
           // CONTENTS
@@ -122,9 +126,9 @@ class HomeArticle extends StatelessWidget {
                               children: <Text>[
                                 Text('마감일 ', style: articleWriterTextStyle),
                                 Text(
-                                    'D-DAY ' +
-                                        DateTime.now()
-                                            .difference(data.detail.dueDate)
+                                    'D-' +
+                                    DateTime.parse(data.detail.dueDate)
+                                            .difference(DateTime.now())
                                             .inDays
                                             .toString(),
                                     style: articleDuedateTextStyle)
@@ -186,8 +190,8 @@ class TagWrapper extends StatelessWidget {
 
 // get image from network
 class ImageWrapper extends StatefulWidget {
-  final String imagePath;
-  ImageWrapper({this.imagePath});
+  final String image;
+  ImageWrapper({this.image});
   @override
   _ImageWrapperState createState() => _ImageWrapperState();
 }
@@ -197,14 +201,14 @@ class _ImageWrapperState extends State<ImageWrapper> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(8),
       child: Container(
         child: Align(
           alignment: Alignment.center,
           widthFactor: 0.8,
           heightFactor: 0.8,
-          child: Image.network(
-            widget.imagePath,
+          child: Image.memory(
+            base64Decode(widget.image),
             width: size.width * 0.27,
             height: size.width * 0.27,
             alignment: Alignment.center,

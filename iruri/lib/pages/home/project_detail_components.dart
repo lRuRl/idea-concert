@@ -9,7 +9,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 Widget thumbnail(BuildContext context, Article data) {
   return Image.network(
-    data.detail.content.imagePath,
+    data.imagePath,
     alignment: Alignment.center,
     errorBuilder: (context, error, stackTrace) =>
         Icon(Icons.error_outline_rounded, size: 24, color: themeGrayText),
@@ -91,11 +91,12 @@ Widget noticeDetail(BuildContext context, Article data) {
                         Row(children: <Text>[
                           Text('마감일 ', style: articleWriterTextStyle),
                           Text(
-                              'D-DAY ' +
-                                  DateTime.now()
-                                      .difference(data.detail.dueDate)
-                                      .inDays
-                                      .toString(),
+                            'D-DAY',
+                              // 'D-DAY ' +
+                              //     DateTime.now()
+                              //         .difference(data.detail.dueDate)
+                              //         .inDays
+                              //         .toString(),
                               style: articleDuedateTextStyle)
                         ]),
                       ],

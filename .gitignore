@@ -4,3 +4,4 @@ iruri/pubspec.lock
 iruri/pubspec.lock
 server/.env
 server/node_modules/.package-lock.json
+.DS_Store
