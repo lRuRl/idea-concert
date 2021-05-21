@@ -165,7 +165,7 @@ class _HomePageState extends State<HomePage> {
           Expanded(
             flex: 1,
             child: IconButton(
-              icon: Icon(Icons.search_rounded),
+              icon: Icon(FeatherIcons.search),
               iconSize: 25,
               onPressed: () => _searchItem(),
             ),
@@ -211,15 +211,27 @@ class _HomePageState extends State<HomePage> {
                   children: <Widget>[
                     Text("모집중인공고", style: articleTitleTextStyle),
                     Row(
-                      children: <TextButton>[
+                      children: <Widget>[
                         TextButton(
-                            onPressed: () => showModalBottomSheet(
-                                context: context, builder: tagBottomSheet),
-                            child: Text('태그', style: bodyTextStyle)),
+                          onPressed: () => showModalBottomSheet(
+                              context: context, builder: tagBottomSheet),
+                          child: Text('태그', style: bodyTextStyle),
+                          style: TextButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  side: BorderSide(
+                                      color: lightWhite, width: 2.0))),
+                        ),
+                        SizedBox(width: 10.0),
                         TextButton(
                             onPressed: () => showModalBottomSheet(
                                 context: context, builder: genreBottomSheet),
-                            child: Text('장르', style: bodyTextStyle)),
+                            child: Text('장르', style: bodyTextStyle),
+                            style: TextButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    side: BorderSide(
+                                        color: lightWhite, width: 2.0)))),
                       ],
                     )
                   ],

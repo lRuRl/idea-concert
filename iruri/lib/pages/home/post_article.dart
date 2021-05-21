@@ -101,9 +101,14 @@ class _PostArticleState extends State<PostArticle> {
   var formTextStyle = notoSansTextStyle(
       fontSize: 16, fontWeight: FontWeight.w500, textColor: greyText);
   // validator
-  formValidator(BuildContext context) => FormBuilderValidators.compose([
-        FormBuilderValidators.required(context, errorText: "필수항목입니다."),
-      ]);
+  formValidator(BuildContext context, {int maxLength}) => maxLength != null
+      ? FormBuilderValidators.compose([
+          FormBuilderValidators.required(context, errorText: "필수항목입니다."),
+          FormBuilderValidators.maxLength(context, maxLength)
+        ])
+      : FormBuilderValidators.compose([
+          FormBuilderValidators.required(context, errorText: "필수항목입니다."),
+        ]);
 
   @override
   void initState() {
@@ -171,9 +176,9 @@ class _PostArticleState extends State<PostArticle> {
                                   icon: Icon(FeatherIcons.tag,
                                       size: 24, color: themeGrayText),
                                   labelText: "프로젝트 제목",
-                                  hintText: "20자 이내로 제목을 입력해주세요",
+                                  hintText: "18자 이내로 제목을 입력해주세요",
                                   validate: _formTextField["title"]["state"]),
-                              validator: formValidator(context),
+                              validator: formValidator(context, maxLength: 18),
                             ),
                             SizedBox(height: 20),
                             // thumbnail  - img

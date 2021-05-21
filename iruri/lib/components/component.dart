@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
@@ -31,115 +32,129 @@ class HomeArticle extends StatelessWidget {
     final routerReader = context.read<CustomRouter>();
     final routerWatcher = context.watch<CustomRouter>();
 
-    return Container(
-      width: size.width * 0.9,
-      height: size.width * 0.4,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: lightWhite),
-      ),
-      margin: marginH20V10,
-      padding: paddingH20V20,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        // Thumbnail | CONTENTS
-        children: <Widget>[
-          /**
-           *  check image path
-           *  1) not null, show image
-           *  2) not null, but image not found
-           *  3) null, default image
-           */
-          Expanded(
-            flex: 2,
-            child: data.imagePath != null
-                ? ImageWrapper(image: data.image)
-                : Image.asset('assets/default.png'),
+    return InkWell(
+        onTap: () => routerReader.navigateTo(
+            routerWatcher.currentPage, '/home/projectdetail',
+            data: data),
+        child: Container(
+          width: size.width * 0.9,
+          height: size.width * 0.4,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8), // 8px
+            border: Border.all(color: lightWhite, width: 3.0),
           ),
-          SizedBox(width: 20),
-          // CONTENTS
-          Expanded(
-            flex: 5,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                // title and iconbutton - spacebetween
-                Expanded(
-                    flex: 2,
-                    child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                                // title
-                                flex: 9,
-                                child: Text(data.detail.content.title,
-                                    style: articleTitleTextStyle)),
-                            Expanded(
-                              flex: 1,
-                              child: IconButton(
-                                icon: Icon(Icons.keyboard_arrow_right_rounded),
-                                iconSize: 20,
-                                onPressed: () => routerReader.navigateTo(
-                                    routerWatcher.currentPage,
-                                    '/home/projectdetail',
-                                    data: data),
-                              ),
-                            )
-                          ],
-                        ))),
-                // tags -start
-                Expanded(
-                  flex: 4,
-                  child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: GridView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                  childAspectRatio: 4 / 2,
-                                  crossAxisCount: 4,
-                                  mainAxisSpacing: 10,
-                                  crossAxisSpacing: 5),
-                          itemCount: data.detail.content.tags.length,
-                          itemBuilder: (context, index) => TagWrapper(
-                                onPressed: () => print('tag pressed'),
-                                tag: data.detail.content.tags[index],
-                              ))),
+          margin: marginH20V10,
+          padding: paddingH10V10,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            // Thumbnail | CONTENTS
+            children: <Widget>[
+              Expanded(
+                flex: 4,
+                child: data.imagePath != null
+                    ? ImageWrapper(image: data.image)
+                    : Image.asset('assets/default.png'),
+              ),
+              SizedBox(width: 20),
+              // CONTENTS
+              Expanded(
+                flex: 6,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    // title and iconbutton - spacebetween
+                    Expanded(
+                        flex: 2,
+                        child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Expanded(
+                                    // title
+                                    flex: 9,
+                                    child: Text(data.detail.content.title,
+                                        style: articleTitleTextStyle)),
+                                Expanded(
+                                    flex: 1,
+                                    child: Icon(FeatherIcons.chevronRight))
+                              ],
+                            ))),
+                    // tags -start
+                    Expanded(
+                      flex: 2,
+                      child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: GridView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                      childAspectRatio: 4 / 2,
+                                      crossAxisCount: 4,
+                                      mainAxisSpacing: 10,
+                                      crossAxisSpacing: 5),
+                              itemCount: data.detail.content.tags.length,
+                              itemBuilder: (context, index) => TagWrapper(
+                                    tag: data.detail.content.tags[index],
+                                  ))),
+                    ),
+                    // genres - start
+                    Expanded(
+                      flex: 2,
+                      child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: GridView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 6),
+                              itemCount: data.detail.content.genres.length,
+                              itemBuilder: (context, index) {
+                                if (index !=
+                                    data.detail.content.genres.length - 1) {
+                                  return Text(
+                                      data.detail.content.genres[index] + ',',
+                                      style: articleTagTextStyle);
+                                } else
+                                  return Text(data.detail.content.genres[index],
+                                      style: articleTagTextStyle);
+                              })),
+                    ),
+                    // writer - start
+                    Expanded(
+                      flex: 1,
+                      child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(data.detail.writer,
+                                  style: articleWriterTextStyle),
+                              Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: <Text>[
+                                    Text('마감일 ', style: articleWriterTextStyle),
+                                    Text(
+                                        'D-' +
+                                            DateTime.parse(data.detail.dueDate)
+                                                .difference(DateTime.now())
+                                                .inDays
+                                                .toString(),
+                                        style: articleDuedateTextStyle)
+                                  ])
+                            ],
+                          )),
+                    ),
+                    SizedBox(height: 10),
+                  ],
                 ),
-                // writer - start
-                Expanded(
-                  flex: 2,
-                  child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(data.detail.writer,
-                              style: articleWriterTextStyle),
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: <Text>[
-                                Text('마감일 ', style: articleWriterTextStyle),
-                                Text(
-                                    'D-' +
-                                        DateTime.parse(data.detail.dueDate)
-                                            .difference(DateTime.now())
-                                            .inDays
-                                            .toString(),
-                                    style: articleDuedateTextStyle)
-                              ])
-                        ],
-                      )),
-                )
-              ],
-            ),
-          )
-        ],
-      ),
-    );
+              )
+            ],
+          ),
+        ));
   }
 }
 
@@ -158,10 +173,12 @@ class TagWrapper extends StatelessWidget {
   Map<String, Color> colorMapper = {
     '글': tagWrite,
     '채색': tagPaint,
+    '선화': themeLightOrange,
     '콘티': tagConti,
     '캐릭터': tagCharacter,
     '그림': tagDraw,
     '데생': tagDessin,
+    '후보정': themeBlue,
     '승인대기': tagApproval_WAIT,
     '승인수락': tagApproval_YES,
     '승인거절': tagApproval_NO,
@@ -178,7 +195,7 @@ class TagWrapper extends StatelessWidget {
           alignment: Alignment.center,
           elevation: 0.0, // no shadow
 
-          padding: paddingH6V4),
+          padding: paddingH3V2),
       child: tag.substring(0, 1) == '승'
           ? Text(tag, style: articleTagTextStyle)
           : Text('# ' + tag, style: articleTagTextStyle),
@@ -201,21 +218,13 @@ class _ImageWrapperState extends State<ImageWrapper> {
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
       child: Container(
-        child: Align(
+        child: Image.memory(
+          base64Decode(widget.image),
+          height: size.width * 0.3,
           alignment: Alignment.center,
-          widthFactor: 0.8,
-          heightFactor: 0.8,
-          child: Image.memory(
-            base64Decode(widget.image),
-            width: size.width * 0.27,
-            height: size.width * 0.27,
-            alignment: Alignment.center,
-            errorBuilder: (context, error, stackTrace) => Icon(
-                Icons.error_outline_rounded,
-                size: 24,
-                color: themeGrayText),
-            fit: BoxFit.cover,
-          ),
+          errorBuilder: (context, error, stackTrace) =>
+              Icon(Icons.error_outline_rounded, size: 24, color: themeGrayText),
+          fit: BoxFit.cover,
         ),
       ),
     );

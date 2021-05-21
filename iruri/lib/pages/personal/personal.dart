@@ -4,6 +4,8 @@ import 'package:iruri/components/palette.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
 import 'package:device_info/device_info.dart';
+import 'package:iruri/components/spacing.dart';
+import 'package:iruri/components/typhography.dart';
 
 class PersonalPage extends StatefulWidget {
   @override
@@ -143,56 +145,65 @@ class _PersonalPageState extends State<PersonalPage> {
     return id;
   }
 
-  String mobileID;
+  var mobileID;
   @override
-  initState() async {
+  initState() {
     super.initState();
-    mobileID = await getMobileID();
+    mobileID = getMobileID();
   }
 
   Widget personalCode() {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Expanded(
-          flex: 1,
-          child: Text("고유코드 정보",
-              style: TextStyle(fontWeight: FontWeight.w700),
-              textAlign: TextAlign.left)),
-      Expanded(
-          flex: 1,
-          child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return FutureBuilder(
+        future: mobileID,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData || snapshot.hasError)
+            return Center(child: CircularProgressIndicator());
+          final size = MediaQuery.of(context).size;
+          return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 250,
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        color: themeLightGrayOpacity20,
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.circular(30),
-                      color: themeLightGrayOpacity20),
-                  child: Center(
-                      child: Text(
-                    //"CHBH12387DNJ13",
-                    mobileID, //mobileID 변수에 받아온 ID를 출력
-                    style: TextStyle(
-                        color: themeGrayText, fontWeight: FontWeight.w800),
-                  )),
-                ),
-                ElevatedButton(
-                    onPressed: () {
-                      Clipboard.setData(
-                          new ClipboardData(text: "CHBH12387DNJ13"));
-                    },
-                    child: Text("복사"),
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.all(3),
-                      primary: themeDeepBlue,
-                      onPrimary: Colors.white,
-                    )),
-              ]))
-    ]);
+                Expanded(
+                    flex: 1,
+                    child: Text("고유코드 정보",
+                        style: TextStyle(fontWeight: FontWeight.w700),
+                        textAlign: TextAlign.left)),
+                Expanded(
+                    flex: 1,
+                    child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            width: size.width * 0.7,
+                            padding: paddingH6V4,
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: themeLightGrayOpacity20,
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.circular(30),
+                                color: themeLightGrayOpacity20),
+                            child: Center(
+                                child: Text(
+                              //"CHBH12387DNJ13",
+                              snapshot.data, //mobileID 변수에 받아온 ID를 출력
+                              style: articleTagTextStyle,
+                            )),
+                          ),
+                          ElevatedButton(
+                              onPressed: () {
+                                Clipboard.setData(
+                                    new ClipboardData(text: snapshot.data));
+                              },
+                              child: Text("복사"),
+                              style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.all(3),
+                                primary: themeDeepBlue,
+                                onPrimary: Colors.white,
+                              )),
+                        ]))
+              ]);
+        });
   }
 
   Widget managePortfolio() {
