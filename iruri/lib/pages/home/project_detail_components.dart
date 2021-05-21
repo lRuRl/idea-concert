@@ -5,6 +5,7 @@ import 'package:iruri/components/spacing.dart';
 import 'package:iruri/components/typhography.dart';
 import 'package:iruri/model/article.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 Widget thumbnail(BuildContext context, Article data) {
   return Image.network(
@@ -204,11 +205,129 @@ Widget projectDetailContent(BuildContext context, Article data) {
   ]));
 }
 
-Widget applyButton(BuildContext context) {
+Widget applyButton(BuildContext context, String mode) {
+  final size = MediaQuery.of(context).size;
+  String currentmode = mode;
   return ElevatedButton(
       onPressed: () {
-        showMyDialog(
-            context, "신청이 완료 되었습니다.", "자세한 지원 사항은 나의 페이지에서 확인 할 수 있습니다.");
+        // showMyDialog(
+        //     context, "신청이 완료 되었습니다.", "자세한 지원 사항은 나의 페이지에서 확인 할 수 있습니다.");
+
+        showMaterialModalBottomSheet(
+          backgroundColor: Color.fromRGBO(255, 255, 255, 0),
+          context: context,
+          builder: (context) => SingleChildScrollView(
+              padding: EdgeInsets.only(bottom: 55),
+              controller: ModalScrollController.of(context),
+              child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20)),
+                  ),
+                  width: size.width * 1,
+                  height: size.height * 0.4,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(FeatherIcons.chevronDown,
+                          size: 24, color: Colors.grey),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("지원하는 부분",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold)),
+                          Position_Small(),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Column(children: [
+                            ElevatedButton(
+                                onPressed: () {
+                                  currentmode = 'user';
+                                },
+                                child: Icon(
+                                  FeatherIcons.user,
+                                  size: 44,
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0)),
+                                    side: BorderSide(
+                                        color:
+                                            Color.fromRGBO(0xe0, 0xe0, 0xe0, 1),
+                                        width: 1),
+                                    elevation: 0,
+                                    padding: EdgeInsets.all(20),
+                                    //fixedSize: Size(90, 30),
+                                    primary: currentmode == 'user'
+                                        ? Color.fromRGBO(0xf2, 0xa2, 0x0c, 1)
+                                        : Colors.white,
+                                    onPrimary: currentmode == 'users'
+                                        ? Color.fromRGBO(0xf2, 0xa2, 0x0c, 1)
+                                        : Colors.white)),
+                            Text("개인",
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.bold)),
+                          ]),
+                          Column(children: [
+                            ElevatedButton(
+                                onPressed: () {
+                                  currentmode = 'users';
+                                },
+                                child: Icon(
+                                  FeatherIcons.users,
+                                  size: 44,
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0)),
+                                    side: BorderSide(
+                                        color:
+                                            Color.fromRGBO(0xe0, 0xe0, 0xe0, 1),
+                                        width: 1),
+                                    elevation: 0,
+                                    padding: EdgeInsets.all(20),
+                                    //fixedSize: Size(90, 30),
+                                    primary: currentmode == 'users'
+                                        ? Color.fromRGBO(0xf2, 0xa2, 0x0c, 1)
+                                        : Colors.white,
+                                    onPrimary: currentmode == 'user'
+                                        ? Color.fromRGBO(0xf2, 0xa2, 0x0c, 1)
+                                        : Colors.white)),
+                            Text("그룹",
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.bold)),
+                          ]),
+                        ],
+                      ),
+                      ElevatedButton(
+                          onPressed: () {
+                            showMyDialog(context, "신청이 완료 되었습니다.",
+                                "자세한 지원 사항은 나의 페이지에서 확인 할 수 있습니다.");
+                          },
+                          child: Text("지원하기",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold)),
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: size.width / 2 - 44, vertical: 8),
+                            //fixedSize: Size(90, 30),
+                            primary: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
+                            onPrimary: Colors.white,
+                          )),
+                    ],
+                  ))),
+        );
       },
       child: Text("지원하기",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
