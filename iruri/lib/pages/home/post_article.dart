@@ -101,10 +101,14 @@ class _PostArticleState extends State<PostArticle> {
   var formTextStyle = notoSansTextStyle(
       fontSize: 16, fontWeight: FontWeight.w500, textColor: greyText);
   // validator
-  formValidator(BuildContext context, {int maxLength}) => FormBuilderValidators.compose([
-        FormBuilderValidators.required(context, errorText: "필수항목입니다."),
-        FormBuilderValidators.maxLength(context, maxLength != null ? maxLength : null)
-      ]);
+  formValidator(BuildContext context, {int maxLength}) => maxLength != null
+      ? FormBuilderValidators.compose([
+          FormBuilderValidators.required(context, errorText: "필수항목입니다."),
+          FormBuilderValidators.maxLength(context, maxLength)
+        ])
+      : FormBuilderValidators.compose([
+          FormBuilderValidators.required(context, errorText: "필수항목입니다."),
+        ]);
 
   @override
   void initState() {
