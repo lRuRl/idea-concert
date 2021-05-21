@@ -35,24 +35,17 @@ class HomeArticle extends StatelessWidget {
       width: size.width * 0.9,
       height: size.width * 0.4,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: lightWhite),
+        borderRadius: BorderRadius.circular(8), // 8px
+        border: Border.all(color: lightWhite, width: 3.0),
       ),
       margin: marginH20V10,
-      padding: paddingH20V20,
+      padding: paddingH10V10,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         // Thumbnail | CONTENTS
         children: <Widget>[
-          /**
-           *  check image path
-           *  1) not null, show image
-           *  2) not null, but image not found
-           *  3) null, default image
-           */
           Expanded(
-            flex: 2,
             flex: 4,
             child: data.imagePath != null
                 ? ImageWrapper(image: data.image)
@@ -61,9 +54,9 @@ class HomeArticle extends StatelessWidget {
           SizedBox(width: 20),
           // CONTENTS
           Expanded(
-            flex: 5,
+            flex: 6,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 // title and iconbutton - spacebetween
                 Expanded(
@@ -71,6 +64,7 @@ class HomeArticle extends StatelessWidget {
                     child: Align(
                         alignment: Alignment.centerLeft,
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Expanded(
                                 // title
@@ -92,7 +86,7 @@ class HomeArticle extends StatelessWidget {
                         ))),
                 // tags -start
                 Expanded(
-                  flex: 4,
+                  flex: 2,
                   child: Align(
                       alignment: Alignment.centerLeft,
                       child: GridView.builder(
@@ -106,13 +100,35 @@ class HomeArticle extends StatelessWidget {
                                   crossAxisSpacing: 5),
                           itemCount: data.detail.content.tags.length,
                           itemBuilder: (context, index) => TagWrapper(
-                                onPressed: () => print('tag pressed'),
                                 tag: data.detail.content.tags[index],
                               ))),
                 ),
-                // writer - start
+                // genres - start
                 Expanded(
                   flex: 2,
+                  child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: GridView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 6),
+                          itemCount: data.detail.content.genres.length,
+                          itemBuilder: (context, index) {
+                            if (index !=
+                                data.detail.content.genres.length - 1) {
+                              return Text(
+                                  data.detail.content.genres[index] + ',',
+                                  style: articleTagTextStyle);
+                            } else
+                              return Text(data.detail.content.genres[index],
+                                  style: articleTagTextStyle);
+                          })),
+                ),
+                // writer - start
+                Expanded(
+                  flex: 1,
                   child: Align(
                       alignment: Alignment.bottomCenter,
                       child: Row(
@@ -134,7 +150,8 @@ class HomeArticle extends StatelessWidget {
                               ])
                         ],
                       )),
-                )
+                ),
+                SizedBox(height: 10),
               ],
             ),
           )
@@ -159,10 +176,12 @@ class TagWrapper extends StatelessWidget {
   Map<String, Color> colorMapper = {
     '글': tagWrite,
     '채색': tagPaint,
+    '선화': themeLightOrange,
     '콘티': tagConti,
     '캐릭터': tagCharacter,
     '그림': tagDraw,
     '데생': tagDessin,
+    '후보정': themeBlue,
     '승인대기': tagApproval_WAIT,
     '승인수락': tagApproval_YES,
     '승인거절': tagApproval_NO,
@@ -179,7 +198,7 @@ class TagWrapper extends StatelessWidget {
           alignment: Alignment.center,
           elevation: 0.0, // no shadow
 
-          padding: paddingH6V4),
+          padding: paddingH3V2),
       child: tag.substring(0, 1) == '승'
           ? Text(tag, style: articleTagTextStyle)
           : Text('# ' + tag, style: articleTagTextStyle),
@@ -202,21 +221,13 @@ class _ImageWrapperState extends State<ImageWrapper> {
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
       child: Container(
-        child: Align(
+        child: Image.memory(
+          base64Decode(widget.image),
+          height: size.width * 0.3,
           alignment: Alignment.center,
-          widthFactor: 0.8,
-          heightFactor: 0.8,
-          child: Image.memory(
-            base64Decode(widget.image),
-            width: size.width * 0.27,
-            height: size.width * 0.27,
-            alignment: Alignment.center,
-            errorBuilder: (context, error, stackTrace) => Icon(
-                Icons.error_outline_rounded,
-                size: 24,
-                color: themeGrayText),
-            fit: BoxFit.cover,
-          ),
+          errorBuilder: (context, error, stackTrace) =>
+              Icon(Icons.error_outline_rounded, size: 24, color: themeGrayText),
+          fit: BoxFit.cover,
         ),
       ),
     );
