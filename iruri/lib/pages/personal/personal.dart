@@ -122,7 +122,7 @@ class _PersonalPageState extends State<PersonalPage> {
   }
 
   //unique ID 생성 (기기의 고유식별번호(uuid) 이용)
-  Future<String> getMobiledID() async {
+  Future<String> getMobileID() async {
     final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
     String id = '';
     try {
@@ -145,7 +145,7 @@ class _PersonalPageState extends State<PersonalPage> {
 
   String mobileID;
   @override
-  initState() {
+  initState() async {
     super.initState();
     mobileID = await getMobileID();
   }
