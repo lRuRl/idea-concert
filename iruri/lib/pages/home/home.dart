@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:iruri/components/component.dart';
 import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/spacing.dart';
 import 'package:iruri/components/text_form_field.dart';
 import 'package:iruri/components/typhography.dart';
 import 'package:iruri/model/article.dart';
+import 'package:iruri/pages/home/muliple_choice_chip.dart';
 import 'package:iruri/util/data_article.dart';
 
 class HomePage extends StatefulWidget {
@@ -41,6 +43,47 @@ class _HomePageState extends State<HomePage> {
   var fetchedData;
   ArticleAPI api = new ArticleAPI();
 
+  // data
+  // save data
+  Map<String, Map<String, bool>> applicantType = {
+    '메인글': {'write_main': false},
+    '글콘티': {'write_conti': false},
+    '메인그림': {'draw_main': false},
+    '그림콘티': {'draw_conti': false},
+    '뎃셍': {'draw_dessin': false},
+    '선화': {'draw_line': false},
+    '캐릭터': {'draw_char': false},
+    '채색': {'draw_color': false},
+    '후보정': {'draw_after': false}
+  };
+
+  Map<String, Map<String, bool>> genreType = {
+    '스릴러': {'thriller': false},
+    '드라마': {'drama': false},
+    '판타지': {'fantasy': false},
+    '액션': {'action': false},
+    '무협': {'muhyup': false},
+    '로맨스': {'romance': false},
+    '학원': {'teen': false},
+    '코믹': {'comic': false},
+    '일상': {'daily': false},
+    '스포츠': {'sports': false},
+    '시대극': {'costume': false},
+    '공포': {'horror': false},
+    'SF': {'sf': false}
+  };
+  void applicantTypeChanged(Map<String, Map<String, bool>> map) {
+    setState(() {
+      applicantType = map;
+    });
+  }
+
+  void genreTypeChanged(Map<String, Map<String, bool>> map) {
+    setState(() {
+      genreType = map;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -62,19 +105,18 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             // SEARCH CONTAINER
             searchContainer(),
-            // TAG CONTAINER
-            tagGenreContainer(),
+            SizedBox(height: 20),
             // RECRUIT CONTAINER
             FutureBuilder(
               future: fetchedData,
               builder: (context, snapshot) {
-                if(!snapshot.hasData) {
+                if (!snapshot.hasData) {
                   return Center(
-                    child: Image.asset('assets/loading.gif', width: 35, height: 35)
-                  );
+                      child: Image.asset('assets/loading.gif',
+                          width: 35, height: 35));
                 } else if (snapshot.hasError) {
                   return Center(child: Text('500 - server'));
-                } else{
+                } else {
                   return recruitContainer(snapshot.data);
                 }
               },
@@ -133,110 +175,27 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  /*
-   *  TODO: @sooo19 태그 컨테이너 만들기
-   *  - 위에는 '태그' 글씨가 들어가야합니다. fontSize : 18, fontWeight : bold
-   *  - 둥근 사각형으로 구성이 되어있습니다. 아이폰X 기준 가로 : 345px, 세로 : 80px, 선 색깔 : #F2F2F2, borderRadius : 20
-   *  - 같은 아이템으로 6개가 나열되어 있는데 이는 두가지 방법을 사용할 수 있습니다.
-   *    1) 하나씩 선언해주기
-   *    2) ListView 사용하기
-   *  - 1번 같은 경우에는 2번보다는 코드가 조금 더 길 수 있지만 그만큼 더 직관적입니다. 그리고 2번과는 다르게 어떤 배열이나 Map<String, dynamic> 같은 객체를 사용해서 구현을 하지 않아도 됩니다.
-   *  - 2번 같은 경우에는 ListView.builder( ) 같은 것을 사용해서 몇개의 변수와 함께 간략한 코드로 구현할 수 있습니다.
-   *  >> 1번을 먼저 시도 해보시고, 2번을 시도해보세요 수림님.
-   *    1번을 구현하시면 기본적인 레이아웃을 구현할 때 Row, Column에 대해서 이해되실거에요.
-   *    그리고 mainAxisAlignment와 crossAxisAlignment를 이용해서 children [ ] 안에 있는 자식들을 정렬해보는 것도 도움이 될 겁니다.
-   *    ListView를 사용하실 때는 전반적인 레이아웃에 대한 이해가 필요해서 조금 익숙해지시면 시도해보시는 걸 추천 드립니다. :)
-   *  - 공통사항: 버튼을 눌렀을 때, setState(() { }); 를 통해서 현재 _HomePageState 안에 있는 tags[] 내용 값을 변경해주어야합니다.
-   * 
-   *  그럼 화이팅 !
-   */
-
-  String tagValueChoose, genreValueChoose;
-  List tagListItem = ['태그', '글', '뎃셍', '그림', '캐릭터', '콘티', '채색'],
-      genreListItem = [
-        '장르',
-        '드라마',
-        '판타지',
-        '액션',
-        '무협',
-        '로맨스',
-        '학원물',
-        '코믹',
-        '일상',
-        '스포츠',
-        '시대물',
-        '호러',
-        'SF'
-      ];
-
-  @override
-  Widget tagGenreContainer() {
-    return Row(
-      children: <Widget>[
-        Container(
-          padding: EdgeInsets.only(left: 16, right: 16),
-          decoration: BoxDecoration(
-              border: Border.all(color: themeLightGrayOpacity20, width: 1),
-              borderRadius: BorderRadius.circular(15)),
-          child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: DropdownButton(
-                hint: Text("태그"),
-                dropdownColor: lightWhite,
-                icon: Icon(Icons.arrow_drop_down),
-                iconSize: 30,
-                isExpanded: true,
-                underline: SizedBox(),
-                style: bodyTextStyle,
-                value: tagValueChoose,
-                onChanged: (tagnewValue) {
-                  setState(() {
-                    tagValueChoose = tagnewValue;
-                  });
-                },
-                items: tagListItem.map((tagvalueItem) {
-                  return DropdownMenuItem(
-                    value: tagvalueItem,
-                    child: Text(tagvalueItem),
-                  );
-                }).toList(),
-              )),
+  Container tagBottomSheet(BuildContext context) => Container(
+        height: MediaQuery.of(context).size.height * 0.5,
+        padding: paddingH20V20,
+        child: MultiChoiceChip(
+          choiceChipType: 0,
+          typeMap: applicantType,
+          onSelectionChanged: applicantTypeChanged,
         ),
-        Container(
-          padding: EdgeInsets.only(left: 16, right: 16),
-          decoration: BoxDecoration(
-            border: Border.all(color: themeLightGrayOpacity20, width:1),
-            borderRadius: BorderRadius.circular(15)
-          ),
-          child:Padding(
-            padding: const EdgeInsets.all(16.0),
-              child: DropdownButton(
-              hint: Text("장르"),
-              dropdownColor: lightWhite,
-              icon: Icon(Icons.arrow_drop_down),
-              iconSize:30,
-              isExpanded: true,
-              underline:SizedBox(),
-              style: bodyTextStyle,
-              value: genreValueChoose,
-              onChanged: (genrenewValue) {
-              setState(() {
-                genreValueChoose = genrenewValue;
-             });
-            },
-            items: genreListItem.map((genrevalueItem) {
-              return DropdownMenuItem(
-                value: genrevalueItem,
-                child: Text(genrevalueItem),
-              );
-            }).toList(),
-          )
-        ),),
-      ],
-    );
-  }
-  
-  Widget recruitContainer(List<Article> data) {  
+      );
+
+  Container genreBottomSheet(BuildContext context) => Container(
+        height: MediaQuery.of(context).size.height * 0.5,
+        padding: paddingH20V20,
+        child: MultiChoiceChip(
+          choiceChipType: 1,
+          typeMap: genreType,
+          onSelectionChanged: genreTypeChanged,
+        ),
+      );
+
+  Widget recruitContainer(List<Article> data) {
     return Column(
       children: <Widget>[
         Align(
@@ -251,7 +210,18 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text("모집중인공고", style: articleTitleTextStyle),
-                    Text("TAGS")
+                    Row(
+                      children: <TextButton>[
+                        TextButton(
+                            onPressed: () => showModalBottomSheet(
+                                context: context, builder: tagBottomSheet),
+                            child: Text('태그', style: bodyTextStyle)),
+                        TextButton(
+                            onPressed: () => showModalBottomSheet(
+                                context: context, builder: genreBottomSheet),
+                            child: Text('장르', style: bodyTextStyle)),
+                      ],
+                    )
                   ],
                 ))),
         Align(
@@ -261,6 +231,7 @@ class _HomePageState extends State<HomePage> {
               shrinkWrap: true, // 자동으로 길이를 조정해주는 느낌
               itemCount: data.length, // 리스트 뷰안에 있는 자식 객체 수
               itemBuilder: (context, index) {
+                // TODO: filtering
                 return HomeArticle(
                   data: data[index],
                 );
