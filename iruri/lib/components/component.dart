@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
@@ -6,12 +9,10 @@ import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/spacing.dart';
 import 'package:iruri/components/typhography.dart';
 import 'package:iruri/model/article.dart';
+import 'package:iruri/pages/home/muliple_choice_chip.dart';
 import 'package:iruri/pages/state/state_utils.dart';
-import 'package:iruri/pages/home/project_detail.dart';
-import 'package:iruri/components/input_decoration.dart';
 // provider
 import 'package:provider/provider.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:iruri/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:async';
@@ -34,113 +35,129 @@ class HomeArticle extends StatelessWidget {
     final routerReader = context.read<CustomRouter>();
     final routerWatcher = context.watch<CustomRouter>();
 
-    return Container(
-      width: size.width * 0.9,
-      height: size.width * 0.4,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: lightWhite),
-      ),
-      margin: marginH20V10,
-      padding: paddingH20V20,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        // Thumbnail | CONTENTS
-        children: <Widget>[
-          /**
-           *  check image path
-           *  1) not null, show image
-           *  2) not null, but image not found
-           *  3) null, default image
-           */
-          Expanded(
-            flex: 2,
-            child: ImageWrapper(imagePath: data.detail.content.imagePath),
+    return InkWell(
+        onTap: () => routerReader.navigateTo(
+            routerWatcher.currentPage, '/home/projectdetail',
+            data: data),
+        child: Container(
+          width: size.width * 0.9,
+          height: size.width * 0.4,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8), // 8px
+            border: Border.all(color: lightWhite, width: 3.0),
           ),
-          SizedBox(width: 20),
-          // CONTENTS
-          Expanded(
-            flex: 5,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                // title and iconbutton - spacebetween
-                Expanded(
-                    flex: 2,
-                    child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                                // title
-                                flex: 9,
-                                child: Text(data.detail.content.title,
-                                    style: articleTitleTextStyle)),
-                            Expanded(
-                              flex: 1,
-                              child: IconButton(
-                                icon: Icon(Icons.keyboard_arrow_right_rounded),
-                                iconSize: 20,
-                                onPressed: () => routerReader.navigateTo(
-                                    routerWatcher.currentPage,
-                                    '/home/projectdetail',
-                                    data: data),
-                              ),
-                            )
-                          ],
-                        ))),
-                // tags -start
-                Expanded(
-                  flex: 4,
-                  child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: GridView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                  childAspectRatio: 4 / 2,
-                                  crossAxisCount: 4,
-                                  mainAxisSpacing: 10,
-                                  crossAxisSpacing: 5),
-                          itemCount: data.detail.content.tags.length,
-                          itemBuilder: (context, index) => TagWrapper(
-                                onPressed: () => print('tag pressed'),
-                                tag: data.detail.content.tags[index],
-                              ))),
+          margin: marginH20V10,
+          padding: paddingH10V10,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            // Thumbnail | CONTENTS
+            children: <Widget>[
+              Expanded(
+                flex: 4,
+                child: data.imagePath != null
+                    ? ImageWrapper(image: data.image)
+                    : Image.asset('assets/default.png'),
+              ),
+              SizedBox(width: 20),
+              // CONTENTS
+              Expanded(
+                flex: 6,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    // title and iconbutton - spacebetween
+                    Expanded(
+                        flex: 2,
+                        child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Expanded(
+                                    // title
+                                    flex: 9,
+                                    child: Text(data.detail.content.title,
+                                        style: articleTitleTextStyle)),
+                                Expanded(
+                                    flex: 1,
+                                    child: Icon(FeatherIcons.chevronRight))
+                              ],
+                            ))),
+                    // tags -start
+                    Expanded(
+                      flex: 2,
+                      child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: GridView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                      childAspectRatio: 4 / 2,
+                                      crossAxisCount: 4,
+                                      mainAxisSpacing: 10,
+                                      crossAxisSpacing: 5),
+                              itemCount: data.detail.content.tags.length,
+                              itemBuilder: (context, index) => TagWrapper(
+                                    tag: data.detail.content.tags[index],
+                                  ))),
+                    ),
+                    // genres - start
+                    Expanded(
+                      flex: 2,
+                      child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: GridView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 6),
+                              itemCount: data.detail.content.genres.length,
+                              itemBuilder: (context, index) {
+                                if (index !=
+                                    data.detail.content.genres.length - 1) {
+                                  return Text(
+                                      data.detail.content.genres[index] + ',',
+                                      style: articleTagTextStyle);
+                                } else
+                                  return Text(data.detail.content.genres[index],
+                                      style: articleTagTextStyle);
+                              })),
+                    ),
+                    // writer - start
+                    Expanded(
+                      flex: 1,
+                      child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(data.detail.writer,
+                                  style: articleWriterTextStyle),
+                              Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: <Text>[
+                                    Text('마감일 ', style: articleWriterTextStyle),
+                                    Text(
+                                        'D-' +
+                                            DateTime.parse(data.detail.dueDate)
+                                                .difference(DateTime.now())
+                                                .inDays
+                                                .toString(),
+                                        style: articleDuedateTextStyle)
+                                  ])
+                            ],
+                          )),
+                    ),
+                    SizedBox(height: 10),
+                  ],
                 ),
-                // writer - start
-                Expanded(
-                  flex: 2,
-                  child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(data.detail.writer,
-                              style: articleWriterTextStyle),
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: <Text>[
-                                Text('마감일 ', style: articleWriterTextStyle),
-                                Text(
-                                    'D-DAY ' +
-                                        DateTime.now()
-                                            .difference(data.detail.dueDate)
-                                            .inDays
-                                            .toString(),
-                                    style: articleDuedateTextStyle)
-                              ])
-                        ],
-                      )),
-                )
-              ],
-            ),
-          )
-        ],
-      ),
-    );
+              )
+            ],
+          ),
+        ));
   }
 }
 
@@ -159,10 +176,12 @@ class TagWrapper extends StatelessWidget {
   Map<String, Color> colorMapper = {
     '글': tagWrite,
     '채색': tagPaint,
+    '선화': themeLightOrange,
     '콘티': tagConti,
     '캐릭터': tagCharacter,
     '그림': tagDraw,
     '데생': tagDessin,
+    '후보정': themeBlue,
     '승인대기': tagApproval_WAIT,
     '승인수락': tagApproval_YES,
     '승인거절': tagApproval_NO,
@@ -179,7 +198,7 @@ class TagWrapper extends StatelessWidget {
           alignment: Alignment.center,
           elevation: 0.0, // no shadow
 
-          padding: paddingH6V4),
+          padding: paddingH3V2),
       child: tag.substring(0, 1) == '승'
           ? Text(tag, style: articleTagTextStyle)
           : Text('# ' + tag, style: articleTagTextStyle),
@@ -189,8 +208,8 @@ class TagWrapper extends StatelessWidget {
 
 // get image from network
 class ImageWrapper extends StatefulWidget {
-  final String imagePath;
-  ImageWrapper({this.imagePath});
+  final String image;
+  ImageWrapper({this.image});
   @override
   _ImageWrapperState createState() => _ImageWrapperState();
 }
@@ -200,23 +219,15 @@ class _ImageWrapperState extends State<ImageWrapper> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(8),
       child: Container(
-        child: Align(
+        child: Image.memory(
+          base64Decode(widget.image),
+          height: size.width * 0.3,
           alignment: Alignment.center,
-          widthFactor: 0.8,
-          heightFactor: 0.8,
-          child: Image.network(
-            widget.imagePath,
-            width: size.width * 0.27,
-            height: size.width * 0.27,
-            alignment: Alignment.center,
-            errorBuilder: (context, error, stackTrace) => Icon(
-                Icons.error_outline_rounded,
-                size: 24,
-                color: themeGrayText),
-            fit: BoxFit.cover,
-          ),
+          errorBuilder: (context, error, stackTrace) =>
+              Icon(Icons.error_outline_rounded, size: 24, color: themeGrayText),
+          fit: BoxFit.cover,
         ),
       ),
     );
@@ -331,6 +342,12 @@ Future<Info> fetchInfo() async {
     throw Exception('Failed to load ProfileInfo');
   }
 }
+<<<<<<< HEAD
+=======
+
+ProfileInfo testInput = ProfileInfo(
+    nickname: "parkjang", phone: "010-XXXX-XXXX", email: "parkjang@naver.com");
+>>>>>>> 05e8178da7f1b2ebe9333f9bad964364e83b0f3a
 
 class MyProfile extends StatefulWidget {
   @override
@@ -342,6 +359,7 @@ class _MyProfileState extends State<MyProfile> {
   final ImagePicker _picker = ImagePicker();
   PickedFile _image;
   String imagePath;
+<<<<<<< HEAD
   String _id;
   int profile_index;
   Future<Info> futureInfo;
@@ -350,6 +368,14 @@ class _MyProfileState extends State<MyProfile> {
   TextEditingController phoneEditor_ = new TextEditingController();//text: testInput.phone
   TextEditingController emailEditor_ = new TextEditingController();//text: testInput.email
   
+=======
+  TextEditingController nameEditor_ =
+      new TextEditingController(text: testInput.nickname);
+  TextEditingController phoneEditor_ =
+      new TextEditingController(text: testInput.phone);
+  TextEditingController emailEditor_ =
+      new TextEditingController(text: testInput.email);
+>>>>>>> 05e8178da7f1b2ebe9333f9bad964364e83b0f3a
 
   @override
   void initState() {
@@ -388,14 +414,19 @@ class _MyProfileState extends State<MyProfile> {
       changeButton = Container();
       imageChangeButton = Container();
     } else {
+<<<<<<< HEAD
       profileContent = changeProfileContent(nameEditor_, phoneEditor_, emailEditor_, width, height, futureInfo);
+=======
+      profileContent = changeProfileContent(
+          nameEditor_, phoneEditor_, emailEditor_, width, height, testInput);
+>>>>>>> 05e8178da7f1b2ebe9333f9bad964364e83b0f3a
       icon = Container();
       changeButton = confirmChangeButton();
       imageChangeButton = confirmImageChangeButton();
     }
 
     return Container(
-      child: Column(
+        child: Column(
       children: <Widget>[
         //프로필 상단 부분
         Row(
@@ -410,30 +441,29 @@ class _MyProfileState extends State<MyProfile> {
         //프로필 하단 부분
         Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
           Container(
-              //프로필사진 컨테이너
-              width: width * 0.3,
-              margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
-              padding: EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                color: themeLightGrayOpacity20,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    height: height * 0.13,
-                    //width: width * 10,
-                    //padding: EdgeInsets.all(2),
-                    child: //ImageWrapper(imagePath: imagePath),
-                     ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.file(File(imagePath))
-                    ),
-                  ),
-                  imageChangeButton
-                ],
-              ),
+            //프로필사진 컨테이너
+            width: width * 0.3,
+            margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
+            padding: EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              color: themeLightGrayOpacity20,
+              borderRadius: BorderRadius.circular(20),
             ),
+            child: Column(
+              children: [
+                Container(
+                  height: height * 0.13,
+                  //width: width * 10,
+                  //padding: EdgeInsets.all(2),
+                  child: //ImageWrapper(imagePath: imagePath),
+                      ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.file(File(imagePath))),
+                ),
+                imageChangeButton
+              ],
+            ),
+          ),
           Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
               children: [
             Container(
@@ -501,20 +531,19 @@ class _MyProfileState extends State<MyProfile> {
               Text("수정", style: TextStyle(color: Colors.white, fontSize: 10)),
         ));
   }
-  
-  Future _getImage() async{
+
+  Future _getImage() async {
     PickedFile image = await _picker.getImage(source: ImageSource.gallery);
-    setState((){
+    setState(() {
       _image = image;
     });
-    if(image != null){
-      setState((){
-      imagePath = image.path;
-    });
-    print("path >>>> " + imagePath);
+    if (image != null) {
+      setState(() {
+        imagePath = image.path;
+      });
+      print("path >>>> " + imagePath);
     }
   }
-
 
   //수정 화면에서 "수정하기" 버튼 => 누르면 원래 화면으로 돌아감 => 내용 수정은 차후로
   Container confirmChangeButton() {
@@ -531,28 +560,26 @@ class _MyProfileState extends State<MyProfile> {
               barrierDismissible: false,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Center(child: Text('수정이 완료되었습니다')),
-                  content: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 60),
-                    child: Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          changeIndex();
-                        },
-                        child: Text("확인",
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white)),
-                        style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                          primary: themeDeepBlue,
-                          onPrimary: Colors.white,
-                        )
-                      )
-                    ),
-                  )
-                );
+                    title: Center(child: Text('수정이 완료되었습니다')),
+                    content: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 60),
+                      child: Expanded(
+                          child: ElevatedButton(
+                              onPressed: () {
+                                changeIndex();
+                              },
+                              child: Text("확인",
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white)),
+                              style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 4, vertical: 4),
+                                primary: themeDeepBlue,
+                                onPrimary: Colors.white,
+                              ))),
+                    ));
               }),
           child: Text("저장하기", style: TextStyle(color: Colors.white)),
         ));
@@ -568,49 +595,44 @@ class _MyProfileState extends State<MyProfile> {
           barrierDismissible: false,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Center(child: Text('수정하시겠습니까')),
-              content: 
-                Row(
+                title: Center(child: Text('수정하시겠습니까')),
+                content: Row(
                   children: [
                     Expanded(
-                      child: Container(
-                          margin: EdgeInsets.symmetric(horizontal: 10),
-                          child: 
-                          ElevatedButton(
-                          onPressed: () { Navigator.pop(context); },
-                          style: ElevatedButton.styleFrom(
-                            primary: themeDeepBlue,
-                          ),
-                          child: Text("취소", 
+                        child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 10),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          primary: themeDeepBlue,
+                        ),
+                        child: Text("취소",
                             style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white
-                            )),
-                          ),
-                        )
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white)),
                       ),
+                    )),
                     Expanded(
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 10),
-                        child: 
-                        ElevatedButton(
-                          onPressed: () { changeIndex(); },
-                          style: ElevatedButton.styleFrom(
-                            primary: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
-                          ),
-                          child: Text("확인",
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white
-                            )),
-                          )
-                        )
-                      ),
-                    ],
-                  )
-            );
+                        child: Container(
+                            margin: EdgeInsets.symmetric(horizontal: 10),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                changeIndex();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                primary: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
+                              ),
+                              child: Text("확인",
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white)),
+                            ))),
+                  ],
+                ));
           }),
     );
   }
@@ -687,6 +709,7 @@ class _MyProfileState extends State<MyProfile> {
 
   //연필 아이콘 누르면 수정하는 화면으로 바뀜
   Column changeProfileContent(
+<<<<<<< HEAD
       TextEditingController nameEditor_, 
       TextEditingController phoneEditor_, 
       TextEditingController emailEditor_, 
@@ -694,6 +717,14 @@ class _MyProfileState extends State<MyProfile> {
       final height, 
       Future<Info> testInput,
     ) {
+=======
+      TextEditingController nameEditor_,
+      TextEditingController phoneEditor_,
+      TextEditingController emailEditor_,
+      final width,
+      final height,
+      ProfileInfo testInput) {
+>>>>>>> 05e8178da7f1b2ebe9333f9bad964364e83b0f3a
     return Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
         children: [
       Container(
@@ -813,9 +844,9 @@ class Position extends StatelessWidget {
         alignment: Alignment.topCenter,
         width: size.width * 0.45,
         // decoration: BoxDecoration(
-        //   border: Border.all( 
+        //   border: Border.all(
         //     width: 1,
-        //     color: themeLightGrayOpacity20, 
+        //     color: themeLightGrayOpacity20,
         //   ),
         //   borderRadius: BorderRadius.circular(10),
         //   color: Colors.white,
@@ -843,8 +874,9 @@ class Position extends StatelessWidget {
             ]));
   }
 }
+
 class Position_Small extends StatelessWidget {
- final List<String> data = ["채색", "콘티", "색칠", "캐릭터"];
+  final List<String> data = ["채색", "콘티", "색칠", "캐릭터"];
 
   @override
   Widget build(BuildContext context) {
@@ -855,25 +887,24 @@ class Position_Small extends StatelessWidget {
     } else {
       bottomMargin = 3;
     }
-    return 
-    Container(
-      margin: EdgeInsets.fromLTRB(0, 0, 0, bottomMargin),
+    return Container(
+        margin: EdgeInsets.fromLTRB(0, 0, 0, bottomMargin),
         padding: EdgeInsets.symmetric(horizontal: 2, vertical: 2),
         alignment: Alignment.topCenter,
         width: size.width * 0.45,
         height: size.height * 0.06,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
-          border: Border.all( 
+          border: Border.all(
             width: 1,
-            color: themeLightGrayOpacity20, 
+            color: themeLightGrayOpacity20,
           ),
           color: themeLightGrayOpacity20,
         ),
-    child: Container(
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
+        child: Container(
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
               Expanded(
                 child: Align(
                     alignment: Alignment.topCenter,
@@ -887,12 +918,12 @@ class Position_Small extends StatelessWidget {
                             crossAxisSpacing: 3),
                         itemCount: data.length,
                         itemBuilder: (context, index) => TagWrapper(
-                              onPressed: () => print("tag pressed"),//_showDialog(context),
+                              onPressed: () =>
+                                  print("tag pressed"), //_showDialog(context),
                               tag: data[index],
                             ))),
               )
-            ]))
-    );
+            ])));
   }
 }
 
@@ -1013,7 +1044,6 @@ void _showDialog(context) {
     );
   }
  */
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////                              프로필 정보 : 석운                             /////////////////////

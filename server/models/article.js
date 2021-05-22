@@ -9,7 +9,7 @@ const conditionSchema = new mongoose.Schema({
 });
 // sub document
 const contentSchema = new mongoose.Schema({
-    introduction: String,
+    title: String,
     desc: String,
     tags: [String],
     genres: [String],
@@ -48,6 +48,7 @@ const detailSchema = new mongoose.Schema({
 const articleSchema = new mongoose.Schema({
     // 💡 MongoDB does not allow overwriting the default _id
     imagePath: String,
+    image: String,
     members: [{ type: String }],
     contracts: [{ type: String }],
     detail: {

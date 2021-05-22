@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:iruri/components/component.dart';
 import 'package:iruri/components/palette.dart';
 import 'package:flutter/services.dart';
+import 'dart:io';
+import 'package:device_info/device_info.dart';
+import 'package:iruri/components/spacing.dart';
+import 'package:iruri/components/typhography.dart';
+
 class PersonalPage extends StatefulWidget {
   @override
   _PersonalPageState createState() => _PersonalPageState();
@@ -118,48 +123,87 @@ class _PersonalPageState extends State<PersonalPage> {
     );
   }
 
+  //unique ID 생성 (기기의 고유식별번호(uuid) 이용)
+  Future<String> getMobileID() async {
+    final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+    String id = '';
+    try {
+      if (Platform.isAndroid) {
+        //안드로이드 기기의 경우
+        final AndroidDeviceInfo androidData =
+            await deviceInfoPlugin.androidInfo; //androidInfo를 가져옴
+        id = androidData.androidId;
+      } else if (Platform.isIOS) {
+        //IOS의 경우
+        final IosDeviceInfo iosData =
+            await deviceInfoPlugin.iosInfo; //iosInfo를 가져옴
+        id = iosData.identifierForVendor;
+      }
+    } on PlatformException {
+      id = '';
+    }
+    return id;
+  }
+
+  var mobileID;
+  @override
+  initState() {
+    super.initState();
+    mobileID = getMobileID();
+  }
+
   Widget personalCode() {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Expanded(
-          flex: 1,
-          child: Text("고유코드 정보",
-              style: TextStyle(fontWeight: FontWeight.w700),
-              textAlign: TextAlign.left)),
-      Expanded(
-          flex: 1,
-          child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return FutureBuilder(
+        future: mobileID,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData || snapshot.hasError)
+            return Center(child: CircularProgressIndicator());
+          final size = MediaQuery.of(context).size;
+          return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 250,
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        color: themeLightGrayOpacity20,
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.circular(30),
-                      color: themeLightGrayOpacity20),
-                  child: Center(
-                      child: Text(
-                    "CHBH12387DNJ13",
-                    style: TextStyle(
-                        color: themeGrayText, fontWeight: FontWeight.w800),
-                  )),
-                ),
-                ElevatedButton(
-                    onPressed: () {
-                      Clipboard.setData(
-                          new ClipboardData(text: "CHBH12387DNJ13"));
-                    },
-                    child: Text("복사"),
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.all(3),
-                      primary: themeDeepBlue,
-                      onPrimary: Colors.white,
-                    )),
-              ]))
-    ]);
+                Expanded(
+                    flex: 1,
+                    child: Text("고유코드 정보",
+                        style: TextStyle(fontWeight: FontWeight.w700),
+                        textAlign: TextAlign.left)),
+                Expanded(
+                    flex: 1,
+                    child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            width: size.width * 0.7,
+                            padding: paddingH6V4,
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: themeLightGrayOpacity20,
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.circular(30),
+                                color: themeLightGrayOpacity20),
+                            child: Center(
+                                child: Text(
+                              //"CHBH12387DNJ13",
+                              snapshot.data, //mobileID 변수에 받아온 ID를 출력
+                              style: articleTagTextStyle,
+                            )),
+                          ),
+                          ElevatedButton(
+                              onPressed: () {
+                                Clipboard.setData(
+                                    new ClipboardData(text: snapshot.data));
+                              },
+                              child: Text("복사"),
+                              style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.all(3),
+                                primary: themeDeepBlue,
+                                onPrimary: Colors.white,
+                              )),
+                        ]))
+              ]);
+        });
   }
 
   Widget managePortfolio() {
@@ -197,7 +241,8 @@ class _PersonalPageState extends State<PersonalPage> {
                                   color: themeLightGrayOpacity20, width: 1),
                               borderRadius: BorderRadius.circular(30)),
                           fillColor: Colors.white,
-                          labelStyle: TextStyle(color: themeGrayText, fontSize: 13),
+                          labelStyle:
+                              TextStyle(color: themeGrayText, fontSize: 13),
                           labelText: 'URL 또는 드라이브 링크'),
                     )),
                 ElevatedButton(
@@ -212,4 +257,3 @@ class _PersonalPageState extends State<PersonalPage> {
     ]);
   }
 }
-

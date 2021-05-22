@@ -14,10 +14,13 @@ var storage = new GridFsStorage({
                     bucketName: 'user-images',
                     filename: `${req.params.id}-profile`
                 };
-            } else {
+            } 
+            else if(req.baseUrl === '/articles') {
+                const { detail } = req.body;
+                const { reportedDate } = detail;
                 return {
                     bucketName: 'article-images',
-                    filename: `${req.params.id}-thumbnail`
+                    filename: `${reportedDate}-thumbnail`
                 }
             }
         } else {
@@ -30,7 +33,7 @@ var storage = new GridFsStorage({
     }
 });
 
-var upload = multer({ storage: storage }).single('userfile');
+var upload = multer({ storage: storage }).single('file');
 var uploadFilesMiddleware = util.promisify(upload);
 
 module.exports = uploadFilesMiddleware;

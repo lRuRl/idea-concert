@@ -3,9 +3,7 @@ const express = require('express');
 const ArticleService = require('../../../services/article');
 const uploadFilesMiddleware = require('../../middleware/multer');
 // set router
-const router = express.Router({// case sensitive routing
-    caseSensitive: true
-});
+const router = express.Router();
 
 module.exports = (app) => {
     // route path
@@ -26,6 +24,7 @@ module.exports = (app) => {
     });
     // 2) R[Read]
     router.get('/', async (req, res) => {
+        console.log('msg received : GET ALL')
         const { status, result } = await articleService.readAll();
         return res.status(status).send(result);
     })
