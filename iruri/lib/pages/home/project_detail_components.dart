@@ -1,19 +1,20 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:iruri/components/component.dart';
 import 'package:iruri/components/palette.dart';
-import 'package:iruri/components/spacing.dart';
 import 'package:iruri/components/typhography.dart';
 import 'package:iruri/model/article.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 Widget thumbnail(BuildContext context, Article data) {
-  return Image.network(
-    data.detail.content.imagePath,
+  return Image.memory(
+    base64Decode(data.image),
     alignment: Alignment.center,
     errorBuilder: (context, error, stackTrace) =>
         Icon(Icons.error_outline_rounded, size: 24, color: themeGrayText),
-    fit: BoxFit.fill,
+    fit: BoxFit.cover,
   );
 }
 
@@ -23,20 +24,25 @@ Widget noticeDetail(BuildContext context, Article data) {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Text("공고 상세보기",
-          //     style: TextStyle(fontWeight: FontWeight.w700),
-          //     textAlign: TextAlign.left),
-          Row(
+          Wrap(
+            runSpacing: 10,
             children: [
               Text(data.detail.content.title + " ",
                   style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20)),
-              Align(
-                alignment: Alignment.centerRight,
-                child: Position_Small(),
-              ),
+              GridView.builder(
+                shrinkWrap: true,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 6,
+                    childAspectRatio: 2 / 1,
+                    mainAxisSpacing: 5,
+                    crossAxisSpacing: 10
+                    ),
+                itemCount: data.detail.content.tags.length,
+                itemBuilder: (context, index) =>
+                    TagWrapper(tag: data.detail.content.tags[index]),
+              )
             ],
           ),
-
           Row(
             children: [
               Text(data.detail.writer + " | ",
@@ -51,7 +57,7 @@ Widget noticeDetail(BuildContext context, Article data) {
                       fontSize: 11)),
             ],
           ),
-          Text("로맨스 ・ 판타지",
+          Text(data.detail.content.genres.join(' · '),
               style: TextStyle(
                   color: Color.fromRGBO(0x77, 0x77, 0x77, 1),
                   fontWeight: FontWeight.w700,
@@ -92,8 +98,8 @@ Widget noticeDetail(BuildContext context, Article data) {
                           Text('마감일 ', style: articleWriterTextStyle),
                           Text(
                               'D-DAY ' +
-                                  DateTime.now()
-                                      .difference(data.detail.dueDate)
+                                  DateTime.parse(data.detail.dueDate)
+                                      .difference(DateTime.now())
                                       .inDays
                                       .toString(),
                               style: articleDuedateTextStyle)

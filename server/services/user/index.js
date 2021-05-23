@@ -73,7 +73,7 @@ module.exports = class UserService {
             // convert to ObjectID
             const res = await UserImageChunk.findOne({ files_id: _id });
 
-            if (res) return onGetNotFound;
+            if (!res) return onGetNotFound;
             return { status: 200, result: res.data };
         } catch (error) {
             console.log(error);
@@ -87,7 +87,7 @@ module.exports = class UserService {
             const findResult = await File.findOne({ filename: filename });
             const { _id } = findResult;
             const res = await FileChunk.findOne({ files_id: _id });
-            if (res) return onGetNotFound;
+            if (!res) return onGetNotFound;
             return { status: 200, result: res.data };
         } catch (error) {
             console.error(error);

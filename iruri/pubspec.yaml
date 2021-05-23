@@ -31,6 +31,13 @@ dependencies:
   flutter_feather_icons: ^2.0.0+1
   # form builder
   flutter_form_builder: ^6.0.0
+  # http
+  http: ^0.12.1
+  flutter_pdfview: ^1.0.4
+  modal_bottom_sheet: ^2.0.0
+  # device info
+  device_info: ^2.0.1
+
   flutter:
     sdk: flutter
   path_provider: ^2.0.0
@@ -42,6 +49,7 @@ dependencies:
   http: ^0.13.3
   shared_preferences: ^2.0.5 
   modal_bottom_sheet: ^2.0.0
+
 dev_dependencies:
 
   flutter_test:
@@ -71,6 +79,7 @@ flutter:
     - assets/구글.png
     - assets/네이버.png
     - assets/default.png
+    - assets/loading.gif
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
