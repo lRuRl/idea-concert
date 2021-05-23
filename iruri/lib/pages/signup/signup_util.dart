@@ -140,6 +140,7 @@ Widget phoneNumberForm() {
 
 Widget registerButton(BuildContext context) {
   return ElevatedButton(
+    
       onPressed: () {
         Provider.of<CustomRouter>(context, listen: false)
             .setRegistrationStatus(true);
@@ -147,6 +148,7 @@ Widget registerButton(BuildContext context) {
       },
       child: Text("가입하기"),
       style: ElevatedButton.styleFrom(
+  
         padding: EdgeInsets.only(top: 11, bottom: 11, left: 21, right: 21),
         primary: Colors.white,
         onPrimary: Color.fromRGBO(0x82, 0x82, 0x82, 1),
