@@ -538,7 +538,16 @@ class _MyProfileState extends State<MyProfile> {
               }
           }),
       ),
-      Position(),
+      FutureBuilder<User>(
+          future: this.user,
+          builder: (context, snapshot) {
+              for(int i = 0;i<snapshot.data.result.length;i++){
+                if(snapshot.data.result[i].sId == this._id){
+                  List<String> roles = snapshot.data.result[i].roles;
+                  return position(roles);
+                }
+              }
+          }),
       Container(
         margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
         alignment: Alignment.topCenter,
@@ -610,7 +619,16 @@ class _MyProfileState extends State<MyProfile> {
           ),
         ),
       ),
-      Position_Small(),
+      FutureBuilder<User>(
+          future: this.user,
+          builder: (context, snapshot) {
+              for(int i = 0;i<snapshot.data.result.length;i++){
+                if(snapshot.data.result[i].sId == this._id){
+                  List<String> roles = snapshot.data.result[i].roles;
+                  return changePosition(roles);
+                }
+              }
+          }),
       Container(
         margin: EdgeInsets.fromLTRB(0, 0, 0, 3),
         alignment: Alignment.topLeft,
@@ -675,55 +693,83 @@ class _MyProfileState extends State<MyProfile> {
       ),
     ]);
   }
-}
 
-//포지션 태그 나타내는 클래스
-class Position extends StatelessWidget {
-  final List<String> data = ["채색", "콘티", "색칠", "캐릭터"];
-
-  @override
-  Widget build(BuildContext context) {
+  Widget position(List<String> data){
     final size = MediaQuery.of(context).size;
     double bottomMargin;
-    if (data.length >= 4) {
-      bottomMargin = 10;
-    } else {
-      bottomMargin = 35;
-    }
+    if (data.length >= 4) bottomMargin = 10;
+    else bottomMargin = 35;
+
     return Container(
-        margin: EdgeInsets.fromLTRB(0, 0, 0, bottomMargin),
-        padding: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
-        alignment: Alignment.topCenter,
-        width: size.width * 0.45,
-        // decoration: BoxDecoration(
-        //   border: Border.all(
-        //     width: 1,
-        //     color: themeLightGrayOpacity20,
-        //   ),
-        //   borderRadius: BorderRadius.circular(10),
-        //   color: Colors.white,
-        // ),
+      margin: EdgeInsets.fromLTRB(0, 0, 0, bottomMargin),
+      padding: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+      alignment: Alignment.topCenter,
+      width: size.width * 0.45,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Expanded(
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: GridView.builder(
+                shrinkWrap: true,
+                physics: AlwaysScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  childAspectRatio: 4 / 1.5,
+                  crossAxisCount: 3,
+                  mainAxisSpacing: 3,
+                  crossAxisSpacing: 3),
+                itemCount: data.length,
+                itemBuilder: (context, index) => TagWrapper(
+                  onPressed: () => print('tag pressed'),
+                  tag: data[index],
+                ))),
+            )
+        ]));
+  }
+    
+  Widget changePosition(List<String> data){
+    final size = MediaQuery.of(context).size;
+    double bottomMargin;
+    if (data.length >= 4) bottomMargin = 3;
+    else bottomMargin = 3;
+    
+    return Container(
+      margin: EdgeInsets.fromLTRB(0, 0, 0, bottomMargin),
+      padding: EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+      alignment: Alignment.topCenter,
+      width: size.width * 0.45,
+      height: size.height * 0.06,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        border: Border.all(
+          width: 1,
+          color: themeLightGrayOpacity20,
+        ),
+        color: themeLightGrayOpacity20,
+      ),
+      child: Container(
         child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Expanded(
-                child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: GridView.builder(
-                        shrinkWrap: true,
-                        physics: AlwaysScrollableScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            childAspectRatio: 4 / 1.5,
-                            crossAxisCount: 3,
-                            mainAxisSpacing: 3,
-                            crossAxisSpacing: 3),
-                        itemCount: data.length,
-                        itemBuilder: (context, index) => TagWrapper(
-                              onPressed: () => print('tag pressed'),
-                              tag: data[index],
-                            ))),
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Expanded(
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  physics: AlwaysScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    childAspectRatio: 4 / 1.5,
+                    crossAxisCount: 3,
+                    mainAxisSpacing: 3,
+                    crossAxisSpacing: 3),
+                  itemCount: data.length,
+                  itemBuilder: (context, index) => TagWrapper(
+                    onPressed: () => print("tag pressed"), //_showDialog(context),
+                    tag: data[index],
+                ))),
               )
-            ]));
+      ])));
   }
 }
 
