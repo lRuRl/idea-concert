@@ -11,10 +11,14 @@ import 'package:iruri/components/typhography.dart';
 import 'package:iruri/model/article.dart';
 import 'package:iruri/pages/home/muliple_choice_chip.dart';
 import 'package:iruri/pages/state/state_utils.dart';
+import 'package:iruri/model/profile_info.dart';
 // provider
 import 'package:provider/provider.dart';
 import 'package:iruri/provider.dart';
 import 'package:image_picker/image_picker.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 // light gray 색 구분선
 const Widget divider = Divider(color: Color(0xFFEEEEEE), thickness: 1);
@@ -235,15 +239,18 @@ class _ImageWrapperState extends State<ImageWrapper> {
 ////////////////                              프로필 정보 : 석운                             /////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class ProfileInfo {
-  String nickname;
-  String phone;
-  String email;
-  ProfileInfo({this.nickname, this.phone, this.email});
-}
+Future<User> fetchUserInfo() async {
+  final response = await http.get('http://172.30.1.45:3000/user');
+  //final response = await http.get('http://localhost:3000/user');
 
-ProfileInfo testInput = ProfileInfo(
-    nickname: "parkjang", phone: "010-XXXX-XXXX", email: "parkjang@naver.com");
+  if (response.statusCode == 200) {
+    // 만약 서버로의 요청이 성공하면, JSON을 파싱합니다.
+    return User.fromJson(json.decode(response.body));
+  } else {
+    // 만약 요청이 실패하면, 에러를 던집니다.
+    throw Exception('Failed to load post');
+  }
+}
 
 class MyProfile extends StatefulWidget {
   @override
@@ -255,30 +262,28 @@ class _MyProfileState extends State<MyProfile> {
   final ImagePicker _picker = ImagePicker();
   PickedFile _image;
   String imagePath;
-  TextEditingController nameEditor_ =
-      new TextEditingController(text: testInput.nickname);
-  TextEditingController phoneEditor_ =
-      new TextEditingController(text: testInput.phone);
-  TextEditingController emailEditor_ =
-      new TextEditingController(text: testInput.email);
+  Future<User> user;
+  String _id;
+  TextEditingController nameEditor_;
+  TextEditingController phoneEditor_;
+  TextEditingController emailEditor_;
 
   @override
   void initState() {
     super.initState();
     index = false;
     _image = null;
+    user = fetchUserInfo();
     //need to be personal info which should be already stored in DB
     //내 temporary 이미지 path
     //imagePath = "/data/user/0/com.example.iruri/cache/image_picker4896229670943898999.jpg";
     imagePath = "";
+    _id = "60a303cfc232d343e0958685";
   }
 
   changeIndex() {
     setState(() {
       index = !index;
-      testInput.nickname = nameEditor_.text;
-      testInput.phone = phoneEditor_.text;
-      testInput.email = emailEditor_.text;
     });
     Navigator.of(context).pop();
   }
@@ -290,13 +295,13 @@ class _MyProfileState extends State<MyProfile> {
     var profileContent, icon, changeButton, imageChangeButton;
 
     if (index == false) {
-      profileContent = showProfileContent(width, height, testInput);
+      profileContent = showProfileContent(width, height);
       icon = changeIcon();
       changeButton = Container();
       imageChangeButton = Container();
     } else {
       profileContent = changeProfileContent(
-          nameEditor_, phoneEditor_, emailEditor_, width, height, testInput);
+          nameEditor_, phoneEditor_, emailEditor_, width, height);
       icon = Container();
       changeButton = confirmChangeButton();
       imageChangeButton = confirmImageChangeButton();
@@ -394,7 +399,7 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   //그림 수정 버튼
-  Container confirmImageChangeButton() {
+  Widget confirmImageChangeButton() {
     return Container(
         alignment: Alignment.center,
         width: 40,
@@ -423,7 +428,7 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   //수정 화면에서 "수정하기" 버튼 => 누르면 원래 화면으로 돌아감 => 내용 수정은 차후로
-  Container confirmChangeButton() {
+  Widget confirmChangeButton() {
     return Container(
         alignment: Alignment.center,
         width: 80,
@@ -463,7 +468,7 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   //초기 프로필 정보 화면에서 연필모양 아이콘 => 누르면 수정하는 화면으로 바뀜
-  IconButton changeIcon() {
+  Widget changeIcon() {
     return IconButton(
       icon: Icon(Icons.create_outlined),
       iconSize: 20,
@@ -515,45 +520,63 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   //프로필 정보 화면 초기상태
-  Column showProfileContent(final width, final height, ProfileInfo testInput) {
+  Widget showProfileContent(final width, final height) {
+    String nickname, phoneNumber, email;
     return Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
         children: [
       Container(
         margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
         alignment: Alignment.topCenter,
-        child: Text(
-          testInput.nickname,
-          style: TextStyle(fontSize: 11),
-        ),
+        child:  FutureBuilder<User>(
+          future: this.user,
+          builder: (context, snapshot) {
+              for(int i = 0;i<snapshot.data.result.length;i++){
+                if(snapshot.data.result[i].sId == this._id){
+                  nickname = snapshot.data.result[i].profileInfo.nickname;
+                  return Text(nickname,style: TextStyle(fontSize: 9),);
+                }
+              }
+          }),
       ),
       Position(),
       Container(
         margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
         alignment: Alignment.topCenter,
-        child: Text(
-          testInput.phone,
-          style: TextStyle(fontSize: 11),
-        ),
+        child:  FutureBuilder<User>(
+          future: this.user,
+          builder: (context, snapshot) {
+              for(int i = 0;i<snapshot.data.result.length;i++){
+                if(snapshot.data.result[i].sId == this._id){
+                  phoneNumber = snapshot.data.result[i].profileInfo.phoneNumber;
+                  return Text(phoneNumber,style: TextStyle(fontSize: 9),);
+                }
+              }
+          }),
       ),
       Container(
         margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
         alignment: Alignment.topCenter,
-        child: Text(
-          testInput.email,
-          style: TextStyle(fontSize: 9),
-        ),
+        child: FutureBuilder<User>(
+          future: this.user,
+          builder: (context, snapshot) {
+              for(int i = 0;i<snapshot.data.result.length;i++){
+                if(snapshot.data.result[i].sId == this._id){
+                  email = snapshot.data.result[i].profileInfo.email;
+                  return Text(email,style: TextStyle(fontSize: 9),);
+                }
+              }
+          }),
       ),
     ]);
   }
 
   //연필 아이콘 누르면 수정하는 화면으로 바뀜
-  Column changeProfileContent(
+  Widget changeProfileContent(
       TextEditingController nameEditor_,
       TextEditingController phoneEditor_,
       TextEditingController emailEditor_,
       final width,
-      final height,
-      ProfileInfo testInput) {
+      final height,) {
     return Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
         children: [
       Container(

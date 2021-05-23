@@ -28,7 +28,7 @@ class Result {
   List<String> roles;
   String sId;
   Null portfolio;
-  PeofileInfo profileInfo;
+  ProfileInfo profileInfo;
   int iV;
 
   Result({this.roles, this.sId, this.portfolio, this.profileInfo, this.iV});
@@ -37,7 +37,7 @@ class Result {
     roles = json['roles'].cast<String>();
     sId = json['_id'];
     portfolio = json['portfolio'];
-    profileInfo = json['info'] != null ? new PeofileInfo.fromJson(json['info']) : null;
+    profileInfo = json['info'] != null ? new ProfileInfo.fromJson(json['info']) : null;
     iV = json['__v'];
   }
 
@@ -54,7 +54,7 @@ class Result {
   }
 }
 
-class PeofileInfo {
+class ProfileInfo {
   List<String> programs;
   String nickname;
   String phoneNumber;
@@ -62,7 +62,7 @@ class PeofileInfo {
   String location;
   String desc;
 
-  PeofileInfo(
+  ProfileInfo(
       {this.programs,
       this.nickname,
       this.phoneNumber,
@@ -70,7 +70,7 @@ class PeofileInfo {
       this.location,
       this.desc});
 
-  PeofileInfo.fromJson(Map<String, dynamic> json) {
+  ProfileInfo.fromJson(Map<String, dynamic> json) {
     programs = json['programs'].cast<String>();
     nickname = json['nickname'];
     phoneNumber = json['phoneNumber'];
