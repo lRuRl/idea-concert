@@ -15,9 +15,6 @@ import 'package:iruri/pages/state/state_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:iruri/provider.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:async';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
 // light gray 색 구분선
 const Widget divider = Divider(color: Color(0xFFEEEEEE), thickness: 1);
@@ -237,117 +234,16 @@ class _ImageWrapperState extends State<ImageWrapper> {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////                              프로필 정보 : 석운                             /////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class Info {
-  String message;
-  List<Result> result;
-
-  Info({this.message, this.result});
-
-  Info.fromJson(Map<String, dynamic> json) {
-    message = json['message'];
-    if (json['result'] != null) {
-      result = new List<Result>();
-      json['result'].forEach((v) {
-        result.add(new Result.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['message'] = this.message;
-    if (this.result != null) {
-      data['result'] = this.result.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
-
-class Result {
-  List<String> roles;
-  String sId;
-  Null portfolio;
-  ProfileInfo info;
-  int iV;
-
-  Result({this.roles, this.sId, this.portfolio, this.info, this.iV});
-
-  Result.fromJson(Map<String, dynamic> json) {
-    roles = json['roles'].cast<String>();
-    sId = json['_id'];
-    portfolio = json['portfolio'];
-    info = json['info'] != null ? new ProfileInfo.fromJson(json['info']) : null;
-    iV = json['__v'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['roles'] = this.roles;
-    data['_id'] = this.sId;
-    data['portfolio'] = this.portfolio;
-    if (this.info != null) {
-      data['info'] = this.info.toJson();
-    }
-    data['__v'] = this.iV;
-    return data;
-  }
-}
 
 class ProfileInfo {
-  List<String> programs;
   String nickname;
-  String phoneNumber;
+  String phone;
   String email;
-  String location;
-  String desc;
-
-  ProfileInfo(
-      {this.programs,
-      this.nickname,
-      this.phoneNumber,
-      this.email,
-      this.location,
-      this.desc});
-
-  ProfileInfo.fromJson(Map<String, dynamic> json) {
-    programs = json['programs'].cast<String>();
-    nickname = json['nickname'];
-    phoneNumber = json['phoneNumber'];
-    email = json['email'];
-    location = json['location'];
-    desc = json['desc'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['programs'] = this.programs;
-    data['nickname'] = this.nickname;
-    data['phoneNumber'] = this.phoneNumber;
-    data['email'] = this.email;
-    data['location'] = this.location;
-    data['desc'] = this.desc;
-    return data;
-  }
+  ProfileInfo({this.nickname, this.phone, this.email});
 }
-
-Future<Info> fetchInfo() async {
-  final response = await http.get('http://172.30.1.45:3000/user');
-
-  if (response.statusCode == 200) {
-    print(response.body);
-    final Map<String, dynamic> data = json.decode(response.body);
-    return Info.fromJson(data);
-    //return Info.fromJson(jsonDecode(response.body));
-  } else {
-    throw Exception('Failed to load ProfileInfo');
-  }
-}
-<<<<<<< HEAD
-=======
 
 ProfileInfo testInput = ProfileInfo(
     nickname: "parkjang", phone: "010-XXXX-XXXX", email: "parkjang@naver.com");
->>>>>>> 05e8178da7f1b2ebe9333f9bad964364e83b0f3a
 
 class MyProfile extends StatefulWidget {
   @override
@@ -359,32 +255,18 @@ class _MyProfileState extends State<MyProfile> {
   final ImagePicker _picker = ImagePicker();
   PickedFile _image;
   String imagePath;
-<<<<<<< HEAD
-  String _id;
-  int profile_index;
-  Future<Info> futureInfo;
-  
-  TextEditingController nameEditor_ = new TextEditingController();//text: testInput.nickname
-  TextEditingController phoneEditor_ = new TextEditingController();//text: testInput.phone
-  TextEditingController emailEditor_ = new TextEditingController();//text: testInput.email
-  
-=======
   TextEditingController nameEditor_ =
       new TextEditingController(text: testInput.nickname);
   TextEditingController phoneEditor_ =
       new TextEditingController(text: testInput.phone);
   TextEditingController emailEditor_ =
       new TextEditingController(text: testInput.email);
->>>>>>> 05e8178da7f1b2ebe9333f9bad964364e83b0f3a
 
   @override
   void initState() {
     super.initState();
     index = false;
     _image = null;
-    _id = "60a30423c232d343e0958686"; //임시 id -> 로그인 구현되면 개인별 고유 id로
-    profile_index = 0;
-    futureInfo = fetchInfo();
     //need to be personal info which should be already stored in DB
     //내 temporary 이미지 path
     //imagePath = "/data/user/0/com.example.iruri/cache/image_picker4896229670943898999.jpg";
@@ -394,11 +276,9 @@ class _MyProfileState extends State<MyProfile> {
   changeIndex() {
     setState(() {
       index = !index;
-      /*
       testInput.nickname = nameEditor_.text;
       testInput.phone = phoneEditor_.text;
       testInput.email = emailEditor_.text;
-      */
     });
     Navigator.of(context).pop();
   }
@@ -408,18 +288,15 @@ class _MyProfileState extends State<MyProfile> {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     var profileContent, icon, changeButton, imageChangeButton;
+
     if (index == false) {
-      profileContent = showProfileContent(width, height, futureInfo);
+      profileContent = showProfileContent(width, height, testInput);
       icon = changeIcon();
       changeButton = Container();
       imageChangeButton = Container();
     } else {
-<<<<<<< HEAD
-      profileContent = changeProfileContent(nameEditor_, phoneEditor_, emailEditor_, width, height, futureInfo);
-=======
       profileContent = changeProfileContent(
           nameEditor_, phoneEditor_, emailEditor_, width, height, testInput);
->>>>>>> 05e8178da7f1b2ebe9333f9bad964364e83b0f3a
       icon = Container();
       changeButton = confirmChangeButton();
       imageChangeButton = confirmImageChangeButton();
@@ -638,93 +515,45 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   //프로필 정보 화면 초기상태
-  Column showProfileContent(final width, final height, Future<Info> testInput) {
-    var profile_index = 0;
-
-     FutureBuilder<Info>( // 올바른 index를 추출하기 위함
-      future: testInput,
-      builder: (context, snapshot) {
-        for(int i = 0;i<snapshot.data.result.length;i++){
-          if(snapshot.data.result[i].sId == this._id)
-            profile_index = i;
-        }
-        // By default, show a loading spinner.
-        return CircularProgressIndicator();
-      },
-    );
-
+  Column showProfileContent(final width, final height, ProfileInfo testInput) {
     return Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
         children: [
       Container(
         margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
         alignment: Alignment.topCenter,
-        child: FutureBuilder<Info>(
-                future: testInput,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Text(snapshot.data.result[profile_index].info.nickname, style: TextStyle(fontSize: 11),);
-                  } else if (snapshot.hasError) {
-                    return Text("${snapshot.error}");
-                  }
-                  // By default, show a loading spinner.
-                  return CircularProgressIndicator();
-                },
-              ),
+        child: Text(
+          testInput.nickname,
+          style: TextStyle(fontSize: 11),
+        ),
       ),
       Position(),
       Container(
         margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
         alignment: Alignment.topCenter,
-        child: FutureBuilder<Info>(
-                future: testInput,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Text(snapshot.data.result[profile_index].info.phoneNumber, style: TextStyle(fontSize: 11),);
-                  } else if (snapshot.hasError) {
-                    return Text("${snapshot.error}");
-                  }
-                  // By default, show a loading spinner.
-                  return CircularProgressIndicator();
-                },
-              ),
+        child: Text(
+          testInput.phone,
+          style: TextStyle(fontSize: 11),
+        ),
       ),
       Container(
         margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
         alignment: Alignment.topCenter,
-        child: FutureBuilder<Info>(
-              future: testInput,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Text(snapshot.data.result[profile_index].info.email, style: TextStyle(fontSize: 11),);
-                } else if (snapshot.hasError) {
-                   return Text("${snapshot.error}");
-                }
-              // By default, show a loading spinner.
-              return CircularProgressIndicator();
-            },
-          ),
+        child: Text(
+          testInput.email,
+          style: TextStyle(fontSize: 9),
+        ),
       ),
     ]);
   }
 
   //연필 아이콘 누르면 수정하는 화면으로 바뀜
   Column changeProfileContent(
-<<<<<<< HEAD
-      TextEditingController nameEditor_, 
-      TextEditingController phoneEditor_, 
-      TextEditingController emailEditor_, 
-      final width, 
-      final height, 
-      Future<Info> testInput,
-    ) {
-=======
       TextEditingController nameEditor_,
       TextEditingController phoneEditor_,
       TextEditingController emailEditor_,
       final width,
       final height,
       ProfileInfo testInput) {
->>>>>>> 05e8178da7f1b2ebe9333f9bad964364e83b0f3a
     return Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
         children: [
       Container(
