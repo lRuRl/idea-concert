@@ -9,9 +9,10 @@ import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/spacing.dart';
 import 'package:iruri/components/typhography.dart';
 import 'package:iruri/model/article.dart';
+import 'package:iruri/model/profile_info.dart';
 import 'package:iruri/pages/home/muliple_choice_chip.dart';
 import 'package:iruri/pages/state/state_utils.dart';
-import 'package:iruri/model/profile_info.dart';
+import 'package:iruri/util/data_user.dart';
 // provider
 import 'package:provider/provider.dart';
 import 'package:iruri/provider.dart';
@@ -239,18 +240,6 @@ class _ImageWrapperState extends State<ImageWrapper> {
 ////////////////                              프로필 정보 : 석운                             /////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Future<User> fetchUserInfo() async {
-  final response = await http.get('http://172.30.1.45:3000/user');
-  //final response = await http.get('http://localhost:3000/user');
-
-  if (response.statusCode == 200) {
-    // 만약 서버로의 요청이 성공하면, JSON을 파싱합니다.
-    return User.fromJson(json.decode(response.body));
-  } else {
-    // 만약 요청이 실패하면, 에러를 던집니다.
-    throw Exception('Failed to load post');
-  }
-}
 
 class MyProfile extends StatefulWidget {
   @override
@@ -261,11 +250,12 @@ class _MyProfileState extends State<MyProfile> {
   var index;
   final ImagePicker _picker = ImagePicker();
   PickedFile _image;
+  UserAPI api = new UserAPI();
   String imagePath;
   Future<User> user;
-  String _id;
-  TextEditingController nameEditor_;
-  TextEditingController phoneEditor_;
+  String _id = "60a303cfc232d343e0958685";
+  TextEditingController nicknameEditor_;
+  TextEditingController phoneNumberEditor_;
   TextEditingController emailEditor_;
 
   @override
@@ -273,12 +263,11 @@ class _MyProfileState extends State<MyProfile> {
     super.initState();
     index = false;
     _image = null;
-    user = fetchUserInfo();
+    user = api.findbyId(this._id);
     //need to be personal info which should be already stored in DB
     //내 temporary 이미지 path
     //imagePath = "/data/user/0/com.example.iruri/cache/image_picker4896229670943898999.jpg";
     imagePath = "";
-    _id = "60a303cfc232d343e0958685";
   }
 
   changeIndex() {
@@ -286,6 +275,10 @@ class _MyProfileState extends State<MyProfile> {
       index = !index;
     });
     Navigator.of(context).pop();
+  }
+
+  updateDB(User data){
+    api.update(data);
   }
 
   @override
@@ -301,7 +294,7 @@ class _MyProfileState extends State<MyProfile> {
       imageChangeButton = Container();
     } else {
       profileContent = changeProfileContent(
-          nameEditor_, phoneEditor_, emailEditor_, width, height);
+          nicknameEditor_, phoneNumberEditor_, emailEditor_, width, height);
       icon = Container();
       changeButton = confirmChangeButton();
       imageChangeButton = confirmImageChangeButton();
@@ -409,8 +402,7 @@ class _MyProfileState extends State<MyProfile> {
           padding: EdgeInsets.all(3),
           color: themeDeepBlue,
           onPressed: _getImage,
-          child:
-              Text("수정", style: TextStyle(color: Colors.white, fontSize: 10)),
+          child: Text("수정", style: TextStyle(color: Colors.white, fontSize: 10)),
         ));
   }
 
@@ -438,33 +430,41 @@ class _MyProfileState extends State<MyProfile> {
           padding: EdgeInsets.all(3),
           color: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
           onPressed: () => showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                    title: Center(child: Text('수정이 완료되었습니다')),
-                    content: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 60),
-                      child: Expanded(
-                          child: ElevatedButton(
-                              onPressed: () {
-                                changeIndex();
-                              },
-                              child: Text("확인",
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white)),
-                              style: ElevatedButton.styleFrom(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 4, vertical: 4),
-                                primary: themeDeepBlue,
-                                onPrimary: Colors.white,
-                              ))),
-                    ));
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Center(child: Text('수정이 완료되었습니다')),
+                content: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 60),
+                    child: Expanded(
+                      child: ElevatedButton(
+                        onPressed: () { 
+                          changeIndex();
+                          updateDB(User(
+                            sId: this._id,
+                            roles: ["roles"],
+                            portfolio: null,
+                            profileInfo: ProfileInfo(
+                              nickname: nicknameEditor_.text,
+                              phoneNumber: phoneNumberEditor_.text,
+                              email: emailEditor_.text,
+                            )
+                          ));},
+                        child: Text("확인",
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white)),
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                              primary: themeDeepBlue,
+                              onPrimary: Colors.white,
+                        ))),
+                  ));
               }),
           child: Text("저장하기", style: TextStyle(color: Colors.white)),
-        ));
+      ));
   }
 
   //초기 프로필 정보 화면에서 연필모양 아이콘 => 누르면 수정하는 화면으로 바뀜
@@ -528,67 +528,64 @@ class _MyProfileState extends State<MyProfile> {
         margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
         alignment: Alignment.topCenter,
         child:  FutureBuilder<User>(
-          future: this.user,
+          future: user,
           builder: (context, snapshot) {
-              for(int i = 0;i<snapshot.data.result.length;i++){
-                if(snapshot.data.result[i].sId == this._id){
-                  nickname = snapshot.data.result[i].profileInfo.nickname;
-                  return Text(nickname,style: TextStyle(fontSize: 9),);
-                }
-              }
+            nickname = snapshot.data.profileInfo.nickname;
+            return Text(nickname ,style: TextStyle(fontSize: 9),);
           }),
       ),
       FutureBuilder<User>(
-          future: this.user,
+          future: user,
           builder: (context, snapshot) {
-              for(int i = 0;i<snapshot.data.result.length;i++){
-                if(snapshot.data.result[i].sId == this._id){
-                  List<String> roles = snapshot.data.result[i].roles;
-                  return position(roles);
-                }
-              }
-          }),
+            List<String> roles = snapshot.data.roles;
+            return position(roles);
+      }),
       Container(
         margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
         alignment: Alignment.topCenter,
         child:  FutureBuilder<User>(
-          future: this.user,
+          future: user,
           builder: (context, snapshot) {
-              for(int i = 0;i<snapshot.data.result.length;i++){
-                if(snapshot.data.result[i].sId == this._id){
-                  phoneNumber = snapshot.data.result[i].profileInfo.phoneNumber;
-                  return Text(phoneNumber,style: TextStyle(fontSize: 9),);
-                }
-              }
-          }),
+            phoneNumber = snapshot.data.profileInfo.phoneNumber;
+            return Text(phoneNumber ,style: TextStyle(fontSize: 9),);
+      }),
       ),
       Container(
         margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
         alignment: Alignment.topCenter,
         child: FutureBuilder<User>(
-          future: this.user,
+          future: user,
           builder: (context, snapshot) {
-              for(int i = 0;i<snapshot.data.result.length;i++){
-                if(snapshot.data.result[i].sId == this._id){
-                  email = snapshot.data.result[i].profileInfo.email;
-                  return Text(email,style: TextStyle(fontSize: 9),);
-                }
-              }
-          }),
+            email = snapshot.data.profileInfo.email;
+            return Text(email ,style: TextStyle(fontSize: 9),);
+      }),
       ),
     ]);
   }
 
   //연필 아이콘 누르면 수정하는 화면으로 바뀜
   Widget changeProfileContent(
-      TextEditingController nameEditor_,
-      TextEditingController phoneEditor_,
+      TextEditingController nicknameEditor_,
+      TextEditingController phoneNumberEditor_,
       TextEditingController emailEditor_,
       final width,
       final height,) {
     return Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
         children: [
-      Container(
+          profiletextfield(nicknameEditor_, width, height),
+          FutureBuilder<User>(
+            future: this.user,
+            builder: (context, snapshot) {
+              List<String> roles = snapshot.data.roles;
+              return changePosition(roles);
+          }),
+          profiletextfield(phoneNumberEditor_, width, height),
+          profiletextfield(emailEditor_, width, height),
+    ]);
+  }
+
+  Widget profiletextfield(TextEditingController _controller, final width, final height){
+    return Container(
         margin: EdgeInsets.fromLTRB(0, 0, 0, 3),
         alignment: Alignment.topLeft,
         width: width * 0.45,
@@ -596,9 +593,9 @@ class _MyProfileState extends State<MyProfile> {
         child: TextFormField(
           enabled: true,
           maxLines: 1,
-          inputFormatters: [new LengthLimitingTextInputFormatter(20)],
-          controller: nameEditor_,
-          style: TextStyle(color: themeGrayText, fontSize: 10),
+          inputFormatters: [new LengthLimitingTextInputFormatter(25)],
+          controller: _controller,
+          style: TextStyle(color: themeGrayText, fontSize: 8),
           decoration: InputDecoration(
             focusedBorder: OutlineInputBorder(
                 borderSide:
@@ -618,81 +615,9 @@ class _MyProfileState extends State<MyProfile> {
             //labelText: testInput.nickname,
           ),
         ),
-      ),
-      FutureBuilder<User>(
-          future: this.user,
-          builder: (context, snapshot) {
-              for(int i = 0;i<snapshot.data.result.length;i++){
-                if(snapshot.data.result[i].sId == this._id){
-                  List<String> roles = snapshot.data.result[i].roles;
-                  return changePosition(roles);
-                }
-              }
-          }),
-      Container(
-        margin: EdgeInsets.fromLTRB(0, 0, 0, 3),
-        alignment: Alignment.topLeft,
-        width: width * 0.45,
-        height: height * 0.025,
-        child: TextFormField(
-          enabled: true,
-          maxLines: 1,
-          inputFormatters: [new LengthLimitingTextInputFormatter(20)],
-          controller: phoneEditor_,
-          style: TextStyle(color: themeGrayText, fontSize: 10),
-          decoration: InputDecoration(
-            focusedBorder: OutlineInputBorder(
-                borderSide:
-                    new BorderSide(color: themeLightGrayOpacity20, width: 1),
-                borderRadius: BorderRadius.circular(5)),
-            enabledBorder: OutlineInputBorder(
-                borderSide:
-                    new BorderSide(color: themeLightGrayOpacity20, width: 1),
-                borderRadius: BorderRadius.circular(5)),
-            disabledBorder: OutlineInputBorder(
-                borderSide:
-                    new BorderSide(color: themeLightGrayOpacity20, width: 1),
-                borderRadius: BorderRadius.circular(5)),
-            fillColor: themeLightGrayOpacity20,
-            filled: true,
-            //labelStyle: TextStyle(color: themeGrayText, fontSize: 3),
-            //labelText: testInput.phone,
-          ),
-        ),
-      ),
-      Container(
-        margin: EdgeInsets.fromLTRB(0, 0, 0, 3),
-        alignment: Alignment.topLeft,
-        width: width * 0.45,
-        height: height * 0.025,
-        child: TextFormField(
-          enabled: true,
-          maxLines: 1,
-          inputFormatters: [new LengthLimitingTextInputFormatter(25)],
-          controller: emailEditor_,
-          style: TextStyle(color: themeGrayText, fontSize: 8),
-          decoration: InputDecoration(
-            focusedBorder: OutlineInputBorder(
-                borderSide:
-                    new BorderSide(color: themeLightGrayOpacity20, width: 1),
-                borderRadius: BorderRadius.circular(5)),
-            enabledBorder: OutlineInputBorder(
-                borderSide:
-                    new BorderSide(color: themeLightGrayOpacity20, width: 1),
-                borderRadius: BorderRadius.circular(5)),
-            disabledBorder: OutlineInputBorder(
-                borderSide:
-                    new BorderSide(color: themeLightGrayOpacity20, width: 1),
-                borderRadius: BorderRadius.circular(5)),
-            fillColor: themeLightGrayOpacity20,
-            filled: true,
-            //labelStyle: TextStyle(color: themeGrayText, fontSize: 6),
-            //labelText: testInput.email,
-          ),
-        ),
-      ),
-    ]);
-  }
+      );
+    }
+  
 
   Widget position(List<String> data){
     final size = MediaQuery.of(context).size;
@@ -770,48 +695,6 @@ class _MyProfileState extends State<MyProfile> {
                 ))),
               )
       ])));
-  }
-}
-
-//포지션 태그 나타내는 클래스
-class Position extends StatelessWidget {
-  final List<String> data = ["채색", "콘티", "색칠", "캐릭터"];
-
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    double bottomMargin;
-    if (data.length >= 4) {
-      bottomMargin = 10;
-    } else {
-      bottomMargin = 35;
-    }
-    return Container(
-        margin: EdgeInsets.fromLTRB(0, 0, 0, bottomMargin),
-        padding: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
-        alignment: Alignment.topCenter,
-        width: size.width * 0.45,
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Expanded(
-                child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: GridView.builder(
-                        shrinkWrap: true,
-                        physics: AlwaysScrollableScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            childAspectRatio: 4 / 1.5,
-                            crossAxisCount: 3,
-                            mainAxisSpacing: 3,
-                            crossAxisSpacing: 3),
-                        itemCount: data.length,
-                        itemBuilder: (context, index) => TagWrapper(
-                              onPressed: () => print('tag pressed'),
-                              tag: data[index],
-                            ))),
-              )
-            ]));
   }
 }
 

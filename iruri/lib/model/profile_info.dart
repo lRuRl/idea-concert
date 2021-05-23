@@ -1,4 +1,4 @@
-class User {
+/*class User {
   String message;
   List<Result> result;
 
@@ -22,18 +22,18 @@ class User {
     }
     return data;
   }
-}
+}*/
 
-class Result {
+class User {
   List<String> roles;
   String sId;
   Null portfolio;
   ProfileInfo profileInfo;
   int iV;
 
-  Result({this.roles, this.sId, this.portfolio, this.profileInfo, this.iV});
+  User({this.roles, this.sId, this.portfolio, this.profileInfo, this.iV});
 
-  Result.fromJson(Map<String, dynamic> json) {
+  User.fromJson(Map<String, dynamic> json) {
     roles = json['roles'].cast<String>();
     sId = json['_id'];
     portfolio = json['portfolio'];
