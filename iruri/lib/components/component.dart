@@ -733,7 +733,7 @@ class _MyProfileState extends State<MyProfile> {
     double bottomMargin;
     if (data.length >= 4) bottomMargin = 3;
     else bottomMargin = 3;
-    
+
     return Container(
       margin: EdgeInsets.fromLTRB(0, 0, 0, bottomMargin),
       padding: EdgeInsets.symmetric(horizontal: 2, vertical: 2),
@@ -765,11 +765,53 @@ class _MyProfileState extends State<MyProfile> {
                     crossAxisSpacing: 3),
                   itemCount: data.length,
                   itemBuilder: (context, index) => TagWrapper(
-                    onPressed: () => print("tag pressed"), //_showDialog(context),
+                    onPressed: () => _showDialog(context),
                     tag: data[index],
                 ))),
               )
       ])));
+  }
+}
+
+//포지션 태그 나타내는 클래스
+class Position extends StatelessWidget {
+  final List<String> data = ["채색", "콘티", "색칠", "캐릭터"];
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    double bottomMargin;
+    if (data.length >= 4) {
+      bottomMargin = 10;
+    } else {
+      bottomMargin = 35;
+    }
+    return Container(
+        margin: EdgeInsets.fromLTRB(0, 0, 0, bottomMargin),
+        padding: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+        alignment: Alignment.topCenter,
+        width: size.width * 0.45,
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Expanded(
+                child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: GridView.builder(
+                        shrinkWrap: true,
+                        physics: AlwaysScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            childAspectRatio: 4 / 1.5,
+                            crossAxisCount: 3,
+                            mainAxisSpacing: 3,
+                            crossAxisSpacing: 3),
+                        itemCount: data.length,
+                        itemBuilder: (context, index) => TagWrapper(
+                              onPressed: () => print('tag pressed'),
+                              tag: data[index],
+                            ))),
+              )
+            ]));
   }
 }
 
@@ -825,123 +867,96 @@ class Position_Small extends StatelessWidget {
   }
 }
 
-/*
-void _showDialog(context) { 
-    showDialog(
+class PositionChange extends StatefulWidget {
+  @override
+  _PositionChangeState createState() => _PositionChangeState();
+}
+
+class _PositionChangeState extends State<PositionChange> {
+  Map<String, Map<String, dynamic>> _formTextField;
+
+  // save data
+  Map<String, Map<String, bool>> applicantType = {
+    '메인글': {'write_main': false},
+    '글콘티': {'write_conti': false},
+    '메인그림': {'draw_main': false},
+    '그림콘티': {'draw_conti': false},
+    '뎃셍': {'draw_dessin': false},
+    '선화': {'draw_line': false},
+    '캐릭터': {'draw_char': false},
+    '채색': {'draw_color': false},
+    '후보정': {'draw_after': false}
+  };
+
+  String location;
+  //  style
+  var formTextStyle = notoSansTextStyle(
+      fontSize: 16, fontWeight: FontWeight.w500, textColor: greyText);
+  
+  @override
+  void initState() {
+    super.initState();
+    _formTextField = new Map<String, Map<String, dynamic>>.from({
+      "applicants": {"controller": null, "state": 0},
+    }); // data
+  }
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    return Container(
+      padding: paddingH20V5,
+      width: size.width * 0.9,
+      decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(
+        width: 3,
+        color: _formTextField["applicants"]["state"] == 0
+            ? Colors.transparent  : _formTextField["applicants"]["state"] ==  1
+                ? onSuccess   : onError
+          )),
+        child: Column(
+          children: <Widget>[
+            MultiChoiceChip(
+            choiceChipType: 0,
+            typeMap: applicantType,
+            onSelectionChanged:
+            applicantTypeChanged),
+            ElevatedButton(
+              child: new Text("저장"),
+              onPressed: () {Navigator.pop(context);},
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                primary:  Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
+                onPrimary: Colors.white,
+              )
+            )
+          ]
+        )
+      );
+  }
+
+  void applicantTypeChanged(Map<String, Map<String, bool>> map) {
+    setState(() {
+      applicantType = map;
+    });
+  }
+}
+
+void _showDialog(context){
+  showDialog(
       context: context,
       barrierDismissible: false,  
       builder: (BuildContext context) { 
         return AlertDialog(
           title: Text("태그 선택"),
-          content: Text("최대 6개 골라주세요"),
           actions: <Widget>[
-            Container(
-                alignment: Alignment.center,
-                child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Column(
-                        children: [
-                          Checkbox(
-                            value: false,
-                          ),
-                          Text('채색'),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Checkbox(
-                            value: false,
-                          ),
-                          Text('콘티'),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Checkbox(
-                            value: false,
-                          ),
-                          Text('캐릭터'),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Checkbox(
-                            value: false,
-                          ),
-                          Text('그림'),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Checkbox(
-                            value: false,
-                          ),
-                          Text('글'),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Column(
-                        children: [
-                          Checkbox(
-                            value: false,
-                          ),
-                          Text('뎃셍'),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Checkbox(
-                            value: false,
-                          ),
-                          Text('기타'),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Checkbox(
-                            value: false,
-                          ),
-                          Text('기타'),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Checkbox(
-                            value: false,
-                          ),
-                          Text('기타'),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Checkbox(
-                            value: false,
-                          ),
-                          Text('기타'),
-                        ],
-                      ),
-                    ],
-                  ),
-                  FlatButton(
-                    child: new Text("닫기"),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ), 
-                ],
-              ),
-            )
-          ],
+            PositionChange()
+          ]
         );
-      },
-    );
-  }
- */
+      }
+  );
+}
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////                              프로필 정보 : 석운                             /////////////////////
