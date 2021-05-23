@@ -8,49 +8,38 @@ import 'package:iruri/model/profile_info.dart';
 
 // user
 class UserAPI {
-  //final baseURL = serverURL + "user/";
-  final baseURL = myURL + "user/";
+  final baseURL = serverURL + "user/";
+  //final baseURL = myURL + "user/";
 
   // GET - ALL
   Future<List<User>> findAll() async {
-      final res = await http.get(baseURL);
-      if (res.statusCode == 200) {
-        final parsedJson = json.decode(res.body)['result'] as List;
-        final list = parsedJson.map((json) => User.fromJson(json)).toList();
-        return list;
-      } else {
-        throw Exception(res.body.toString());
-      }
+    final res = await http.get(baseURL);
+    if (res.statusCode == 200) {
+      final parsedJson = json.decode(res.body)['result'] as List;
+      final list = parsedJson.map((json) => User.fromJson(json)).toList();
+      return list;
+    } else {
+      throw Exception(res.body.toString());
     }
+  
+  }
   // GET - ONE(ID)
   Future<User> findbyId(String id) async {
-      final res = await http.get(baseURL);
-      if (res.statusCode == 200) {
-        final parsedJson = json.decode(res.body)['result'] as List;
-        final list = parsedJson.map((json) => User.fromJson(json)).toList();
-        for(int i = 0; i < list.length; i++){
-          if(list[i].sId == id)
-            return list[i];
-        }
-      } else {
-        throw Exception(res.body.toString());
+    final res = await http.get(baseURL);
+    if (res.statusCode == 200) {
+      final parsedJson = json.decode(res.body)['result'] as List;
+      final list = parsedJson.map((json) => User.fromJson(json)).toList();
+      for(int i = 0; i < list.length; i++){
+        if(list[i].sId == id)
+          return list[i];
       }
+    } else {
+      throw Exception(res.body.toString());
     }
-
-  Future<void> update(User data) async {
-    final res = await http.patch(baseURL, body: data.toJson());
-
-    if (res.statusCode == 200)
-      print('user updated');
-    else
-      throw Exception('user update error\n>' + res.body.toString());
   }
 
-
-  /*
-
   // POST
-  Future<void> postNewArticle(Article data, String filePath) async {
+  Future<void> postNewArticle(User data, String filePath) async {
     // create multipart Request
     var request = http.MultipartRequest("POST", Uri.parse(baseURL));
     // multipart takes file
@@ -59,25 +48,16 @@ class UserAPI {
     // add file to multipart
     request.files.add(multipartFile);
     // body
-    request.fields['imagePath'] = data.imagePath;
-    request.fields['memebers'] = jsonEncode(data.members);
-    request.fields['contracts'] = jsonEncode(data.contracts);
-    request.fields['detail[status]'] = data.detail.status;
-    request.fields['detail[reportedDate]'] = data.detail.reportedDate;
-    request.fields['detail[dueDate]'] = data.detail.dueDate;
-    request.fields['detail[writer]'] = data.detail.writer;
-    request.fields['detail[location]'] = data.detail.location;
-    request.fields['detail[applicants]'] = jsonEncode(data.detail.applicants);
-    request.fields['detail[peroid][from]'] = data.detail.period.from;
-    request.fields['detail[peroid][to]'] = data.detail.period.to;
-    request.fields['detail[condition][projectType]'] = data.detail.condition.projectType;
-    request.fields['detail[condition][contractType]'] = data.detail.condition.contractType;
-    request.fields['detail[condition][wage]'] = data.detail.condition.wage;
-    request.fields['detail[content][title]'] = data.detail.content.title;
-    request.fields['detail[content][desc]'] = data.detail.content.desc;
-    request.fields['detail[content][tags]'] = jsonEncode(data.detail.content.tags);
-    request.fields['detail[content][genres]'] = jsonEncode(data.detail.content.genres);
-    request.fields['detail[content][prefer]'] = data.detail.content.prefer;
+    request.fields['roles'] = jsonEncode(data.roles);
+    request.fields['sId'] = data.sId;
+    request.fields['portfolio'] = data.portfolio;
+    request.fields['profileInfo[programs]'] = jsonEncode(data.profileInfo.programs);
+    request.fields['profileInfo[nickname]'] = data.profileInfo.nickname;
+    request.fields['profileInfo[phoneNumber]'] = data.profileInfo.phoneNumber;
+    request.fields['profileInfo[email]'] = data.profileInfo.email;
+    request.fields['profileInfo[location]'] = data.profileInfo.location;
+    request.fields['profileInfo[desc]'] = data.profileInfo.desc;
+    
     // headers for body
     request.headers["Content-Type"] = "application/json";
     // send request
@@ -89,14 +69,14 @@ class UserAPI {
     });
   }
 
-  // PATCH
-  Future<void> update(Article data) async {
+  //Patch
+  Future<void> update(User data) async {
     final res = await http.patch(baseURL, body: data.toJson());
 
     if (res.statusCode == 200)
-      print('article updated');
+      print('user updated');
     else
-      throw Exception('article update error\n>' + res.body.toString());
+      throw Exception('user update error\n>' + res.body.toString());
   }
 
   // DELETE
@@ -108,5 +88,5 @@ class UserAPI {
       print('article deleted');
     else
       throw Exception('article delete error\n>' + res.body.toString());
-  }*/
+  }
 }
