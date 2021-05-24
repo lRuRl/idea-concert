@@ -46,9 +46,11 @@ class _ApplyListPageState extends State<ApplyListPage> {
                     future: fetchedData,
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
-                        return Center(
-                            child: Image.asset('assets/loading.gif',
-                                width: 35, height: 35));
+                        return Container(
+                            height: MediaQuery.of(context).size.height * 0.85,
+                            child: Center(
+                                child: Image.asset('assets/loading.gif',
+                                    width: 35, height: 35)));
                       } else if (snapshot.hasError) {
                         return Center(child: Text('500 - server'));
                       } else {
