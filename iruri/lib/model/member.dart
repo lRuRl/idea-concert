@@ -3,7 +3,6 @@ class Member {
   final List<String> roles;
   final String portfolio;
   final Info info;
-
   Member({this.id, this.info, this.portfolio, this.roles});
 }
 

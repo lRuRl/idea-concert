@@ -5,6 +5,10 @@ import 'package:iruri/model/article_sample.dart';
 import 'package:iruri/pages/home/project_detail_components.dart';
 import 'package:iruri/pages/state/state_utils.dart';
 
+// provider
+import 'package:provider/provider.dart';
+import 'package:iruri/provider.dart';
+
 class FillContractPage extends StatefulWidget {
   @override
   _FillContractPageState createState() => _FillContractPageState();
@@ -36,8 +40,8 @@ class _FillContractPageState extends State<FillContractPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Article data = context.watch<CustomRouter>().data;
-    Article data = articleSampleData.first;
+    Article data = context.watch<CustomRouter>().data;
+    // Article data = articleSampleData.first;
 
     return Scaffold(
         // body

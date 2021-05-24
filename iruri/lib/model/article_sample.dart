@@ -24,6 +24,7 @@ List<Article> articleSampleData = [
           title: '그림 및 글 작가 공고',
           desc: '석유 캐는 만화',
           tags: ['그림', '캐릭터', '채색', '글', '콘티'],
+          genres: ['로맨스', '공포'],
           prefer: '서울시 서초구 거주',
         ),
         writer: '쓰니',

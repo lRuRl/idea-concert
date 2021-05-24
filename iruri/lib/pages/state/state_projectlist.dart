@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'state_utils.dart';
+import 'package:iruri/util/data_article.dart';
+import 'package:iruri/model/article.dart';
 
 class ProjectListPage extends StatefulWidget {
   @override
@@ -7,8 +9,16 @@ class ProjectListPage extends StatefulWidget {
 }
 
 class _ProjectListPageState extends State<ProjectListPage> {
+  var fetchedData;
+  ArticleAPI api = new ArticleAPI();
+
   ScrollController scrollController = new ScrollController();
   ScrollController listScrollController = new ScrollController();
+
+  @override
+  void initState() {
+    fetchedData = api.findAll();
+  }
 
   // @override
   // void initState() {
@@ -38,11 +48,36 @@ class _ProjectListPageState extends State<ProjectListPage> {
                 color: Color.fromRGBO(255, 255, 255, 1),
                 width: MediaQuery.of(context).size.width * 1,
                 height: MediaQuery.of(context).size.height * 0.35,
-                child: myProject(
-                    context,
-                    List<Container>.generate(5, (index) {
-                      return boxItem(index, items, context);
-                    })),
+                child: FutureBuilder(
+                  future: fetchedData,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(
+                          child: Image.asset('assets/loading.gif',
+                              width: 35, height: 35));
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('500 - server'));
+                    } else {
+                      return Container(
+                        width: MediaQuery.of(context).size.width * 1,
+                        height: MediaQuery.of(context).size.height * 0.98,
+                        child: myProject(
+                            context,
+                            List<Container>.generate(snapshot.data.length,
+                                (index) {
+                              return boxItem(
+                                  index, items, context, snapshot.data[index]);
+                            })),
+                      );
+                    }
+                  },
+                ),
+
+                // myProject(
+                // context,
+                // List<Container>.generate(5, (index) {
+                //   return boxItem(index, items, context);
+                // })),
               ),
               Container(
                 decoration: BoxDecoration(
@@ -55,11 +90,40 @@ class _ProjectListPageState extends State<ProjectListPage> {
                 padding: EdgeInsets.symmetric(horizontal: 15),
                 width: MediaQuery.of(context).size.width * 1,
                 height: MediaQuery.of(context).size.height * 0.35,
-                child: applyProject(
-                    context,
-                    List<Container>.generate(5, (index) {
-                      return boxItem_apply(index, items, context);
-                    })),
+                child: FutureBuilder(
+                  future: fetchedData,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(
+                          child: Image.asset('assets/loading.gif',
+                              width: 35, height: 35));
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('500 - server'));
+                    } else {
+                      return Container(
+                        width: MediaQuery.of(context).size.width * 1,
+                        height: MediaQuery.of(context).size.height * 0.98,
+                        child: applyProject(
+                            context,
+                            List<Container>.generate(snapshot.data.length,
+                                (index) {
+                              return boxItem_apply(
+                                  index,
+                                  items,
+                                  context,
+                                  snapshot
+                                      .data[snapshot.data.length - 1 - index]);
+                            })),
+                      );
+                    }
+                  },
+                ),
+
+                // applyProject(
+                //   context,
+                //   List<Container>.generate(5, (index) {
+                //     return boxItem_apply(index, items, context);
+                //   })),
               ),
             ],
           ),
