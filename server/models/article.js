@@ -42,7 +42,31 @@ const detailSchema = new mongoose.Schema({
     },
     writer: String,
     location: String,
-    applicants: [String]
+    /* 
+        지원자를 포지션 별로 담아 낼 수 있어야 하기 때문에 구조 변화를 주어야함
+        applicants : {
+            write_mains : []
+            write_contis : []
+            draw_mains : []
+            draw_contis : []
+            draw_dessins : []
+            draw_lines : []
+            draw_chars : []
+            draw_colors : []
+            draw_afters : []
+        }
+    */
+    applicant: {
+        writeMains: [{ type: String }],
+        writeContis: [{ type: String }],
+        drawMains: [{ type: String }],
+        drawContis: [{ type: String }],
+        drawDessins: [{ type: String }],
+        drawLines: [{ type: String }],
+        drawChars: [{ type: String }],
+        drawColors: [{ type: String }],
+        drawAfters: [{ type: String }],
+    }
 });
 // parent document
 const articleSchema = new mongoose.Schema({
