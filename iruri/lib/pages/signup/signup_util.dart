@@ -1,159 +1,217 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:iruri/components/palette.dart';
+import 'package:iruri/model/member.dart';
 import 'package:iruri/pages/home/home.dart';
 import 'package:iruri/pages/signup/signup.dart';
 import 'package:iruri/pages/state/state_applylist.dart';
 import 'package:iruri/provider.dart';
+import 'package:iruri/util/data_user.dart';
 import 'package:provider/provider.dart';
 
-Widget userInfoField(BuildContext context) {
-  return Container(
-      decoration: BoxDecoration(
-        border:
-            Border.all(width: 5, color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 1)),
-        color: Color.fromRGBO(255, 255, 255, 1),
-      ),
-      child: ListView(
-        shrinkWrap: true,
-        padding: const EdgeInsets.all(8),
-        children: <Widget>[
-          emailForm(),
-          passwordForm(),
-          nameForm(),
-          phoneNumberForm(),
+class UserInfo extends StatefulWidget {
+  @override
+  _UserInfoState createState() => _UserInfoState();
+}
+
+class _UserInfoState extends State<UserInfo> {
+  UserAPI api;
+  Member member;
+  Map<String, TextEditingController> infoController =
+      Map<String, TextEditingController>();
+
+  @override
+  Widget build(BuildContntext) {
+    return Container(
+        decoration: BoxDecoration(
+          border:
+              Border.all(width: 5, color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 1)),
+          color: Color.fromRGBO(255, 255, 255, 1),
+        ),
+        child: ListView(
+          shrinkWrap: true,
+          padding: const EdgeInsets.all(8),
+          children: <Widget>[
+            emailForm(),
+            passwordForm(),
+            nameForm(),
+            phoneNumberForm(),
+            registerButton()
+          ],
+        ));
+  }
+
+  Widget emailForm() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 25),
+      child: Row(
+        children: [
+          Expanded(flex: 1, child: Text("아이디")),
+          Expanded(
+              flex: 5,
+              child: TextFormField(
+                controller: infoController['email'],
+                onChanged: (infonController) {
+                  print("email: $infonController");
+                },
+                decoration: InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        new BorderSide(color: Colors.transparent, width: 1),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide:
+                        new BorderSide(color: Colors.transparent, width: 1),
+                  ),
+                  fillColor: Colors.white,
+                  hintStyle: TextStyle(color: themeGrayText),
+                  hintText: '이메일 형식에 맞게 입력',
+                ),
+              ))
         ],
-      ));
+      ),
+    );
+  }
+
+  Widget passwordForm() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 25),
+      child: Row(
+        children: [
+          Expanded(flex: 1, child: Text("비밀번호")),
+          Expanded(
+              flex: 5,
+              child: TextFormField(
+                controller: infoController['password'],
+                onChanged: (infonController) {
+                  print("password: $infonController");
+                },
+                obscureText: true,
+                decoration: InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        new BorderSide(color: Colors.transparent, width: 1),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide:
+                        new BorderSide(color: Colors.transparent, width: 1),
+                  ),
+                  fillColor: Colors.white,
+                  hintStyle: TextStyle(color: themeGrayText),
+                  hintText: '영문 대, 소문자+숫자 8-15자',
+                ),
+              ))
+        ],
+      ),
+    );
+  }
+
+  Widget nameForm() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 25),
+      child: Row(
+        children: [
+          Expanded(flex: 1, child: Text("이름")),
+          Expanded(
+              flex: 5,
+              child: TextFormField(
+                controller: infoController['name'],
+                onChanged: (infonController) {
+                  print("name: $infonController");
+                },
+                decoration: InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        new BorderSide(color: Colors.transparent, width: 1),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide:
+                        new BorderSide(color: Colors.transparent, width: 1),
+                  ),
+                  fillColor: Colors.white,
+                  hintStyle: TextStyle(color: themeGrayText),
+                  hintText: '실명 입력',
+                ),
+              ))
+        ],
+      ),
+    );
+  }
+
+  Widget phoneNumberForm() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 25),
+      child: Row(
+        children: [
+          Expanded(flex: 1, child: Text("전화번호")),
+          Expanded(
+              flex: 5,
+              child: TextFormField(
+                controller: infoController['phoneNumber'],
+                onChanged: (infonController) {
+                  print("phoneNumber: $infonController");
+                },
+                decoration: InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        new BorderSide(color: Colors.transparent, width: 1),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide:
+                        new BorderSide(color: Colors.transparent, width: 1),
+                  ),
+                  fillColor: Colors.white,
+                  hintStyle: TextStyle(color: themeGrayText),
+                  hintText: '하이픈(-) 없이 입력',
+                ),
+              ))
+        ],
+      ),
+    );
+  }
+
+  void setMemberInfo() {
+    setState(() {
+      member = new Member(
+          info: new Info(
+              email: infoController['email'].text,
+              phoneNumber: infoController['phoneNumber'].text,
+              nickname: infoController['name'].text));
+    });
+    print("${member.info}");
+  }
+
+  Widget registerButton() {
+    return ElevatedButton(
+        onPressed: () {
+          setMemberInfo();
+          print(member.info);
+          // postUserInfo();
+
+          Provider.of<CustomRouter>(context, listen: false)
+              .setRegistrationStatus(true);
+          Navigator.pop(context);
+        },
+        child: Text("가입하기"),
+        style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.only(top: 11, bottom: 11, left: 21, right: 21),
+          primary: Colors.white,
+          onPrimary: Color.fromRGBO(0x82, 0x82, 0x82, 1),
+          // fixedSize: Size(90, 30),
+        ));
+  }
+
+  noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
-Widget emailForm() {
-  return Container(
-    padding: EdgeInsets.symmetric(horizontal: 25),
-    child: Row(
-      children: [
-        Expanded(flex: 1, child: Text("아이디")),
-        Expanded(
-            flex: 5,
-            child: TextFormField(
-              decoration: InputDecoration(
-                focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      new BorderSide(color: Colors.transparent, width: 1),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide:
-                      new BorderSide(color: Colors.transparent, width: 1),
-                ),
-                fillColor: Colors.white,
-                hintStyle: TextStyle(color: themeGrayText),
-                hintText: '이메일 형식에 맞게 입력',
-              ),
-            ))
-      ],
-    ),
-  );
-}
+Future<void> postUserInfo() async {
+  UserAPI api;
 
-Widget passwordForm() {
-  return Container(
-    padding: EdgeInsets.symmetric(horizontal: 25),
-    child: Row(
-      children: [
-        Expanded(flex: 1, child: Text("비밀번호")),
-        Expanded(
-            flex: 5,
-            child: TextFormField(
-              obscureText: true,
-              decoration: InputDecoration(
-                focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      new BorderSide(color: Colors.transparent, width: 1),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide:
-                      new BorderSide(color: Colors.transparent, width: 1),
-                ),
-                fillColor: Colors.white,
-                hintStyle: TextStyle(color: themeGrayText),
-                hintText: '영문 대, 소문자+숫자 8-15자',
-              ),
-            ))
-      ],
-    ),
-  );
-}
-
-Widget nameForm() {
-  return Container(
-    padding: EdgeInsets.symmetric(horizontal: 25),
-    child: Row(
-      children: [
-        Expanded(flex: 1, child: Text("이름")),
-        Expanded(
-            flex: 5,
-            child: TextFormField(
-              decoration: InputDecoration(
-                focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      new BorderSide(color: Colors.transparent, width: 1),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide:
-                      new BorderSide(color: Colors.transparent, width: 1),
-                ),
-                fillColor: Colors.white,
-                hintStyle: TextStyle(color: themeGrayText),
-                hintText: '실명 입력',
-              ),
-            ))
-      ],
-    ),
-  );
-}
-
-Widget phoneNumberForm() {
-  return Container(
-    padding: EdgeInsets.symmetric(horizontal: 25),
-    child: Row(
-      children: [
-        Expanded(flex: 1, child: Text("전화번호")),
-        Expanded(
-            flex: 5,
-            child: TextFormField(
-              decoration: InputDecoration(
-                focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      new BorderSide(color: Colors.transparent, width: 1),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide:
-                      new BorderSide(color: Colors.transparent, width: 1),
-                ),
-                fillColor: Colors.white,
-                hintStyle: TextStyle(color: themeGrayText),
-                hintText: '하이픈(-) 없이 입력',
-              ),
-            ))
-      ],
-    ),
-  );
-}
-
-Widget registerButton(BuildContext context) {
-  return ElevatedButton(
-    
-      onPressed: () {
-        Provider.of<CustomRouter>(context, listen: false)
-            .setRegistrationStatus(true);
-        Navigator.pop(context);
-      },
-      child: Text("가입하기"),
-      style: ElevatedButton.styleFrom(
-  
-        padding: EdgeInsets.only(top: 11, bottom: 11, left: 21, right: 21),
-        primary: Colors.white,
-        onPrimary: Color.fromRGBO(0x82, 0x82, 0x82, 1),
-        // fixedSize: Size(90, 30),
-      ));
+  // var validRes = validateWholeForm();
+  // print('validRes : ' + validRes.toString());
+  Member member;
+  await api.postNewUserInfo(member);
 }
 
 class AgreeTerm extends StatefulWidget {
@@ -213,7 +271,7 @@ class _AgreeTermState extends State<AgreeTerm> {
                   textAlign: TextAlign.left),
             )
           ]),
-           Row(children: [
+          Row(children: [
             Padding(
                 padding: EdgeInsets.symmetric(horizontal: 2, vertical: 10),
                 child: InkWell(
@@ -248,7 +306,7 @@ class _AgreeTermState extends State<AgreeTerm> {
                   textAlign: TextAlign.left),
             )
           ]),
-           Row(children: [
+          Row(children: [
             Padding(
                 padding: EdgeInsets.symmetric(horizontal: 2, vertical: 10),
                 child: InkWell(

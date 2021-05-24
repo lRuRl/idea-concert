@@ -40,9 +40,8 @@ class _SignUpPageeState extends State<SignUpPage> {
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      userInfoField(context),
+                      UserInfo(),
                       AgreeTerm(),
-                      registerButton(context)
                     ]))));
   }
 }

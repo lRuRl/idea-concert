@@ -11,7 +11,7 @@ class ArticleAPI {
 
   // GET - ONE(ID)
   Future<Article> findById(String id) async {
-    final res = await http.get(baseURL + id);
+    final res = await http.get( Uri.parse(baseURL + id));
 
     if (res.statusCode == 200) {
       return Article.fromJson(jsonDecode(res.body));
@@ -22,7 +22,7 @@ class ArticleAPI {
 
   // GET - ALL
   Future<List<Article>> findAll() async {
-    final res = await http.get(baseURL);
+    final res = await http.get(Uri.parse(baseURL));
     if (res.statusCode == 200) {
       print('status 200');
       final parsedJson = json.decode(res.body)['result'] as List;
@@ -72,11 +72,9 @@ class ArticleAPI {
       print(event);
     });
   }
-
   // PATCH
   Future<void> update(Article data) async {
-    final res = await http.patch(baseURL, body: data.toJson());
-
+    final res = await http.patch( Uri.parse(baseURL), body: data.toJson());
     if (res.statusCode == 200)
       print('article updated');
     else
@@ -86,7 +84,7 @@ class ArticleAPI {
   // DELETE
   Future<void> delete(String id) async {
     // TODO: check user
-    final res = await http.delete(baseURL);
+    final res = await http.delete( Uri.parse(baseURL));
 
     if (res.statusCode == 200)
       print('article deleted');
