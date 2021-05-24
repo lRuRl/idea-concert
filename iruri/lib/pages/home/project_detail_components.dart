@@ -187,7 +187,7 @@ Widget projectCalendar(BuildContext context, Article data) {
                       color: Color.fromRGBO(0x82, 0x82, 0x82, 1),
                     ),
                     Text(
-                      "09:00 ~ 18:00",
+                      "탄력 근무제",
                       style: TextStyle(
                           fontSize: 11,
                           color: Color.fromRGBO(0x82, 0x82, 0x82, 1)),

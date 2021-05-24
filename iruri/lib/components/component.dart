@@ -1060,7 +1060,7 @@ class _AgreeContractState extends State<AgreeContract> {
       Container(
           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
           width: MediaQuery.of(context).size.width * 1,
-          height: MediaQuery.of(context).size.height * 0.5,
+          height: MediaQuery.of(context).size.height * 0.4,
           child: _isLoading
               ? Center(child: CircularProgressIndicator())
               : PDFView(

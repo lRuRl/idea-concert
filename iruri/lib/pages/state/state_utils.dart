@@ -241,7 +241,7 @@ boxItem_apply(
                       ))
                 ],
               )),
-          Expanded(flex: 2, child: listItemButton(context))
+          Expanded(flex: 2, child: listItemButton(context, data))
         ],
       ));
 }
@@ -385,7 +385,7 @@ Widget editButton() {
 }
 
 //내가 지원한 프로젝트 (아래)
-Widget listItemButton(BuildContext context) {
+Widget listItemButton(BuildContext context, Article data) {
   // provider
   final routerReader = context.read<CustomRouter>();
   final routerWatcher = context.watch<CustomRouter>();
@@ -395,9 +395,7 @@ Widget listItemButton(BuildContext context) {
     children: [
       ElevatedButton(
           onPressed: () => routerReader.navigateTo(
-                routerWatcher.currentPage,
-                '/state/fillcontract',
-              ),
+              routerWatcher.currentPage, '/state/fillcontract', data: data),
           child: Text("계약서 작성",
               style: TextStyle(
                   fontSize: 12, color: Color.fromRGBO(0x1b, 0x30, 0x59, 1))),
