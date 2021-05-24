@@ -656,7 +656,7 @@ class _MyProfileState extends State<MyProfile> {
 
 //포지션 태그 나타내는 클래스
 class Position extends StatelessWidget {
-  final List<String> data = ["채색", "콘티", "색칠", "캐릭터"];
+  final List<String> data = ["채색", "콘티", "선화", "캐릭터"];
 
   @override
   Widget build(BuildContext context) {
@@ -705,43 +705,42 @@ class Position extends StatelessWidget {
 }
 
 class Position_Small extends StatelessWidget {
-  final List<String> data = ["채색", "콘티", "색칠", "캐릭터"];
+  final List<String> data = ["채색", "콘티", "선화", "캐릭터"];
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     double bottomMargin;
     if (data.length >= 4) {
-      bottomMargin = 3;
+      bottomMargin = 2;
     } else {
-      bottomMargin = 3;
+      bottomMargin = 5;
     }
     return Container(
-        margin: EdgeInsets.fromLTRB(0, 0, 0, bottomMargin),
-        padding: EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+        margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+        // padding: EdgeInsets.symmetric(horizontal: 2, vertical: 2),
         alignment: Alignment.topCenter,
-        width: size.width * 0.45,
-        height: size.height * 0.06,
+        width: size.width * 0.35,
+        // height: size.height * 0.06,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          border: Border.all(
-            width: 1,
-            color: themeLightGrayOpacity20,
-          ),
-          color: themeLightGrayOpacity20,
+          borderRadius: BorderRadius.circular(20),
+          // border: Border.all(
+          //   width: 1,
+          //   color: themeLightGrayOpacity20,
+          // ),
+          // color: themeLightGrayOpacity20,
         ),
-        child: Container(
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
               Expanded(
                 child: Align(
-                    alignment: Alignment.topCenter,
+                    alignment: Alignment.centerLeft,
                     child: GridView.builder(
                         shrinkWrap: true,
                         physics: AlwaysScrollableScrollPhysics(),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            childAspectRatio: 4 / 1.5,
+                            childAspectRatio: 3.5 / 1.5,
                             crossAxisCount: 3,
                             mainAxisSpacing: 3,
                             crossAxisSpacing: 3),
@@ -752,7 +751,58 @@ class Position_Small extends StatelessWidget {
                               tag: data[index],
                             ))),
               )
-            ])));
+            ]));
+  }
+}
+
+class PositionSmallLinear extends StatelessWidget {
+  final List<String> data = ["채색", "콘티", "선화", "캐릭터"];
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    double bottomMargin;
+    if (data.length >= 4) {
+      bottomMargin = 5;
+    } else {
+      bottomMargin = 5;
+    }
+    return Container(
+        margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+        // padding: EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+        alignment: Alignment.topCenter,
+        width: size.width * 0.11 * data.length,
+        // height: size.height * 0.06,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          // border: Border.all(
+          //   width: 1,
+          //   color: themeLightGrayOpacity20,
+          // ),
+          // color: themeLightGrayOpacity20,
+        ),
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Expanded(
+                child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: GridView.builder(
+                        shrinkWrap: true,
+                        physics: AlwaysScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            childAspectRatio: 3.5 / 1.5,
+                            crossAxisCount: data.length,
+                            mainAxisSpacing: 5,
+                            crossAxisSpacing: 5),
+                        itemCount: data.length,
+                        itemBuilder: (context, index) => TagWrapper(
+                              onPressed: () =>
+                                  print("tag pressed"), //_showDialog(context),
+                              tag: data[index],
+                            ))),
+              )
+            ]));
   }
 }
 

@@ -19,7 +19,7 @@ class _StateProjectDetailPageState extends State<StateProjectDetailPage> {
   @override
   Widget build(BuildContext context) {
     Article data = articleSampleData.first;
-
+    print(data.toString());
     return Scaffold(
         // body
         body: SingleChildScrollView(
@@ -30,11 +30,12 @@ class _StateProjectDetailPageState extends State<StateProjectDetailPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width * 1,
-                    height: MediaQuery.of(context).size.height * 0.25,
-                    child: thumbnail(context, data),
-                  ),
+                  //TODO: 디비연동시 풀 것
+                  // Container(
+                  //   width: MediaQuery.of(context).size.width * 1,
+                  //   height: MediaQuery.of(context).size.height * 0.25,
+                  //   child: thumbnail(context, data),
+                  // ),
                   Container(
                     width: MediaQuery.of(context).size.width * 1,
                     height: MediaQuery.of(context).size.height * 0.2,

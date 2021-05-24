@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'state_utils.dart';
 import 'package:iruri/routes.dart';
+import 'package:iruri/util/data_article.dart';
 
 class ApplyListPage extends StatefulWidget {
   @override
@@ -8,14 +9,22 @@ class ApplyListPage extends StatefulWidget {
 }
 
 List<Container> applyListitems;
-ListViewVertical(BuildContext context) {
-  applyListitems = List<Container>.generate(5, (index) {
-    return boxItem_apply(index, applyListitems, context);
-  });
-}
+// ListViewVertical(BuildContext context) {
+//   applyListitems = List<Container>.generate(5, (index) {
+//     return boxItem_apply(index, applyListitems, context,);
+//   });
+// }
 
 class _ApplyListPageState extends State<ApplyListPage> {
   ScrollController scrollController = new ScrollController();
+  var fetchedData;
+  ArticleAPI api = new ArticleAPI();
+
+  @override
+  void initState() {
+    super.initState();
+    fetchedData = api.findAll();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,24 +42,40 @@ class _ApplyListPageState extends State<ApplyListPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    // decoration: BoxDecoration(
-                    //   border: Border(
-                    //     top: BorderSide(
-                    //         width: 5, color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 1)),
-                    //   ),
-                    //   color: Color.fromRGBO(255, 255, 255, 1),
-                    // ),
-                    // padding: EdgeInsets.symmetric(horizontal: 15),
-
-                    width: MediaQuery.of(context).size.width * 1,
-                    height: MediaQuery.of(context).size.height * 1.0,
-                    child: applyProject_vertical(
-                        context,
-                        List<Container>.generate(5, (index) {
-                          return boxItem_apply(index, applyListitems, context);
-                        })),
+                  FutureBuilder(
+                    future: fetchedData,
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return Center(
+                            child: Image.asset('assets/loading.gif',
+                                width: 35, height: 35));
+                      } else if (snapshot.hasError) {
+                        return Center(child: Text('500 - server'));
+                      } else {
+                        return Container(
+                          width: MediaQuery.of(context).size.width * 1,
+                          height: MediaQuery.of(context).size.height * 0.98,
+                          child: applyProject_vertical(
+                              context,
+                              List<Container>.generate(snapshot.data.length,
+                                  (index) {
+                                return boxItem_apply(index, applyListitems,
+                                    context, fetchedData[index]);
+                              })),
+                        );
+                      }
+                    },
                   ),
+
+                  // Container(
+                  //   width: MediaQuery.of(context).size.width * 1,
+                  //   height: MediaQuery.of(context).size.height * 1.0,
+                  //   child: applyProject_vertical(
+                  //       context,
+                  //       List<Container>.generate(5, (index) {
+                  //         return boxItem_apply(index, applyListitems, context);
+                  //       })),
+                  // ),
                 ],
               ),
             )));
