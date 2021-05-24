@@ -19,7 +19,18 @@ class _UserInfoState extends State<UserInfo> {
   UserAPI api;
   Member member;
   Map<String, TextEditingController> infoController =
-      Map<String, TextEditingController>();
+      new Map<String, TextEditingController>();
+  @override
+  void initState() {
+    super.initState();
+    api = new UserAPI();
+
+    infoController['email'] = new TextEditingController();
+
+    infoController['password'] = new TextEditingController();
+    infoController['nickname'] = new TextEditingController();
+    infoController['phoneNumber'] = new TextEditingController();
+  }
 
   @override
   Widget build(BuildContntext) {
@@ -52,9 +63,6 @@ class _UserInfoState extends State<UserInfo> {
               flex: 5,
               child: TextFormField(
                 controller: infoController['email'],
-                onChanged: (infonController) {
-                  print("email: $infonController");
-                },
                 decoration: InputDecoration(
                   focusedBorder: OutlineInputBorder(
                     borderSide:
@@ -84,9 +92,6 @@ class _UserInfoState extends State<UserInfo> {
               flex: 5,
               child: TextFormField(
                 controller: infoController['password'],
-                onChanged: (infonController) {
-                  print("password: $infonController");
-                },
                 obscureText: true,
                 decoration: InputDecoration(
                   focusedBorder: OutlineInputBorder(
@@ -116,10 +121,7 @@ class _UserInfoState extends State<UserInfo> {
           Expanded(
               flex: 5,
               child: TextFormField(
-                controller: infoController['name'],
-                onChanged: (infonController) {
-                  print("name: $infonController");
-                },
+                controller: infoController['nickname'],
                 decoration: InputDecoration(
                   focusedBorder: OutlineInputBorder(
                     borderSide:
@@ -149,9 +151,6 @@ class _UserInfoState extends State<UserInfo> {
               flex: 5,
               child: TextFormField(
                 controller: infoController['phoneNumber'],
-                onChanged: (infonController) {
-                  print("phoneNumber: $infonController");
-                },
                 decoration: InputDecoration(
                   focusedBorder: OutlineInputBorder(
                     borderSide:
@@ -177,17 +176,19 @@ class _UserInfoState extends State<UserInfo> {
           info: new Info(
               email: infoController['email'].text,
               phoneNumber: infoController['phoneNumber'].text,
-              nickname: infoController['name'].text));
+              nickname: infoController['nickname'].text));
     });
-    print("${member.info}");
+  }
+
+  Future<void> postUserInfo() async {
+    await api.postNewUserInfo(member);
   }
 
   Widget registerButton() {
     return ElevatedButton(
         onPressed: () {
           setMemberInfo();
-          print(member.info);
-          // postUserInfo();
+          postUserInfo();
 
           Provider.of<CustomRouter>(context, listen: false)
               .setRegistrationStatus(true);
@@ -203,15 +204,6 @@ class _UserInfoState extends State<UserInfo> {
   }
 
   noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
-}
-
-Future<void> postUserInfo() async {
-  UserAPI api;
-
-  // var validRes = validateWholeForm();
-  // print('validRes : ' + validRes.toString());
-  Member member;
-  await api.postNewUserInfo(member);
 }
 
 class AgreeTerm extends StatefulWidget {

@@ -14,7 +14,6 @@ class Member {
         info: Info.fromJson(json['info']));
   }
 
-  // for posting new article
   Map<String, dynamic> toJson() =>
       {'roles': roles, 'portfolio': portfolio, 'info': info.toJson()};
 }
