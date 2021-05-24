@@ -1,0 +1,81 @@
+{
+    "message":"[GET] msg received",
+    "result":[
+        {
+            "roles":["채색","캐릭터"],
+            "_id":"60a303cfc232d343e0958685",
+            "portfolio":null,
+            "info":{
+                "programs":["Android Studio","Figma"],
+                "nickname":"whdgk12",
+                "phoneNumber":"112",
+                "email":"jswboseok@boseok.com",
+                "location":"Suwon",
+                "desc":"Bling Bling Seokun"
+            },
+            "__v":0
+        },
+        {
+            "roles":["채색","캐릭터"],
+            "_id":"60a30423c232d343e0958686",
+            "portfolio":null,
+            "info":{
+                "programs":["Android Studio","Figma"],
+                "nickname":"whdgk12",
+                "phoneNumber":"112",
+                "email":"jswboseok@boseok.com",
+                "location":"Suwon",
+                "desc":"Bling Bling Seokun"
+            },
+            "__v":0
+        },
+        {
+            "roles":["채색","캐릭터"],
+            "_id":"60a307b6c232d343e0958687",
+            "portfolio":null,
+            "info":{
+                "programs":["Android Studio","Figma"],
+                "nickname":"whdgk12",
+                "phoneNumber":"112",
+                "email":"jswboseok@boseok.com",
+                "location":"Suwon",
+                "desc":"Bling Bling Seokun"
+            },
+            "__v":0
+        },
+        {
+            "roles":["채색","캐릭터"],
+            "_id":"60a307f7c232d343e0958688",
+            "portfolio":null,
+            "info":{
+                "programs":["Android Studio","Figma"],
+                "nickname":"whdgk12",
+                "phoneNumber":"112",
+                "email":"jswboseok@boseok.com",
+                "location":"Suwon",
+                "desc":"Bling Bling Seokun"
+            },
+            "__v":0
+        },
+        {
+            "roles":[],
+            "_id":"60a31150ebfbee3e88e9ffa1",
+            "portfolio":null,
+            "__v":0
+        },
+        {
+            "roles":["채색","캐릭터"],
+            "_id":"60a34acc1b41e138cc3f3009",
+            "portfolio":null,
+            "info":{
+                "programs":["Android Studio","Figma"],
+                "nickname":"whdgk12",
+                "phoneNumber":"112",
+                "email":"jswboseok@boseok.com",
+                "location":"Suwon",
+                "desc":"Bling Bling Seokun"
+            },
+            "__v":0
+        }
+    ]
+}
