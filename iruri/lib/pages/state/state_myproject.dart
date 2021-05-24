@@ -62,7 +62,7 @@ class _MyprojectPageState extends State<MyprojectPage> {
                               List<Container>.generate(snapshot.data.length,
                                   (index) {
                                 return boxItem(index, myProjectListItems,
-                                    context, fetchedData[index]);
+                                    context, snapshot.data[index]);
                               })),
                         );
                       }

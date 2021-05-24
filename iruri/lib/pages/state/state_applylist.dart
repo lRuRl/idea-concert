@@ -60,7 +60,7 @@ class _ApplyListPageState extends State<ApplyListPage> {
                               List<Container>.generate(snapshot.data.length,
                                   (index) {
                                 return boxItem_apply(index, applyListitems,
-                                    context, fetchedData[index]);
+                                    context, snapshot.data[index]);
                               })),
                         );
                       }

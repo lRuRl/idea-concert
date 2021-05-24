@@ -55,7 +55,8 @@ boxItem(int index, List<Container> items, BuildContext context, Article data) {
                 children: [
                   GestureDetector(
                     onTap: () => routerReader.navigateTo(
-                        routerWatcher.currentPage, '/state/projectdetail'),
+                        routerWatcher.currentPage, '/state/projectdetail',
+                        data: data),
                     child: Container(
                       width: 90,
                       height: 90,
@@ -76,7 +77,8 @@ boxItem(int index, List<Container> items, BuildContext context, Article data) {
                   ),
                   GestureDetector(
                       onTap: () => routerReader.navigateTo(
-                          routerWatcher.currentPage, '/state/projectdetail'),
+                          routerWatcher.currentPage, '/state/projectdetail',
+                          data: data),
                       child: Container(
                         width: 150,
                         height: 90,
@@ -169,7 +171,8 @@ boxItem_apply(
                 children: [
                   GestureDetector(
                     onTap: () => routerReader.navigateTo(
-                        routerWatcher.currentPage, '/state/projectdetail'),
+                        routerWatcher.currentPage, '/state/projectdetail',
+                        data: data),
                     child: Container(
                       width: 90,
                       height: 90,
@@ -190,7 +193,8 @@ boxItem_apply(
                   ),
                   GestureDetector(
                       onTap: () => routerReader.navigateTo(
-                          routerWatcher.currentPage, '/state/projectdetail'),
+                          routerWatcher.currentPage, '/state/projectdetail',
+                          data: data),
                       child: Container(
                         width: 150,
                         height: 105,
