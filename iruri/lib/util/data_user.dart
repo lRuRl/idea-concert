@@ -13,7 +13,6 @@ class UserAPI {
           'Content-Type': 'application/json; charset=UTF-8'
         },
         body: jsonEncode(data.toJson()));
-  print(data.toJson());
     if (response.statusCode == 200) {
       print("success");
     } else
@@ -21,7 +20,8 @@ class UserAPI {
   }
 
   Future<void> update(Member data) async {
-    final res = await http.patch(Uri.parse(baseURL), body: data.toJson());
+    final res =
+        await http.patch(Uri.parse(baseURL), body: jsonEncode(data.toJson()));
     if (res.statusCode == 200)
       print('User Info Updated');
     else

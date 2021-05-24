@@ -22,16 +22,19 @@ class Info {
   final String nickname;
   final String phoneNumber;
   final String email;
-  Info({this.email, this.nickname, this.phoneNumber});
+  final String password;
+  Info({this.email, this.nickname, this.phoneNumber, this.password});
 
   factory Info.fromJson(Map<String, dynamic> json) => Info(
       email: json['email'],
       phoneNumber: json['phoneNumber'],
-      nickname: json['location']);
+      nickname: json['location'],
+      password: json['password']);
 
   Map<String, dynamic> toJson() => {
         'email': email,
         'nickname': nickname,
         'phoneNumber': phoneNumber,
+        'password': password
       };
 }
