@@ -618,7 +618,7 @@ class _MyProfileState extends State<MyProfile> {
       );
     }
   
-
+  
   Widget position(List<String> data){
     final size = MediaQuery.of(context).size;
     double bottomMargin;
@@ -800,6 +800,7 @@ class PositionSmallLinear extends StatelessWidget {
   }
 }
 
+
 class PositionChange extends StatefulWidget {
   @override
   _PositionChangeState createState() => _PositionChangeState();
@@ -874,6 +875,7 @@ class _PositionChangeState extends State<PositionChange> {
     });
   }
 }
+
 
 void _showDialog(context){
   showDialog(
