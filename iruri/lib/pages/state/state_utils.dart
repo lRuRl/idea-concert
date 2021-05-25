@@ -103,8 +103,8 @@ boxItem(int index, List<Container> items, BuildContext context, Article data) {
                             ),
                             Text(
                                 "승인대기중 : " +
-                                    data.detail.applicants.length.toString() +
-                                    "명",
+                                    // data.detail.applicants.length.toString() +
+                                    "2명",
                                 style: TextStyle(
                                     fontSize: 10,
                                     fontFamily: "Roboto",

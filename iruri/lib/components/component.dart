@@ -109,24 +109,33 @@ class HomeArticle extends StatelessWidget {
                     Expanded(
                       flex: 2,
                       child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: GridView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 6),
-                              itemCount: data.detail.content.genres.length,
-                              itemBuilder: (context, index) {
-                                if (index !=
-                                    data.detail.content.genres.length - 1) {
-                                  return Text(
-                                      data.detail.content.genres[index] + ',',
-                                      style: articleTagTextStyle);
-                                } else
-                                  return Text(data.detail.content.genres[index],
-                                      style: articleTagTextStyle);
-                              })),
+                        alignment: Alignment.centerLeft,
+                        // child: GridView.builder(
+                        //     shrinkWrap: true,
+                        //     physics: NeverScrollableScrollPhysics(),
+                        //     gridDelegate:
+                        //         SliverGridDelegateWithFixedCrossAxisCount(
+                        //             crossAxisCount: 6,
+                        //             mainAxisSpacing: 1.0
+                        //             ),
+                        //     itemCount: data.detail.content.genres.length,
+                        //     itemBuilder: (context, index) {
+                        //       if (index !=
+                        //           data.detail.content.genres.length - 1) {
+                        //         return Text(
+                        //             data.detail.content.genres[index] + '·',
+                        //             style: articleTagTextStyle);
+                        //       } else
+                        //         return Text(data.detail.content.genres[index],
+                        //             style: articleTagTextStyle);
+                        //     })
+                        child: Text(
+                            data.detail.content.genres.toString().substring(
+                                1,
+                                data.detail.content.genres.toString().length -
+                                    1).replaceAll(', ', ' · '),
+                            style: articleTagTextStyle),
+                      ),
                     ),
                     // writer - start
                     Expanded(
@@ -240,7 +249,6 @@ class _ImageWrapperState extends State<ImageWrapper> {
 ////////////////                              프로필 정보 : 석운                             /////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 class MyProfile extends StatefulWidget {
   @override
   _MyProfileState createState() => _MyProfileState();
@@ -277,7 +285,7 @@ class _MyProfileState extends State<MyProfile> {
     Navigator.of(context).pop();
   }
 
-  updateDB(User data){
+  updateDB(User data) {
     api.update(data);
   }
 
@@ -402,7 +410,8 @@ class _MyProfileState extends State<MyProfile> {
           padding: EdgeInsets.all(3),
           color: themeDeepBlue,
           onPressed: _getImage,
-          child: Text("수정", style: TextStyle(color: Colors.white, fontSize: 10)),
+          child:
+              Text("수정", style: TextStyle(color: Colors.white, fontSize: 10)),
         ));
   }
 
@@ -430,41 +439,42 @@ class _MyProfileState extends State<MyProfile> {
           padding: EdgeInsets.all(3),
           color: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
           onPressed: () => showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Center(child: Text('수정이 완료되었습니다')),
-                content: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 60),
-                    child: Expanded(
-                      child: ElevatedButton(
-                        onPressed: () { 
-                          changeIndex();
-                          updateDB(User(
-                            sId: this._id,
-                            roles: ["roles"],
-                            portfolio: null,
-                            profileInfo: ProfileInfo(
-                              nickname: nicknameEditor_.text,
-                              phoneNumber: phoneNumberEditor_.text,
-                              email: emailEditor_.text,
-                            )
-                          ));},
-                        child: Text("확인",
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white)),
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                              primary: themeDeepBlue,
-                              onPrimary: Colors.white,
-                        ))),
-                  ));
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                    title: Center(child: Text('수정이 완료되었습니다')),
+                    content: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 60),
+                      child: Expanded(
+                          child: ElevatedButton(
+                              onPressed: () {
+                                changeIndex();
+                                updateDB(User(
+                                    sId: this._id,
+                                    roles: ["roles"],
+                                    portfolio: null,
+                                    profileInfo: ProfileInfo(
+                                      nickname: nicknameEditor_.text,
+                                      phoneNumber: phoneNumberEditor_.text,
+                                      email: emailEditor_.text,
+                                    )));
+                              },
+                              child: Text("확인",
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white)),
+                              style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 4, vertical: 4),
+                                primary: themeDeepBlue,
+                                onPrimary: Colors.white,
+                              ))),
+                    ));
               }),
           child: Text("저장하기", style: TextStyle(color: Colors.white)),
-      ));
+        ));
   }
 
   //초기 프로필 정보 화면에서 연필모양 아이콘 => 누르면 수정하는 화면으로 바뀜
@@ -527,174 +537,188 @@ class _MyProfileState extends State<MyProfile> {
       Container(
         margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
         alignment: Alignment.topCenter,
-        child:  FutureBuilder<User>(
-          future: user,
-          builder: (context, snapshot) {
-            nickname = snapshot.data.profileInfo.nickname;
-            return Text(nickname ,style: TextStyle(fontSize: 9),);
-          }),
+        child: FutureBuilder<User>(
+            future: user,
+            builder: (context, snapshot) {
+              nickname = snapshot.data.profileInfo.nickname;
+              return Text(
+                nickname,
+                style: TextStyle(fontSize: 9),
+              );
+            }),
       ),
       FutureBuilder<User>(
           future: user,
           builder: (context, snapshot) {
             List<String> roles = snapshot.data.roles;
             return position(roles);
-      }),
+          }),
       Container(
         margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
         alignment: Alignment.topCenter,
-        child:  FutureBuilder<User>(
-          future: user,
-          builder: (context, snapshot) {
-            phoneNumber = snapshot.data.profileInfo.phoneNumber;
-            return Text(phoneNumber ,style: TextStyle(fontSize: 9),);
-      }),
+        child: FutureBuilder<User>(
+            future: user,
+            builder: (context, snapshot) {
+              phoneNumber = snapshot.data.profileInfo.phoneNumber;
+              return Text(
+                phoneNumber,
+                style: TextStyle(fontSize: 9),
+              );
+            }),
       ),
       Container(
         margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
         alignment: Alignment.topCenter,
         child: FutureBuilder<User>(
-          future: user,
-          builder: (context, snapshot) {
-            email = snapshot.data.profileInfo.email;
-            return Text(email ,style: TextStyle(fontSize: 9),);
-      }),
+            future: user,
+            builder: (context, snapshot) {
+              email = snapshot.data.profileInfo.email;
+              return Text(
+                email,
+                style: TextStyle(fontSize: 9),
+              );
+            }),
       ),
     ]);
   }
 
   //연필 아이콘 누르면 수정하는 화면으로 바뀜
   Widget changeProfileContent(
-      TextEditingController nicknameEditor_,
-      TextEditingController phoneNumberEditor_,
-      TextEditingController emailEditor_,
-      final width,
-      final height,) {
+    TextEditingController nicknameEditor_,
+    TextEditingController phoneNumberEditor_,
+    TextEditingController emailEditor_,
+    final width,
+    final height,
+  ) {
     return Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
         children: [
-          profiletextfield(nicknameEditor_, width, height),
-          FutureBuilder<User>(
-            future: this.user,
-            builder: (context, snapshot) {
-              List<String> roles = snapshot.data.roles;
-              return changePosition(roles);
+      profiletextfield(nicknameEditor_, width, height),
+      FutureBuilder<User>(
+          future: this.user,
+          builder: (context, snapshot) {
+            List<String> roles = snapshot.data.roles;
+            return changePosition(roles);
           }),
-          profiletextfield(phoneNumberEditor_, width, height),
-          profiletextfield(emailEditor_, width, height),
+      profiletextfield(phoneNumberEditor_, width, height),
+      profiletextfield(emailEditor_, width, height),
     ]);
   }
 
-  Widget profiletextfield(TextEditingController _controller, final width, final height){
+  Widget profiletextfield(
+      TextEditingController _controller, final width, final height) {
     return Container(
-        margin: EdgeInsets.fromLTRB(0, 0, 0, 3),
-        alignment: Alignment.topLeft,
-        width: width * 0.45,
-        height: height * 0.025,
-        child: TextFormField(
-          enabled: true,
-          maxLines: 1,
-          inputFormatters: [new LengthLimitingTextInputFormatter(25)],
-          controller: _controller,
-          style: TextStyle(color: themeGrayText, fontSize: 8),
-          decoration: InputDecoration(
-            focusedBorder: OutlineInputBorder(
-                borderSide:
-                    new BorderSide(color: themeLightGrayOpacity20, width: 1),
-                borderRadius: BorderRadius.circular(5)),
-            enabledBorder: OutlineInputBorder(
-                borderSide:
-                    new BorderSide(color: themeLightGrayOpacity20, width: 1),
-                borderRadius: BorderRadius.circular(5)),
-            disabledBorder: OutlineInputBorder(
-                borderSide:
-                    new BorderSide(color: themeLightGrayOpacity20, width: 1),
-                borderRadius: BorderRadius.circular(5)),
-            fillColor: themeLightGrayOpacity20,
-            filled: true,
-            //labelStyle: TextStyle(color: themeGrayText, fontSize: 3),
-            //labelText: testInput.nickname,
-          ),
+      margin: EdgeInsets.fromLTRB(0, 0, 0, 3),
+      alignment: Alignment.topLeft,
+      width: width * 0.45,
+      height: height * 0.025,
+      child: TextFormField(
+        enabled: true,
+        maxLines: 1,
+        inputFormatters: [new LengthLimitingTextInputFormatter(25)],
+        controller: _controller,
+        style: TextStyle(color: themeGrayText, fontSize: 8),
+        decoration: InputDecoration(
+          focusedBorder: OutlineInputBorder(
+              borderSide:
+                  new BorderSide(color: themeLightGrayOpacity20, width: 1),
+              borderRadius: BorderRadius.circular(5)),
+          enabledBorder: OutlineInputBorder(
+              borderSide:
+                  new BorderSide(color: themeLightGrayOpacity20, width: 1),
+              borderRadius: BorderRadius.circular(5)),
+          disabledBorder: OutlineInputBorder(
+              borderSide:
+                  new BorderSide(color: themeLightGrayOpacity20, width: 1),
+              borderRadius: BorderRadius.circular(5)),
+          fillColor: themeLightGrayOpacity20,
+          filled: true,
+          //labelStyle: TextStyle(color: themeGrayText, fontSize: 3),
+          //labelText: testInput.nickname,
         ),
-      );
-    }
-  
-  
-  Widget position(List<String> data){
-    final size = MediaQuery.of(context).size;
-    double bottomMargin;
-    if (data.length >= 4) bottomMargin = 10;
-    else bottomMargin = 35;
-
-    return Container(
-      margin: EdgeInsets.fromLTRB(0, 0, 0, bottomMargin),
-      padding: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
-      alignment: Alignment.topCenter,
-      width: size.width * 0.45,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Expanded(
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: GridView.builder(
-                shrinkWrap: true,
-                physics: AlwaysScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  childAspectRatio: 4 / 1.5,
-                  crossAxisCount: 3,
-                  mainAxisSpacing: 3,
-                  crossAxisSpacing: 3),
-                itemCount: data.length,
-                itemBuilder: (context, index) => TagWrapper(
-                  onPressed: () => print('tag pressed'),
-                  tag: data[index],
-                ))),
-            )
-        ]));
+      ),
+    );
   }
-    
-  Widget changePosition(List<String> data){
+
+  Widget position(List<String> data) {
     final size = MediaQuery.of(context).size;
     double bottomMargin;
-    if (data.length >= 4) bottomMargin = 3;
-    else bottomMargin = 3;
+    if (data.length >= 4)
+      bottomMargin = 10;
+    else
+      bottomMargin = 35;
 
     return Container(
-      margin: EdgeInsets.fromLTRB(0, 0, 0, bottomMargin),
-      padding: EdgeInsets.symmetric(horizontal: 2, vertical: 2),
-      alignment: Alignment.topCenter,
-      width: size.width * 0.45,
-      height: size.height * 0.06,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        border: Border.all(
-          width: 1,
+        margin: EdgeInsets.fromLTRB(0, 0, 0, bottomMargin),
+        padding: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+        alignment: Alignment.topCenter,
+        width: size.width * 0.45,
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Expanded(
+                child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: GridView.builder(
+                        shrinkWrap: true,
+                        physics: AlwaysScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            childAspectRatio: 4 / 1.5,
+                            crossAxisCount: 3,
+                            mainAxisSpacing: 3,
+                            crossAxisSpacing: 3),
+                        itemCount: data.length,
+                        itemBuilder: (context, index) => TagWrapper(
+                              onPressed: () => print('tag pressed'),
+                              tag: data[index],
+                            ))),
+              )
+            ]));
+  }
+
+  Widget changePosition(List<String> data) {
+    final size = MediaQuery.of(context).size;
+    double bottomMargin;
+    if (data.length >= 4)
+      bottomMargin = 3;
+    else
+      bottomMargin = 3;
+
+    return Container(
+        margin: EdgeInsets.fromLTRB(0, 0, 0, bottomMargin),
+        padding: EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+        alignment: Alignment.topCenter,
+        width: size.width * 0.45,
+        height: size.height * 0.06,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          border: Border.all(
+            width: 1,
+            color: themeLightGrayOpacity20,
+          ),
           color: themeLightGrayOpacity20,
         ),
-        color: themeLightGrayOpacity20,
-      ),
-      child: Container(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Expanded(
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: GridView.builder(
-                  shrinkWrap: true,
-                  physics: AlwaysScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    childAspectRatio: 4 / 1.5,
-                    crossAxisCount: 3,
-                    mainAxisSpacing: 3,
-                    crossAxisSpacing: 3),
-                  itemCount: data.length,
-                  itemBuilder: (context, index) => TagWrapper(
-                    onPressed: () => _showDialog(context),
-                    tag: data[index],
-                ))),
+        child: Container(
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+              Expanded(
+                child: Align(
+                    alignment: Alignment.topCenter,
+                    child: GridView.builder(
+                        shrinkWrap: true,
+                        physics: AlwaysScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            childAspectRatio: 4 / 1.5,
+                            crossAxisCount: 3,
+                            mainAxisSpacing: 3,
+                            crossAxisSpacing: 3),
+                        itemCount: data.length,
+                        itemBuilder: (context, index) => TagWrapper(
+                              onPressed: () => _showDialog(context),
+                              tag: data[index],
+                            ))),
               )
-      ])));
+            ])));
   }
 }
 
@@ -800,7 +824,6 @@ class PositionSmallLinear extends StatelessWidget {
   }
 }
 
-
 class PositionChange extends StatefulWidget {
   @override
   _PositionChangeState createState() => _PositionChangeState();
@@ -826,7 +849,7 @@ class _PositionChangeState extends State<PositionChange> {
   //  style
   var formTextStyle = notoSansTextStyle(
       fontSize: 16, fontWeight: FontWeight.w500, textColor: greyText);
-  
+
   @override
   void initState() {
     super.initState();
@@ -834,39 +857,38 @@ class _PositionChangeState extends State<PositionChange> {
       "applicants": {"controller": null, "state": 0},
     }); // data
   }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Container(
-      padding: paddingH20V5,
-      width: size.width * 0.9,
-      decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(
-        width: 3,
-        color: _formTextField["applicants"]["state"] == 0
-            ? Colors.transparent  : _formTextField["applicants"]["state"] ==  1
-                ? onSuccess   : onError
-          )),
-        child: Column(
-          children: <Widget>[
-            MultiChoiceChip(
-            choiceChipType: 0,
-            typeMap: applicantType,
-            onSelectionChanged:
-            applicantTypeChanged),
-            ElevatedButton(
+        padding: paddingH20V5,
+        width: size.width * 0.9,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+                width: 3,
+                color: _formTextField["applicants"]["state"] == 0
+                    ? Colors.transparent
+                    : _formTextField["applicants"]["state"] == 1
+                        ? onSuccess
+                        : onError)),
+        child: Column(children: <Widget>[
+          MultiChoiceChip(
+              choiceChipType: 0,
+              typeMap: applicantType,
+              onSelectionChanged: applicantTypeChanged),
+          ElevatedButton(
               child: new Text("저장"),
-              onPressed: () {Navigator.pop(context);},
+              onPressed: () {
+                Navigator.pop(context);
+              },
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                primary:  Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
+                primary: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
                 onPrimary: Colors.white,
-              )
-            )
-          ]
-        )
-      );
+              ))
+        ]));
   }
 
   void applicantTypeChanged(Map<String, Map<String, bool>> map) {
@@ -876,22 +898,15 @@ class _PositionChangeState extends State<PositionChange> {
   }
 }
 
-
-void _showDialog(context){
+void _showDialog(context) {
   showDialog(
       context: context,
-      barrierDismissible: false,  
-      builder: (BuildContext context) { 
+      barrierDismissible: false,
+      builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("태그 선택"),
-          actions: <Widget>[
-            PositionChange()
-          ]
-        );
-      }
-  );
+            title: Text("태그 선택"), actions: <Widget>[PositionChange()]);
+      });
 }
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////                              프로필 정보 : 석운                             /////////////////////
