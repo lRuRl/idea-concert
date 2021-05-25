@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:iruri/components/component.dart';
 import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/typhography.dart';
-import 'package:iruri/model/member.dart';
+import 'package:iruri/model/profile_info.dart';
 import 'package:iruri/provider.dart';
 import 'package:iruri/util/data_user.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -18,7 +18,7 @@ class UserInfo extends StatefulWidget {
 
 class _UserInfoState extends State<UserInfo> {
   UserAPI api;
-  Member member;
+  User user;
   Map<String, TextEditingController> infoController =
       new Map<String, TextEditingController>();
   bool _value1 = false;
@@ -192,11 +192,11 @@ class _UserInfoState extends State<UserInfo> {
           child: Image.asset('assets/default.png')));
   }
 
-  void setMemberInfo() {
+  void setUserInfo() {
     setState(() {
-      member = new Member(
+      user = new User(
           roles: selectedTags,
-          info: new Info(
+          profileInfo: new ProfileInfo(
               email: infoController['email'].text,
               password: infoController['password'].text,
               phoneNumber: infoController['phoneNumber'].text,
@@ -205,8 +205,8 @@ class _UserInfoState extends State<UserInfo> {
   }
 
   Future<void> postUserInfo() async {
-    setMemberInfo();
-    await api.postNewUserInfo(member);
+    setUserInfo();
+    await api.postNewUserInfo(user);
   }
 
   Widget nextButton() {
