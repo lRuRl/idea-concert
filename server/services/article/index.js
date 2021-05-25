@@ -27,9 +27,7 @@ module.exports = class ArticleSerive {
             const {
                 status, reportedDate, dueDate, period, condition, content, writer, location
             } = detail;
-            const {
-                title, desc, tags, genres, prefer
-            } = content;
+            const { title, desc, tags, genres, prefer } = content;
             // create object
             const uploadData = await Article.create({
                 imagePath: file,
@@ -93,7 +91,7 @@ module.exports = class ArticleSerive {
                             // put 'image' key and value
                             document['image'] = buffer;
                             updatedRes.push(document);
-                            console.log(JSON.stringify(updatedRes));
+                            // console.log(JSON.stringify(updatedRes));
 
                         }
                     } else {

@@ -24,7 +24,6 @@ class ArticleAPI {
   Future<List<Article>> findAll() async {
     final res = await http.get(baseURL);
     if (res.statusCode == 200) {
-      print('status 200');
       final parsedJson = json.decode(res.body)['result'] as List;
       final list = parsedJson.map((json) => Article.fromJson(json)).toList();
       return list;
@@ -51,9 +50,9 @@ class ArticleAPI {
     request.fields['detail[dueDate]'] = data.detail.dueDate;
     request.fields['detail[writer]'] = data.detail.writer;
     request.fields['detail[location]'] = data.detail.location;
-    request.fields['detail[applicants]'] = jsonEncode(data.detail.applicants);
-    request.fields['detail[peroid][from]'] = data.detail.period.from;
-    request.fields['detail[peroid][to]'] = data.detail.period.to;
+    // request.fields['detail[applicants]'] = jsonEncode(data.detail.applicants);
+    request.fields['detail[period][from]'] = data.detail.period.from;
+    request.fields['detail[period][to]'] = data.detail.period.to;
     request.fields['detail[condition][projectType]'] = data.detail.condition.projectType;
     request.fields['detail[condition][contractType]'] = data.detail.condition.contractType;
     request.fields['detail[condition][wage]'] = data.detail.condition.wage;

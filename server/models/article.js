@@ -15,6 +15,10 @@ const contentSchema = new mongoose.Schema({
     genres: [String],
     prefer: String
 });
+const periodSchema = new mongoose.Schema({
+    from: { type: Date, default: Date.now },
+    to: { type: Date, default: Date.now }
+})
 // middle document
 const detailSchema = new mongoose.Schema({
     status: String,
@@ -27,8 +31,8 @@ const detailSchema = new mongoose.Schema({
         default: Date.now
     },
     period: {
-        from: { type: Date, default: Date.now },
-        to: { type: Date, default: Date.now }
+        _id: false,
+        type: periodSchema
     },
     condition: {
         // don't create objectID in sub document

@@ -28,6 +28,5 @@ List<Article> articleSampleData = [
         ),
         writer: '쓰니',
         location: '서울 서초구 반포동',
-        applicants: [],
       ))
 ];
