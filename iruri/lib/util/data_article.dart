@@ -23,6 +23,7 @@ class ArticleAPI {
   // GET - ALL
   Future<List<Article>> findAll() async {
     final res = await http.get(baseURL);
+    // print("http 시작");
     if (res.statusCode == 200) {
       final parsedJson = json.decode(res.body)['result'] as List;
       final list = parsedJson.map((json) => Article.fromJson(json)).toList();
@@ -58,8 +59,10 @@ class ArticleAPI {
     request.fields['detail[condition][wage]'] = data.detail.condition.wage;
     request.fields['detail[content][title]'] = data.detail.content.title;
     request.fields['detail[content][desc]'] = data.detail.content.desc;
-    request.fields['detail[content][tags]'] = jsonEncode(data.detail.content.tags);
-    request.fields['detail[content][genres]'] = jsonEncode(data.detail.content.genres);
+    request.fields['detail[content][tags]'] =
+        jsonEncode(data.detail.content.tags);
+    request.fields['detail[content][genres]'] =
+        jsonEncode(data.detail.content.genres);
     request.fields['detail[content][prefer]'] = data.detail.content.prefer;
     // headers for body
     request.headers["Content-Type"] = "application/json";

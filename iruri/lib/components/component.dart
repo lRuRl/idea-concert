@@ -9,12 +9,17 @@ import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/spacing.dart';
 import 'package:iruri/components/typhography.dart';
 import 'package:iruri/model/article.dart';
+import 'package:iruri/model/profile_info.dart';
 import 'package:iruri/pages/home/muliple_choice_chip.dart';
 import 'package:iruri/pages/state/state_utils.dart';
+import 'package:iruri/util/data_user.dart';
 // provider
 import 'package:provider/provider.dart';
 import 'package:iruri/provider.dart';
 import 'package:image_picker/image_picker.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 // light gray 색 구분선
 const Widget divider = Divider(color: Color(0xFFEEEEEE), thickness: 1);
@@ -235,15 +240,6 @@ class _ImageWrapperState extends State<ImageWrapper> {
 ////////////////                              프로필 정보 : 석운                             /////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class ProfileInfo {
-  String nickname;
-  String phone;
-  String email;
-  ProfileInfo({this.nickname, this.phone, this.email});
-}
-
-ProfileInfo testInput = ProfileInfo(
-    nickname: "parkjang", phone: "010-XXXX-XXXX", email: "parkjang@naver.com");
 
 class MyProfile extends StatefulWidget {
   @override
@@ -254,19 +250,20 @@ class _MyProfileState extends State<MyProfile> {
   var index;
   final ImagePicker _picker = ImagePicker();
   PickedFile _image;
+  UserAPI api = new UserAPI();
   String imagePath;
-  TextEditingController nameEditor_ =
-      new TextEditingController(text: testInput.nickname);
-  TextEditingController phoneEditor_ =
-      new TextEditingController(text: testInput.phone);
-  TextEditingController emailEditor_ =
-      new TextEditingController(text: testInput.email);
+  Future<User> user;
+  String _id = "60a303cfc232d343e0958685";
+  TextEditingController nicknameEditor_;
+  TextEditingController phoneNumberEditor_;
+  TextEditingController emailEditor_;
 
   @override
   void initState() {
     super.initState();
     index = false;
     _image = null;
+    user = api.findbyId(this._id);
     //need to be personal info which should be already stored in DB
     //내 temporary 이미지 path
     //imagePath = "/data/user/0/com.example.iruri/cache/image_picker4896229670943898999.jpg";
@@ -276,11 +273,12 @@ class _MyProfileState extends State<MyProfile> {
   changeIndex() {
     setState(() {
       index = !index;
-      testInput.nickname = nameEditor_.text;
-      testInput.phone = phoneEditor_.text;
-      testInput.email = emailEditor_.text;
     });
     Navigator.of(context).pop();
+  }
+
+  updateDB(User data){
+    api.update(data);
   }
 
   @override
@@ -290,13 +288,13 @@ class _MyProfileState extends State<MyProfile> {
     var profileContent, icon, changeButton, imageChangeButton;
 
     if (index == false) {
-      profileContent = showProfileContent(width, height, testInput);
+      profileContent = showProfileContent(width, height);
       icon = changeIcon();
       changeButton = Container();
       imageChangeButton = Container();
     } else {
       profileContent = changeProfileContent(
-          nameEditor_, phoneEditor_, emailEditor_, width, height, testInput);
+          nicknameEditor_, phoneNumberEditor_, emailEditor_, width, height);
       icon = Container();
       changeButton = confirmChangeButton();
       imageChangeButton = confirmImageChangeButton();
@@ -394,7 +392,7 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   //그림 수정 버튼
-  Container confirmImageChangeButton() {
+  Widget confirmImageChangeButton() {
     return Container(
         alignment: Alignment.center,
         width: 40,
@@ -404,8 +402,7 @@ class _MyProfileState extends State<MyProfile> {
           padding: EdgeInsets.all(3),
           color: themeDeepBlue,
           onPressed: _getImage,
-          child:
-              Text("수정", style: TextStyle(color: Colors.white, fontSize: 10)),
+          child: Text("수정", style: TextStyle(color: Colors.white, fontSize: 10)),
         ));
   }
 
@@ -423,7 +420,7 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   //수정 화면에서 "수정하기" 버튼 => 누르면 원래 화면으로 돌아감 => 내용 수정은 차후로
-  Container confirmChangeButton() {
+  Widget confirmChangeButton() {
     return Container(
         alignment: Alignment.center,
         width: 80,
@@ -433,37 +430,45 @@ class _MyProfileState extends State<MyProfile> {
           padding: EdgeInsets.all(3),
           color: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
           onPressed: () => showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                    title: Center(child: Text('수정이 완료되었습니다')),
-                    content: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 60),
-                      child: Expanded(
-                          child: ElevatedButton(
-                              onPressed: () {
-                                changeIndex();
-                              },
-                              child: Text("확인",
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white)),
-                              style: ElevatedButton.styleFrom(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 4, vertical: 4),
-                                primary: themeDeepBlue,
-                                onPrimary: Colors.white,
-                              ))),
-                    ));
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Center(child: Text('수정이 완료되었습니다')),
+                content: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 60),
+                    child: Expanded(
+                      child: ElevatedButton(
+                        onPressed: () { 
+                          changeIndex();
+                          updateDB(User(
+                            sId: this._id,
+                            roles: ["roles"],
+                            portfolio: null,
+                            profileInfo: ProfileInfo(
+                              nickname: nicknameEditor_.text,
+                              phoneNumber: phoneNumberEditor_.text,
+                              email: emailEditor_.text,
+                            )
+                          ));},
+                        child: Text("확인",
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white)),
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                              primary: themeDeepBlue,
+                              onPrimary: Colors.white,
+                        ))),
+                  ));
               }),
           child: Text("저장하기", style: TextStyle(color: Colors.white)),
-        ));
+      ));
   }
 
   //초기 프로필 정보 화면에서 연필모양 아이콘 => 누르면 수정하는 화면으로 바뀜
-  IconButton changeIcon() {
+  Widget changeIcon() {
     return IconButton(
       icon: Icon(Icons.create_outlined),
       iconSize: 20,
@@ -515,48 +520,72 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   //프로필 정보 화면 초기상태
-  Column showProfileContent(final width, final height, ProfileInfo testInput) {
+  Widget showProfileContent(final width, final height) {
+    String nickname, phoneNumber, email;
     return Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
         children: [
       Container(
         margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
         alignment: Alignment.topCenter,
-        child: Text(
-          testInput.nickname,
-          style: TextStyle(fontSize: 11),
-        ),
+        child:  FutureBuilder<User>(
+          future: user,
+          builder: (context, snapshot) {
+            nickname = snapshot.data.profileInfo.nickname;
+            return Text(nickname ,style: TextStyle(fontSize: 9),);
+          }),
       ),
-      Position(),
+      FutureBuilder<User>(
+          future: user,
+          builder: (context, snapshot) {
+            List<String> roles = snapshot.data.roles;
+            return position(roles);
+      }),
       Container(
         margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
         alignment: Alignment.topCenter,
-        child: Text(
-          testInput.phone,
-          style: TextStyle(fontSize: 11),
-        ),
+        child:  FutureBuilder<User>(
+          future: user,
+          builder: (context, snapshot) {
+            phoneNumber = snapshot.data.profileInfo.phoneNumber;
+            return Text(phoneNumber ,style: TextStyle(fontSize: 9),);
+      }),
       ),
       Container(
         margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
         alignment: Alignment.topCenter,
-        child: Text(
-          testInput.email,
-          style: TextStyle(fontSize: 9),
-        ),
+        child: FutureBuilder<User>(
+          future: user,
+          builder: (context, snapshot) {
+            email = snapshot.data.profileInfo.email;
+            return Text(email ,style: TextStyle(fontSize: 9),);
+      }),
       ),
     ]);
   }
 
   //연필 아이콘 누르면 수정하는 화면으로 바뀜
-  Column changeProfileContent(
-      TextEditingController nameEditor_,
-      TextEditingController phoneEditor_,
+  Widget changeProfileContent(
+      TextEditingController nicknameEditor_,
+      TextEditingController phoneNumberEditor_,
       TextEditingController emailEditor_,
       final width,
-      final height,
-      ProfileInfo testInput) {
+      final height,) {
     return Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
         children: [
-      Container(
+          profiletextfield(nicknameEditor_, width, height),
+          FutureBuilder<User>(
+            future: this.user,
+            builder: (context, snapshot) {
+              List<String> roles = snapshot.data.roles;
+              return changePosition(roles);
+          }),
+          profiletextfield(phoneNumberEditor_, width, height),
+          profiletextfield(emailEditor_, width, height),
+    ]);
+  }
+
+  Widget profiletextfield(TextEditingController _controller, final width, final height){
+    return Container(
         margin: EdgeInsets.fromLTRB(0, 0, 0, 3),
         alignment: Alignment.topLeft,
         width: width * 0.45,
@@ -564,9 +593,9 @@ class _MyProfileState extends State<MyProfile> {
         child: TextFormField(
           enabled: true,
           maxLines: 1,
-          inputFormatters: [new LengthLimitingTextInputFormatter(20)],
-          controller: nameEditor_,
-          style: TextStyle(color: themeGrayText, fontSize: 10),
+          inputFormatters: [new LengthLimitingTextInputFormatter(25)],
+          controller: _controller,
+          style: TextStyle(color: themeGrayText, fontSize: 8),
           decoration: InputDecoration(
             focusedBorder: OutlineInputBorder(
                 borderSide:
@@ -586,100 +615,115 @@ class _MyProfileState extends State<MyProfile> {
             //labelText: testInput.nickname,
           ),
         ),
-      ),
-      Position_Small(),
-      Container(
-        margin: EdgeInsets.fromLTRB(0, 0, 0, 3),
-        alignment: Alignment.topLeft,
-        width: width * 0.45,
-        height: height * 0.025,
-        child: TextFormField(
-          enabled: true,
-          maxLines: 1,
-          inputFormatters: [new LengthLimitingTextInputFormatter(20)],
-          controller: phoneEditor_,
-          style: TextStyle(color: themeGrayText, fontSize: 10),
-          decoration: InputDecoration(
-            focusedBorder: OutlineInputBorder(
-                borderSide:
-                    new BorderSide(color: themeLightGrayOpacity20, width: 1),
-                borderRadius: BorderRadius.circular(5)),
-            enabledBorder: OutlineInputBorder(
-                borderSide:
-                    new BorderSide(color: themeLightGrayOpacity20, width: 1),
-                borderRadius: BorderRadius.circular(5)),
-            disabledBorder: OutlineInputBorder(
-                borderSide:
-                    new BorderSide(color: themeLightGrayOpacity20, width: 1),
-                borderRadius: BorderRadius.circular(5)),
-            fillColor: themeLightGrayOpacity20,
-            filled: true,
-            //labelStyle: TextStyle(color: themeGrayText, fontSize: 3),
-            //labelText: testInput.phone,
-          ),
+      );
+    }
+  
+  
+  Widget position(List<String> data){
+    final size = MediaQuery.of(context).size;
+    double bottomMargin;
+    if (data.length >= 4) bottomMargin = 10;
+    else bottomMargin = 35;
+
+    return Container(
+      margin: EdgeInsets.fromLTRB(0, 0, 0, bottomMargin),
+      padding: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+      alignment: Alignment.topCenter,
+      width: size.width * 0.45,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Expanded(
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: GridView.builder(
+                shrinkWrap: true,
+                physics: AlwaysScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  childAspectRatio: 4 / 1.5,
+                  crossAxisCount: 3,
+                  mainAxisSpacing: 3,
+                  crossAxisSpacing: 3),
+                itemCount: data.length,
+                itemBuilder: (context, index) => TagWrapper(
+                  onPressed: () => print('tag pressed'),
+                  tag: data[index],
+                ))),
+            )
+        ]));
+  }
+    
+  Widget changePosition(List<String> data){
+    final size = MediaQuery.of(context).size;
+    double bottomMargin;
+    if (data.length >= 4) bottomMargin = 3;
+    else bottomMargin = 3;
+
+    return Container(
+      margin: EdgeInsets.fromLTRB(0, 0, 0, bottomMargin),
+      padding: EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+      alignment: Alignment.topCenter,
+      width: size.width * 0.45,
+      height: size.height * 0.06,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        border: Border.all(
+          width: 1,
+          color: themeLightGrayOpacity20,
         ),
+        color: themeLightGrayOpacity20,
       ),
-      Container(
-        margin: EdgeInsets.fromLTRB(0, 0, 0, 3),
-        alignment: Alignment.topLeft,
-        width: width * 0.45,
-        height: height * 0.025,
-        child: TextFormField(
-          enabled: true,
-          maxLines: 1,
-          inputFormatters: [new LengthLimitingTextInputFormatter(25)],
-          controller: emailEditor_,
-          style: TextStyle(color: themeGrayText, fontSize: 8),
-          decoration: InputDecoration(
-            focusedBorder: OutlineInputBorder(
-                borderSide:
-                    new BorderSide(color: themeLightGrayOpacity20, width: 1),
-                borderRadius: BorderRadius.circular(5)),
-            enabledBorder: OutlineInputBorder(
-                borderSide:
-                    new BorderSide(color: themeLightGrayOpacity20, width: 1),
-                borderRadius: BorderRadius.circular(5)),
-            disabledBorder: OutlineInputBorder(
-                borderSide:
-                    new BorderSide(color: themeLightGrayOpacity20, width: 1),
-                borderRadius: BorderRadius.circular(5)),
-            fillColor: themeLightGrayOpacity20,
-            filled: true,
-            //labelStyle: TextStyle(color: themeGrayText, fontSize: 6),
-            //labelText: testInput.email,
-          ),
-        ),
-      ),
-    ]);
+      child: Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Expanded(
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  physics: AlwaysScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    childAspectRatio: 4 / 1.5,
+                    crossAxisCount: 3,
+                    mainAxisSpacing: 3,
+                    crossAxisSpacing: 3),
+                  itemCount: data.length,
+                  itemBuilder: (context, index) => TagWrapper(
+                    onPressed: () => _showDialog(context),
+                    tag: data[index],
+                ))),
+              )
+      ])));
   }
 }
 
-//포지션 태그 나타내는 클래스
-class Position extends StatelessWidget {
-  final List<String> data = ["채색", "콘티", "색칠", "캐릭터"];
+class Position_Small extends StatelessWidget {
+  final List<String> data = ["채색", "콘티", "선화", "캐릭터"];
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     double bottomMargin;
     if (data.length >= 4) {
-      bottomMargin = 10;
+      bottomMargin = 2;
     } else {
-      bottomMargin = 35;
+      bottomMargin = 5;
     }
     return Container(
-        margin: EdgeInsets.fromLTRB(0, 0, 0, bottomMargin),
-        padding: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+        margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+        // padding: EdgeInsets.symmetric(horizontal: 2, vertical: 2),
         alignment: Alignment.topCenter,
-        width: size.width * 0.45,
-        // decoration: BoxDecoration(
-        //   border: Border.all(
-        //     width: 1,
-        //     color: themeLightGrayOpacity20,
-        //   ),
-        //   borderRadius: BorderRadius.circular(10),
-        //   color: Colors.white,
-        // ),
+        width: size.width * 0.35,
+        // height: size.height * 0.06,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          // border: Border.all(
+          //   width: 1,
+          //   color: themeLightGrayOpacity20,
+          // ),
+          // color: themeLightGrayOpacity20,
+        ),
         child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -690,58 +734,7 @@ class Position extends StatelessWidget {
                         shrinkWrap: true,
                         physics: AlwaysScrollableScrollPhysics(),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            childAspectRatio: 4 / 1.5,
-                            crossAxisCount: 3,
-                            mainAxisSpacing: 3,
-                            crossAxisSpacing: 3),
-                        itemCount: data.length,
-                        itemBuilder: (context, index) => TagWrapper(
-                              onPressed: () => print('tag pressed'),
-                              tag: data[index],
-                            ))),
-              )
-            ]));
-  }
-}
-
-class Position_Small extends StatelessWidget {
-  final List<String> data = ["채색", "콘티", "색칠", "캐릭터"];
-
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    double bottomMargin;
-    if (data.length >= 4) {
-      bottomMargin = 3;
-    } else {
-      bottomMargin = 3;
-    }
-    return Container(
-        margin: EdgeInsets.fromLTRB(0, 0, 0, bottomMargin),
-        padding: EdgeInsets.symmetric(horizontal: 2, vertical: 2),
-        alignment: Alignment.topCenter,
-        width: size.width * 0.45,
-        height: size.height * 0.06,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          border: Border.all(
-            width: 1,
-            color: themeLightGrayOpacity20,
-          ),
-          color: themeLightGrayOpacity20,
-        ),
-        child: Container(
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-              Expanded(
-                child: Align(
-                    alignment: Alignment.topCenter,
-                    child: GridView.builder(
-                        shrinkWrap: true,
-                        physics: AlwaysScrollableScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            childAspectRatio: 4 / 1.5,
+                            childAspectRatio: 3.5 / 1.5,
                             crossAxisCount: 3,
                             mainAxisSpacing: 3,
                             crossAxisSpacing: 3),
@@ -752,127 +745,153 @@ class Position_Small extends StatelessWidget {
                               tag: data[index],
                             ))),
               )
-            ])));
+            ]));
   }
 }
 
-/*
-void _showDialog(context) { 
-    showDialog(
+class PositionSmallLinear extends StatelessWidget {
+  final List<String> data = ["채색", "콘티", "선화", "캐릭터"];
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    double bottomMargin;
+    if (data.length >= 4) {
+      bottomMargin = 5;
+    } else {
+      bottomMargin = 5;
+    }
+    return Container(
+        margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+        // padding: EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+        alignment: Alignment.topCenter,
+        width: size.width * 0.11 * data.length,
+        // height: size.height * 0.06,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          // border: Border.all(
+          //   width: 1,
+          //   color: themeLightGrayOpacity20,
+          // ),
+          // color: themeLightGrayOpacity20,
+        ),
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Expanded(
+                child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: GridView.builder(
+                        shrinkWrap: true,
+                        physics: AlwaysScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            childAspectRatio: 3.5 / 1.5,
+                            crossAxisCount: data.length,
+                            mainAxisSpacing: 5,
+                            crossAxisSpacing: 5),
+                        itemCount: data.length,
+                        itemBuilder: (context, index) => TagWrapper(
+                              onPressed: () =>
+                                  print("tag pressed"), //_showDialog(context),
+                              tag: data[index],
+                            ))),
+              )
+            ]));
+  }
+}
+
+
+class PositionChange extends StatefulWidget {
+  @override
+  _PositionChangeState createState() => _PositionChangeState();
+}
+
+class _PositionChangeState extends State<PositionChange> {
+  Map<String, Map<String, dynamic>> _formTextField;
+
+  // save data
+  Map<String, Map<String, bool>> applicantType = {
+    '메인글': {'write_main': false},
+    '글콘티': {'write_conti': false},
+    '메인그림': {'draw_main': false},
+    '그림콘티': {'draw_conti': false},
+    '뎃셍': {'draw_dessin': false},
+    '선화': {'draw_line': false},
+    '캐릭터': {'draw_char': false},
+    '채색': {'draw_color': false},
+    '후보정': {'draw_after': false}
+  };
+
+  String location;
+  //  style
+  var formTextStyle = notoSansTextStyle(
+      fontSize: 16, fontWeight: FontWeight.w500, textColor: greyText);
+  
+  @override
+  void initState() {
+    super.initState();
+    _formTextField = new Map<String, Map<String, dynamic>>.from({
+      "applicants": {"controller": null, "state": 0},
+    }); // data
+  }
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    return Container(
+      padding: paddingH20V5,
+      width: size.width * 0.9,
+      decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(
+        width: 3,
+        color: _formTextField["applicants"]["state"] == 0
+            ? Colors.transparent  : _formTextField["applicants"]["state"] ==  1
+                ? onSuccess   : onError
+          )),
+        child: Column(
+          children: <Widget>[
+            MultiChoiceChip(
+            choiceChipType: 0,
+            typeMap: applicantType,
+            onSelectionChanged:
+            applicantTypeChanged),
+            ElevatedButton(
+              child: new Text("저장"),
+              onPressed: () {Navigator.pop(context);},
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                primary:  Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
+                onPrimary: Colors.white,
+              )
+            )
+          ]
+        )
+      );
+  }
+
+  void applicantTypeChanged(Map<String, Map<String, bool>> map) {
+    setState(() {
+      applicantType = map;
+    });
+  }
+}
+
+
+void _showDialog(context){
+  showDialog(
       context: context,
       barrierDismissible: false,  
       builder: (BuildContext context) { 
         return AlertDialog(
           title: Text("태그 선택"),
-          content: Text("최대 6개 골라주세요"),
           actions: <Widget>[
-            Container(
-                alignment: Alignment.center,
-                child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Column(
-                        children: [
-                          Checkbox(
-                            value: false,
-                          ),
-                          Text('채색'),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Checkbox(
-                            value: false,
-                          ),
-                          Text('콘티'),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Checkbox(
-                            value: false,
-                          ),
-                          Text('캐릭터'),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Checkbox(
-                            value: false,
-                          ),
-                          Text('그림'),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Checkbox(
-                            value: false,
-                          ),
-                          Text('글'),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Column(
-                        children: [
-                          Checkbox(
-                            value: false,
-                          ),
-                          Text('뎃셍'),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Checkbox(
-                            value: false,
-                          ),
-                          Text('기타'),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Checkbox(
-                            value: false,
-                          ),
-                          Text('기타'),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Checkbox(
-                            value: false,
-                          ),
-                          Text('기타'),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Checkbox(
-                            value: false,
-                          ),
-                          Text('기타'),
-                        ],
-                      ),
-                    ],
-                  ),
-                  FlatButton(
-                    child: new Text("닫기"),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ), 
-                ],
-              ),
-            )
-          ],
+            PositionChange()
+          ]
         );
-      },
-    );
-  }
- */
+      }
+  );
+}
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////                              프로필 정보 : 석운                             /////////////////////
@@ -1010,7 +1029,7 @@ class _AgreeContractState extends State<AgreeContract> {
       Container(
           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
           width: MediaQuery.of(context).size.width * 1,
-          height: MediaQuery.of(context).size.height * 0.5,
+          height: MediaQuery.of(context).size.height * 0.4,
           child: _isLoading
               ? Center(child: CircularProgressIndicator())
               : PDFView(
