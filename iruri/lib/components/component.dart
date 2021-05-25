@@ -110,25 +110,6 @@ class HomeArticle extends StatelessWidget {
                       flex: 2,
                       child: Align(
                         alignment: Alignment.centerLeft,
-                        // child: GridView.builder(
-                        //     shrinkWrap: true,
-                        //     physics: NeverScrollableScrollPhysics(),
-                        //     gridDelegate:
-                        //         SliverGridDelegateWithFixedCrossAxisCount(
-                        //             crossAxisCount: 6,
-                        //             mainAxisSpacing: 1.0
-                        //             ),
-                        //     itemCount: data.detail.content.genres.length,
-                        //     itemBuilder: (context, index) {
-                        //       if (index !=
-                        //           data.detail.content.genres.length - 1) {
-                        //         return Text(
-                        //             data.detail.content.genres[index] + '·',
-                        //             style: articleTagTextStyle);
-                        //       } else
-                        //         return Text(data.detail.content.genres[index],
-                        //             style: articleTagTextStyle);
-                        //     })
                         child: Text(
                             data.detail.content.genres.toString().substring(
                                 1,

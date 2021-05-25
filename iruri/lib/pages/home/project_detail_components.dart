@@ -28,9 +28,10 @@ Widget noticeDetail(BuildContext context, Article data) {
           Wrap(
             runSpacing: 10,
             children: [
-              Text(data.detail.content.title + " ",
+              Text(data.detail.content.title,
                   style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20)),
               GridView.builder(
+                physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 6,
@@ -115,6 +116,10 @@ Widget noticeDetail(BuildContext context, Article data) {
 }
 
 Widget projectCalendar(BuildContext context, Article data) {
+  
+  final begin = DateTime.parse(data.detail.period.from);
+  final end = DateTime.parse(data.detail.period.to);
+  
   return Container(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
     Expanded(
@@ -155,7 +160,8 @@ Widget projectCalendar(BuildContext context, Article data) {
                       color: Color.fromRGBO(0x82, 0x82, 0x82, 1),
                     ),
                     Text(
-                      "6개월 ~ 1년",
+                      // "6개월 ~ 1년",
+                      (end.difference(begin).inDays ~/ 30).toString() + ' 개월',
                       style: TextStyle(
                           fontSize: 11,
                           color: Color.fromRGBO(0x82, 0x82, 0x82, 1)),
