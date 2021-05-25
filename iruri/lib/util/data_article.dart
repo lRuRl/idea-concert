@@ -62,6 +62,7 @@ class ArticleAPI {
     request.fields['detail[content][tags]'] = jsonEncode(data.detail.content.tags);
     request.fields['detail[content][genres]'] = jsonEncode(data.detail.content.genres);
     request.fields['detail[content][prefer]'] = data.detail.content.prefer;
+    
     // headers for body
     request.headers["Content-Type"] = "application/json";
     // send request

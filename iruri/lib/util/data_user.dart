@@ -19,7 +19,7 @@ class UserAPI {
       throw Exception('User Info post error\n>' + response.body.toString());
   }
 
-  Future<void> update(Member data) async {
+  Future<void> updateUserInfo(Member data) async {
     final res =
         await http.patch(Uri.parse(baseURL), body: jsonEncode(data.toJson()));
     if (res.statusCode == 200)

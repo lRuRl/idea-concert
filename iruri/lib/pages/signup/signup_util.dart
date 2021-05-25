@@ -1,14 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:iruri/components/component.dart';
 import 'package:iruri/components/palette.dart';
-import 'package:iruri/components/spacing.dart';
 import 'package:iruri/components/typhography.dart';
 import 'package:iruri/model/member.dart';
-import 'package:iruri/pages/home/home.dart';
-import 'package:iruri/pages/signup/signup.dart';
-import 'package:iruri/pages/state/state_applylist.dart';
 import 'package:iruri/provider.dart';
 import 'package:iruri/util/data_user.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -24,15 +19,14 @@ class _UserInfoState extends State<UserInfo> {
   Member member;
   Map<String, TextEditingController> infoController =
       new Map<String, TextEditingController>();
-
-  List<bool> select = new List(8);
+  bool _value1 = false;
+  bool _value2 = false;
+  List<bool> select = [false, false, false, false, false, false, false, false];
+  List<String> selectedTags = [];
   @override
   void initState() {
     super.initState();
 
-    for (int i = 0; i < 8; i++) {
-      select[i] = false;
-    }
     api = new UserAPI();
 
     infoController['email'] = new TextEditingController();
@@ -51,13 +45,14 @@ class _UserInfoState extends State<UserInfo> {
         ),
         child: ListView(
           shrinkWrap: true,
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(0),
           children: <Widget>[
             emailForm(),
             passwordForm(),
             nameForm(),
             phoneNumberForm(),
-            registerButton()
+            agreeTerm(),
+            nextButton()
           ],
         ));
   }
@@ -182,6 +177,7 @@ class _UserInfoState extends State<UserInfo> {
   void setMemberInfo() {
     setState(() {
       member = new Member(
+          roles: selectedTags,
           info: new Info(
               email: infoController['email'].text,
               password: infoController['password'].text,
@@ -190,174 +186,36 @@ class _UserInfoState extends State<UserInfo> {
     });
   }
 
-  void updateMemberInfo() {
-    setState(() {
-      member = new Member();
-    });
-  }
-
   Future<void> postUserInfo() async {
     setMemberInfo();
     await api.postNewUserInfo(member);
   }
 
-  Future<void> updateUserInfo() async {}
-
-  Widget registerButton() {
-    final routerReader = context.read<CustomRouter>();
-    final routerWatcher = context.watch<CustomRouter>();
-
+  Widget nextButton() {
     return ElevatedButton(
         onPressed: () {
-          // postUserInfo().then((value) => ScaffoldMessenger.of(context)
-          //     .showSnackBar(SnackBar(content: Text('회원가입 완료!'))));
-
-          // Provider.of<CustomRouter>(context, listen: false)
-          //     .setRegistrationStatus(true);
-          // routerReader.navigateTo(routerWatcher.currentPage, '/');
-          // Navigator.pop(context);
-          selectModal();
+          if (_value1 == true && _value2 == true) {
+            selectModal();
+          } else {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text('약관 동의가 필요합니다.')));
+          }
         },
-        child: Text("가입하기"),
+        child: Text("다음"),
         style: ElevatedButton.styleFrom(
           padding: EdgeInsets.only(top: 11, bottom: 11, left: 21, right: 21),
-          primary: Colors.white,
-          onPrimary: Color.fromRGBO(0x82, 0x82, 0x82, 1),
+          primary: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
+          onPrimary: Colors.white,
           // fixedSize: Size(90, 30),
         ));
   }
 
-  Future<void> selectModal() {
-    return showMaterialModalBottomSheet(
-        backgroundColor: Color.fromRGBO(255, 255, 255, 0),
-        context: context,
-        builder: (context) {
-          return StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-            return Container(
-                padding:
-                    EdgeInsets.only(top: 20, bottom: 40, left: 20, right: 20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20)),
-                ),
-                width: MediaQuery.of(context).size.width * 1,
-                height: MediaQuery.of(context).size.width * 1.3,
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Icon(
-                              Icons.create_outlined,
-                              size: 30.0,
-                              color: Colors.black87,
-                            ),
-                          ),
-                          Text(
-                            "선택 정보 입력",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                color: Colors.black87),
-                          )
-                        ],
-                      ),
-                      selectOptions(0, "글", setState),
-                      selectOptions(1, "채색", setState),
-                      selectOptions(2, "선화", setState),
-                      selectOptions(3, "콘티", setState),
-                      selectOptions(4, "캐릭터", setState),
-                      selectOptions(5, "그림", setState),
-                      selectOptions(6, "데생", setState),
-                      selectOptions(7, "후보정", setState),
-                      SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.8,
-                          child: ElevatedButton(
-                            child: Text("선택 완료",
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold)),
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.only(top: 11, bottom: 11),
-                              //fixedSize: Size(90, 30),
-                              primary: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
-                              onPrimary: Colors.white,
-                            ),
-                            onPressed: () => updateUserInfo()
-                                .then((value) => Navigator.pop(context))
-                                .then((value) => ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
-                                        content: Text('선택 정보가 저장되었습니다.')))),
-                          ))
-                    ]));
-          });
-        });
-  }
-
-  Widget selectOptions(int i, String tags, StateSetter setState) {
-    return Container(
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Row(children: [
-        Padding(
-            padding: EdgeInsets.symmetric(horizontal: 2, vertical: 1),
-            child: InkWell(
-              onTap: () {
-                setState(() {
-                  select[i] = !select[i];
-                });
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle, color: themeLightOrange),
-                child: Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: select[i]
-                      ? Icon(
-                          Icons.check,
-                          size: 20.0,
-                          color: Colors.white,
-                        )
-                      : Icon(
-                          Icons.check_box_outline_blank,
-                          size: 20.0,
-                          color: themeLightOrange,
-                        ),
-                ),
-              ),
-            )),
-        Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15),
-            child: TagWrapper(tag: tags))
-      ]),
-    ]));
-  }
-
-  noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
-}
-
-class AgreeTerm extends StatefulWidget {
-  final String content;
-  AgreeTerm({this.content});
-  @override
-  _AgreeTermState createState() => _AgreeTermState();
-}
-
-class _AgreeTermState extends State<AgreeTerm> {
-  bool _value1 = false;
-  bool _value2 = false;
-
-  int index;
-  String content;
-  @override
-  Widget build(BuildContext context) {
+  Widget agreeTerm() {
     return Container(
         decoration: BoxDecoration(
           border:
-              Border.all(width: 5, color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 1)),
+              Border(
+                top: BorderSide(width: 5, color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 1))),
           color: Color.fromRGBO(255, 255, 255, 1),
         ),
         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
@@ -376,16 +234,16 @@ class _AgreeTermState extends State<AgreeTerm> {
                     decoration: BoxDecoration(
                         shape: BoxShape.circle, color: themeLightOrange),
                     child: Padding(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.all(2.0),
                       child: _value1
                           ? Icon(
                               Icons.check,
-                              size: 10.0,
+                              size: 20.0,
                               color: Colors.white,
                             )
                           : Icon(
                               Icons.check_box_outline_blank,
-                              size: 10.0,
+                              size: 20.0,
                               color: themeLightOrange,
                             ),
                     ),
@@ -411,16 +269,16 @@ class _AgreeTermState extends State<AgreeTerm> {
                     decoration: BoxDecoration(
                         shape: BoxShape.circle, color: themeLightOrange),
                     child: Padding(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.all(2.0),
                       child: _value2
                           ? Icon(
                               Icons.check,
-                              size: 10.0,
+                              size: 20.0,
                               color: Colors.white,
                             )
                           : Icon(
                               Icons.check_box_outline_blank,
-                              size: 10.0,
+                              size: 20.0,
                               color: themeLightOrange,
                             ),
                     ),
@@ -435,4 +293,153 @@ class _AgreeTermState extends State<AgreeTerm> {
           ]),
         ]));
   }
+
+  Future<void> selectModal() {
+    return showMaterialModalBottomSheet(
+        backgroundColor: Color.fromRGBO(255, 255, 255, 0),
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+            final routerReader = context.read<CustomRouter>();
+            final routerWatcher = context.watch<CustomRouter>();
+            Widget selectOptions(int i, String tags) {
+              return Container(
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                    Row(children: [
+                      Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 2, vertical: 1),
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                select[i] = !select[i];
+                              });
+                              if (select[i]) {
+                                selectedTags.add(tags);
+                              } else {
+                                selectedTags
+                                    .removeWhere((element) => element == tags);
+                              }
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: themeLightOrange),
+                              child: Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: select[i]
+                                    ? Icon(
+                                        Icons.check,
+                                        size: 20.0,
+                                        color: Colors.white,
+                                      )
+                                    : Icon(
+                                        Icons.check_box_outline_blank,
+                                        size: 20.0,
+                                        color: themeLightOrange,
+                                      ),
+                              ),
+                            ),
+                          )),
+                      Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          child: TagWrapper(tag: tags))
+                    ]),
+                  ]));
+            }
+
+            return Container(
+                padding:
+                    EdgeInsets.only(top: 20, bottom: 40, left: 20, right: 20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20)),
+                ),
+                width: MediaQuery.of(context).size.width * 1,
+                height: MediaQuery.of(context).size.width * 1.3,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(children: [
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Icon(
+                                Icons.create_outlined,
+                                size: 30.0,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            Text(
+                              "선택 정보 입력",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.black87),
+                            )
+                          ]),
+                          TextButton(
+                            onPressed: () {
+                              postUserInfo().then((value) =>
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text('회원가입 완료!'))));
+                              Provider.of<CustomRouter>(context, listen: false)
+                                  .setRegistrationStatus(true);
+
+                              Navigator.pop(context);
+                              routerReader.navigateTo(
+                                  routerWatcher.currentPage, '/');
+                              Navigator.pop(context);
+                            },
+                            child: Text('건너뛰기', style: bodyTextStyle),
+                          ),
+                        ],
+                      ),
+                      selectOptions(0, "글"),
+                      selectOptions(1, "채색"),
+                      selectOptions(2, "선화"),
+                      selectOptions(3, "콘티"),
+                      selectOptions(4, "캐릭터"),
+                      selectOptions(5, "그림"),
+                      selectOptions(6, "데생"),
+                      selectOptions(7, "후보정"),
+                      SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          child: ElevatedButton(
+                              child: Text("회원가입 완료",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold)),
+                              style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.only(top: 11, bottom: 11),
+                                //fixedSize: Size(90, 30),
+                                primary: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
+                                onPrimary: Colors.white,
+                              ),
+                              onPressed: () {
+                                postUserInfo().then((value) =>
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text('회원가입 완료!'))));
+                                Provider.of<CustomRouter>(context,
+                                        listen: false)
+                                    .setRegistrationStatus(true);
+
+                                Navigator.pop(context);
+                                routerReader.navigateTo(
+                                    routerWatcher.currentPage, '/');
+                                Navigator.pop(context);
+                              }))
+                    ]));
+          });
+        });
+  }
+
+  noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
