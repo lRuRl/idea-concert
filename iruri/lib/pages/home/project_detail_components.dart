@@ -116,10 +116,9 @@ Widget noticeDetail(BuildContext context, Article data) {
 }
 
 Widget projectCalendar(BuildContext context, Article data) {
-  
   final begin = DateTime.parse(data.detail.period.from);
   final end = DateTime.parse(data.detail.period.to);
-  
+
   return Container(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
     Expanded(
@@ -217,7 +216,7 @@ Widget projectDetailContent(BuildContext context, Article data) {
   ]));
 }
 
-Widget applyButton(BuildContext context, String mode) {
+Widget applyButton(BuildContext context, String mode, Article data) {
   final size = MediaQuery.of(context).size;
   String currentmode = mode;
   return ElevatedButton(
@@ -231,7 +230,7 @@ Widget applyButton(BuildContext context, String mode) {
           builder: (context) => SingleChildScrollView(
               // padding: EdgeInsets.only(bottom: 55),
               controller: ModalScrollController.of(context),
-              child: SelectBoxApply()),
+              child: SelectBoxApply(tags: data.detail.content.tags,)),
         );
       },
       child: Text("지원하기",

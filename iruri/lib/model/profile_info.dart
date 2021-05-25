@@ -27,19 +27,17 @@
 class User {
   List<String> roles;
   String sId;
-  Null portfolio;
+  String portfolio;
   ProfileInfo profileInfo;
-  int iV;
 
-  User({this.roles, this.sId, this.portfolio, this.profileInfo, this.iV});
+  User({this.roles, this.sId, this.portfolio, this.profileInfo});
 
-  User.fromJson(Map<String, dynamic> json) {
-    roles = json['roles'].cast<String>();
-    sId = json['_id'];
-    portfolio = json['portfolio'];
-    profileInfo = json['info'] != null ? new ProfileInfo.fromJson(json['info']) : null;
-    iV = json['__v'];
-  }
+  factory User.fromJson(Map<String, dynamic> json) => User(
+      roles: List.from(json['roles']),
+      sId: json['_id'],
+      portfolio: json['portfolio'],
+      profileInfo:
+          json['info'] != null ? new ProfileInfo.fromJson(json['info']) : null,);
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -49,7 +47,6 @@ class User {
     if (this.profileInfo != null) {
       data['info'] = this.profileInfo.toJson();
     }
-    data['__v'] = this.iV;
     return data;
   }
 }
@@ -70,14 +67,13 @@ class ProfileInfo {
       this.location,
       this.desc});
 
-  ProfileInfo.fromJson(Map<String, dynamic> json) {
-    programs = json['programs'].cast<String>();
-    nickname = json['nickname'];
-    phoneNumber = json['phoneNumber'];
-    email = json['email'];
-    location = json['location'];
-    desc = json['desc'];
-  }
+  factory ProfileInfo.fromJson(Map<String, dynamic> json) => ProfileInfo(
+      programs: List.from(json['programs']),
+      nickname: json['nickname'],
+      phoneNumber: json['phoneNumber'],
+      email: json['email'],
+      location: json['location'],
+      desc: json['desc']);
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
