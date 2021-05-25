@@ -25,11 +25,9 @@ module.exports = class ArticleSerive {
                 members, contracts, detail
             } = body;
             const {
-                status, reportedDate, dueDate, period, condition, content, writer, location, applicants
+                status, reportedDate, dueDate, period, condition, content, writer, location
             } = detail;
-            const {
-                title, desc, tags, genres, prefer
-            } = content;
+            const { title, desc, tags, genres, prefer } = content;
             // create object
             const uploadData = await Article.create({
                 imagePath: file,
@@ -37,20 +35,30 @@ module.exports = class ArticleSerive {
                 members: members != null ? JSON.parse(members) : [],
                 contracts: contracts != null ? JSON.parse(contracts) : [],
                 detail: {
-                    status : status,
-                    reportedDate : reportedDate,
-                    dueDate : dueDate,
-                    period : period,
-                    condition : condition,
-                    writer : writer,
-                    location : location,
-                    applicants : applicants != null ? JSON.parse(applicants) : [],
-                    content : {
-                        title : title,
-                        desc : desc,
-                        tags : tags != null ? JSON.parse(tags) : [],
-                        genres : genres != null ? JSON.parse(genres) : [],
-                        prefer : prefer
+                    status: status,
+                    reportedDate: reportedDate,
+                    dueDate: dueDate,
+                    period: period,
+                    condition: condition,
+                    writer: writer,
+                    location: location,
+                    applicants: {
+                        writeMains: [],
+                        writeContis: [],
+                        drawMains: [],
+                        drawContis: [],
+                        drawDessins: [],
+                        drawLines: [],
+                        drawChars: [],
+                        drawColors: [],
+                        drawAfters: [],
+                    },
+                    content: {
+                        title: title,
+                        desc: desc,
+                        tags: tags != null ? JSON.parse(tags) : [],
+                        genres: genres != null ? JSON.parse(genres) : [],
+                        prefer: prefer
                     }
                 }
             });
@@ -72,7 +80,6 @@ module.exports = class ArticleSerive {
             async function updateImageProperty(res, updatedRes) {
                 // iterable
                 for (const document of res) {
-                    const updateDocument = Object.create(document);
                     const { imagePath } = document;
                     if (imagePath != null) {
                         const searchImageFile = await ArticleImage.findOne({ filename: imagePath });
@@ -82,10 +89,10 @@ module.exports = class ArticleSerive {
                             var buffer = '';
                             searchImageChunk.map((doc) => buffer += Buffer.from(doc.data, 'binary').toString('base64'));
                             // put 'image' key and value
-                            updateDocument['image'] = buffer;
-                            updatedRes.push(updateDocument);
-                            console.log(JSON.stringify(updatedRes));
-                            
+                            document['image'] = buffer;
+                            updatedRes.push(document);
+                            // console.log(JSON.stringify(updatedRes));
+
                         }
                     } else {
                         updatedRes.push(document);
@@ -159,6 +166,31 @@ module.exports = class ArticleSerive {
         } catch (error) {
             console.error(error);
             return onDeleteFailure(error);
+        }
+    }
+    // apply for position in article
+    apply = async (id, position, uid) => {
+        try {
+
+            // in position array
+            var applicantMap = {}
+            for (const pos of position) {
+                applicantMap[`detail.applicant.${pos}`] = uid;
+            }
+            const res = await Article.findByIdAndUpdate(
+                id,
+                {
+                    $push: applicantMap
+                },
+                {
+                    "new": true
+                }
+            );
+            if (!res) return onUpdateNotFound;
+            return onUpdateSuccess(res);
+        } catch (error) {
+            console.error(error);
+            return onUpdateFailure(error);
         }
     }
 }

@@ -27,4 +27,29 @@ class UserAPI {
     else
       throw Exception('User Info Update Error\n>' + res.body.toString());
   }
+  
+  Future<List<User>> findAll() async {
+    final res = await http.get(baseURL);
+    if (res.statusCode == 200) {
+      final parsedJson = json.decode(res.body)['result'] as List;
+      final list = parsedJson.map((json) => User.fromJson(json)).toList();
+      return list;
+    } else {
+      throw Exception(res.body.toString());
+    }
+  }
+  
+  Future<User> findbyId(String id) async {
+    final res = await http.get(baseURL);
+    if (res.statusCode == 200) {
+      final parsedJson = json.decode(res.body)['result'] as List;
+      final list = parsedJson.map((json) => User.fromJson(json)).toList();
+      for(int i = 0; i < list.length; i++){
+        if(list[i].sId == id)
+          return list[i];
+      }
+    } else {
+      throw Exception(res.body.toString());
+    }
+  }
 }

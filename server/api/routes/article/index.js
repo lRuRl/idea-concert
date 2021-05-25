@@ -44,4 +44,16 @@ module.exports = (app) => {
         const { status, result } = await articleService.delete(req.params.id);
         return res.status(status).send(result);
     })
+    /**
+     *  기본적인 CRUD를 제외하고 필요한 기능 추가
+     *  1) apply
+     *      - ?uid=userid
+     *      - ?position=writeMain&position=drawDessin
+     */
+    router.patch('/apply/:id', async (req, res) => {
+        var position = req.query.position;
+        var uid = req.query.uid;
+        const { status, result } = await articleService.apply(req.params.id, position, uid);
+        return res.status(status).send(result);
+    })
 }
