@@ -4,20 +4,24 @@ const { onPostSuccess, onPostFailure, onGetFailure, onGetSuccess,
 } = require('../../types/service-return');
 // get model
 const Article = require('../../models/article');
-const { json } = require('express');
 const { ArticleImage, ArticleImageChunk } = require('../../models/file');
 
 module.exports = class ArticleSerive {
     // constructor
     constructor() { }
 
-    // functions
     /**
-     *  TODO : 
+     *  @function
      *      1) C : Create Article
      *      2) R : Read Article
      *      3) U : Update Article
      *      4) D : Delete Article
+     */
+    /**
+     * post new article
+     * @param {object} body - parsed json object from request
+     * @param {string} file - The file path that stored in DB
+     * @returns {status, result} - set in @borrows onPostSuccess, onPostFailure as result
      */
     post = async (body, file) => {
         try {
@@ -169,9 +173,8 @@ module.exports = class ArticleSerive {
         }
     }
     // apply for position in article
-    apply = async (id, position, uid) => {
+    postApply = async (id, position, uid) => {
         try {
-
             // in position array
             var applicantMap = {}
             for (const pos of position) {
@@ -184,6 +187,44 @@ module.exports = class ArticleSerive {
                 },
                 {
                     "new": true
+                }
+            );
+            if (!res) return onUpdateNotFound;
+            return onUpdateSuccess(res);
+        } catch (error) {
+            console.error(error);
+            return onUpdateFailure(error);
+        }
+    }
+    // remove applicant from the article
+    deleteApply = async (id, position, uid) => {
+        try {
+            /**
+             *  this function is only available for publishers !
+             *  1) one-by-one
+             *      removes uid from article-applicant one at a time
+             *      simple API ==> ex) ?position=drawMains&uid=user123456
+             *  2) multiple
+             *      candidate 1 : set < index of position , index of uid >
+             *      by setting same index, it would be easier to make object to remove from DB
+             *      ex) position = [ 'drawMains', 'drawContis']
+             *          uid = ['user123', 'user123', 'user456']
+             *      The problem is that troubles in same postion with multi-uid
+             *      there can't be any information by using just 2 querys to know like below
+             *      ex) remove list
+             *      drawMains : [ 'user123', 'user456']
+             *      drawContis : [ 'user123']
+             *  As this server is made up for demo-version, only handles one-by-one
+             *  @author seunghwanly
+             *  @since 2021-05-26
+             */
+            const path = `detail.applicant.${position}`;
+            const res = await Article.findByIdAndUpdate(
+                id,
+                {
+                    $pull: {
+                        path: uid
+                    }
                 }
             );
             if (!res) return onUpdateNotFound;
