@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 /**
  *  image는 데이터베이스에서 가져올 때 Buffer가 저장되는 곳 입니다.
  *  imagePath는 post할 때 데이터베이스에 저장되는 경로입니다.
@@ -54,10 +56,10 @@ class Detail {
   final Content content;
   final String writer;
   final String location;
-  final List<String> applicants;
+  final Applicant applicant;
 
   Detail(
-      {this.applicants,
+      {this.applicant,
       this.condition,
       this.content,
       this.dueDate,
@@ -69,10 +71,7 @@ class Detail {
 
   factory Detail.fromJson(Map<String, dynamic> json) => Detail(
       period: Period.fromJson(json['period']),
-      applicants: List.from(json['applicants']),
-      // reportedDate:
-      //     DateTime.parse(json['reportedDate']), // "2021-04-21T00:02:00.000Z"
-      // dueDate: DateTime.parse(json['dueDate']),
+      applicant: Applicant.fromJson(json['applicant']),
       reportedDate: json['reportedDate'],
       dueDate: json['dueDate'],
       status: json['status'],
@@ -83,7 +82,7 @@ class Detail {
 
   Map<String, dynamic> toJson() => {
         'period': period.toJson(),
-        'applicants': applicants,
+        'applicants': applicant.toJson(),
         // 'reportedDate': DateFormat("yyyy-MM-ddTHH:mm:ss").format(reportedDate),
         // 'dueDate': DateFormat("yyyy-MM-ddTHH:mm:ss").format(dueDate),
         "reportedDate": reportedDate,
@@ -158,5 +157,52 @@ class Period {
         // 'to': DateFormat("yyyy-MM-ddTHH:mm:ss").format(to)
         "from": from,
         "to": to
+      };
+}
+
+class Applicant {
+  final List<String> writeMains; // 메인글
+  final List<String> writeContis; // 글콘티
+  final List<String> drawMains; // 메인그림
+  final List<String> drawContis; // 그림콘티
+  final List<String> drawDessins; // 그림뎃셍
+  final List<String> drawLines; // 선화
+  final List<String> drawChars; // 캐릭터
+  final List<String> drawColors; // 채색
+  final List<String> drawAfters; // 후보정
+
+  Applicant(
+      {this.drawAfters,
+      this.drawChars,
+      this.drawColors,
+      this.drawContis,
+      this.drawDessins,
+      this.drawLines,
+      this.drawMains,
+      this.writeContis,
+      this.writeMains});
+
+  factory Applicant.fromJson(Map<String, dynamic> json) => Applicant(
+        writeMains: List<String>.from(json['writeMains']),
+        writeContis: List<String>.from(json['writeContis']),
+        drawMains: List<String>.from(json['drawMains']),
+        drawContis: List<String>.from(json['drawContis']),
+        drawDessins: List<String>.from(json['drawDessins']),
+        drawChars: List<String>.from(json['drawChars']),
+        drawColors: List<String>.from(json['drawColors']),
+        drawAfters: List<String>.from(json['drawAfters']),
+        drawLines: List<String>.from(json['drawLines']),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "writeMains": jsonEncode(writeMains),
+        "writeContis": jsonEncode(writeContis),
+        "drawMains": jsonEncode(drawMains),
+        "drawContis": jsonEncode(drawContis),
+        "drawDessins": jsonEncode(drawDessins),
+        "drawChars": jsonEncode(drawChars),
+        "drawColors": jsonEncode(drawColors),
+        "drawAfters": jsonEncode(drawAfters),
+        "drawLines": jsonEncode(drawLines)
       };
 }

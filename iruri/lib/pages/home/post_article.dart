@@ -530,7 +530,6 @@ class _PostArticleState extends State<PostArticle> {
             detail: new Detail(
                 location: location,
                 writer: 'tester',
-                applicants: [],
                 status: '모집중',
                 reportedDate: DateFormat('yyyy-MM-ddTHH:mm:ss.mmm')
                     .format(new DateTime.now())
@@ -538,7 +537,7 @@ class _PostArticleState extends State<PostArticle> {
                 dueDate: DateFormat('yyyy-MM-ddTHH:mm:ss.mmm')
                     .format(_formKey.currentState.value["dueDate"])
                     .toString(),
-                period: new Period(
+                period: Period(
                     from: DateFormat('yyyy-MM-ddTHH:mm:ss.mmm')
                         .format(_formKey.currentState.value["periodfrom"])
                         .toString(),
