@@ -32,8 +32,9 @@ class UserAPI {
       print(parsedJson);
       final list = parsedJson.map((json) => User.fromJson(json)).toList();
       print(list.toString());
+
       for(int i = 0; i < list.length; i++){
-        if(list[i].sId == '609bc2d60dd8c13d95a81073')
+        if(list[i].sId == '609bc2d60dd8c13d95a81073') //임시로 놓은 id
           return list[i];
       }
     } else {
