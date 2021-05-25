@@ -111,15 +111,10 @@ class HomeArticle extends StatelessWidget {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                            data.detail.content.genres
-                                .toString()
-                                .substring(
-                                    1,
-                                    data.detail.content.genres
-                                            .toString()
-                                            .length -
-                                        1)
-                                .replaceAll(', ', ' · '),
+                            data.detail.content.genres.toString().substring(
+                                1,
+                                data.detail.content.genres.toString().length -
+                                    1).replaceAll(', ', ' · '),
                             style: articleTagTextStyle),
                       ),
                     ),
@@ -247,7 +242,7 @@ class _MyProfileState extends State<MyProfile> {
   UserAPI api = new UserAPI();
   String imagePath;
   Future<User> user;
-  String _id = "609bc2d60dd8c13d95a81073";
+  String _id = "60a303cfc232d343e0958685";
   TextEditingController nicknameEditor_;
   TextEditingController phoneNumberEditor_;
   TextEditingController emailEditor_;
@@ -272,7 +267,7 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   updateDB(User data) {
-    api.update(data);
+    api.updateUserInfo(data);
   }
 
   @override
@@ -526,8 +521,6 @@ class _MyProfileState extends State<MyProfile> {
         child: FutureBuilder<User>(
             future: user,
             builder: (context, snapshot) {
-              print('snapshot');
-              print(snapshot.data.toString());
               nickname = snapshot.data.profileInfo.nickname;
               return Text(
                 nickname,
@@ -800,7 +793,6 @@ class PositionSmallLinear extends StatelessWidget {
                     ))));
   }
 }
-
 class PositionChange extends StatefulWidget {
   @override
   _PositionChangeState createState() => _PositionChangeState();
