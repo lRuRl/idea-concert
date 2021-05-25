@@ -36,12 +36,8 @@ class _SignUpPageeState extends State<SignUpPage> {
                   color: Color.fromRGBO(255, 255, 255, 1),
                 ),
                 width: MediaQuery.of(context).size.width * 1,
-                height: MediaQuery.of(context).size.height * 0.6,
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      UserInfo()
-                      
-                    ]))));
+                    children: <Widget>[UserInfo()]))));
   }
 }

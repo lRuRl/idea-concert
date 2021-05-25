@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iruri/components/component.dart';
@@ -36,11 +38,17 @@ class _UserInfoState extends State<UserInfo> {
   }
 
   @override
-  Widget build(BuildContntext) {
+  Widget build(BuildContext context) {
     return Container(
         decoration: BoxDecoration(
-          border:
-              Border.all(width: 5, color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 1)),
+          border: Border(
+            top: BorderSide(
+                width: 5, color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 1)),
+            left: BorderSide(
+                width: 5, color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 1)),
+            right: BorderSide(
+                width: 5, color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 1)),
+          ),
           color: Color.fromRGBO(255, 255, 255, 1),
         ),
         child: ListView(
@@ -52,7 +60,8 @@ class _UserInfoState extends State<UserInfo> {
             nameForm(),
             phoneNumberForm(),
             agreeTerm(),
-            nextButton()
+            nextButton(),
+            defaultImage(context)
           ],
         ));
   }
@@ -174,6 +183,15 @@ class _UserInfoState extends State<UserInfo> {
     );
   }
 
+  Widget defaultImage(BuildContext context) {
+    return SizedBox(
+        width: MediaQuery.of(context).size.width * 0.5,
+        height: MediaQuery.of(context).size.height * 0.15,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 30),
+          child: Image.asset('assets/default.png')));
+  }
+
   void setMemberInfo() {
     setState(() {
       member = new Member(
@@ -213,9 +231,9 @@ class _UserInfoState extends State<UserInfo> {
   Widget agreeTerm() {
     return Container(
         decoration: BoxDecoration(
-          border:
-              Border(
-                top: BorderSide(width: 5, color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 1))),
+          border: Border(
+              top: BorderSide(
+                  width: 5, color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 1))),
           color: Color.fromRGBO(255, 255, 255, 1),
         ),
         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
