@@ -77,7 +77,7 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                         Expanded(flex: 1, child: SizedBox()),
                         Expanded(
                           flex: 12,
-                          child: applyButton(context, mode),
+                          child: applyButton(context, mode, data),
                         )
                       ],
                     ),

@@ -111,10 +111,15 @@ class HomeArticle extends StatelessWidget {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                            data.detail.content.genres.toString().substring(
-                                1,
-                                data.detail.content.genres.toString().length -
-                                    1).replaceAll(', ', ' · '),
+                            data.detail.content.genres
+                                .toString()
+                                .substring(
+                                    1,
+                                    data.detail.content.genres
+                                            .toString()
+                                            .length -
+                                        1)
+                                .replaceAll(', ', ' · '),
                             style: articleTagTextStyle),
                       ),
                     ),
@@ -242,7 +247,7 @@ class _MyProfileState extends State<MyProfile> {
   UserAPI api = new UserAPI();
   String imagePath;
   Future<User> user;
-  String _id = "60a303cfc232d343e0958685";
+  String _id = "609bc2d60dd8c13d95a81073";
   TextEditingController nicknameEditor_;
   TextEditingController phoneNumberEditor_;
   TextEditingController emailEditor_;
@@ -521,6 +526,8 @@ class _MyProfileState extends State<MyProfile> {
         child: FutureBuilder<User>(
             future: user,
             builder: (context, snapshot) {
+              print('snapshot');
+              print(snapshot.data.toString());
               nickname = snapshot.data.profileInfo.nickname;
               return Text(
                 nickname,
@@ -755,7 +762,10 @@ class Position_Small extends StatelessWidget {
 }
 
 class PositionSmallLinear extends StatelessWidget {
-  final List<String> data = ["채색", "콘티", "선화", "캐릭터"];
+  // dynamic data
+  final List<String> data;
+
+  PositionSmallLinear({this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -769,39 +779,25 @@ class PositionSmallLinear extends StatelessWidget {
     return Container(
         margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
         // padding: EdgeInsets.symmetric(horizontal: 2, vertical: 2),
-        alignment: Alignment.topCenter,
-        width: size.width * 0.11 * data.length,
-        // height: size.height * 0.06,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          // border: Border.all(
-          //   width: 1,
-          //   color: themeLightGrayOpacity20,
-          // ),
-          // color: themeLightGrayOpacity20,
-        ),
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Expanded(
-                child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: GridView.builder(
-                        shrinkWrap: true,
-                        physics: AlwaysScrollableScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            childAspectRatio: 3.5 / 1.5,
-                            crossAxisCount: data.length,
-                            mainAxisSpacing: 5,
-                            crossAxisSpacing: 5),
-                        itemCount: data.length,
-                        itemBuilder: (context, index) => TagWrapper(
-                              onPressed: () =>
-                                  print("tag pressed"), //_showDialog(context),
-                              tag: data[index],
-                            ))),
-              )
-            ]));
+        alignment: Alignment.centerRight,
+        // width: size.width * 0.11 * data.length,
+        // height: 50,
+        child: Align(
+            alignment: Alignment.centerRight,
+            child: GridView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                // physics: AlwaysScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    childAspectRatio: 3.5 / 1.5,
+                    crossAxisCount: 6,
+                    crossAxisSpacing: 5),
+                itemCount: data.length,
+                itemBuilder: (context, index) => TagWrapper(
+                      onPressed: () =>
+                          print("tag pressed"), //_showDialog(context),
+                      tag: data[index],
+                    ))));
   }
 }
 

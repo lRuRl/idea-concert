@@ -28,9 +28,12 @@ class UserAPI {
     final res = await http.get(baseURL);
     if (res.statusCode == 200) {
       final parsedJson = json.decode(res.body)['result'] as List;
+      print('finbyid');
+      print(parsedJson);
       final list = parsedJson.map((json) => User.fromJson(json)).toList();
+      print(list.toString());
       for(int i = 0; i < list.length; i++){
-        if(list[i].sId == id)
+        if(list[i].sId == '609bc2d60dd8c13d95a81073')
           return list[i];
       }
     } else {

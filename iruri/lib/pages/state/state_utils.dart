@@ -700,6 +700,8 @@ Future<File> fromAsset(String asset, String filename) async {
 }
 
 class SelectBoxApply extends StatefulWidget {
+  final List<String> tags;
+  SelectBoxApply({this.tags});
   @override
   _SelectBoxApplyState createState() => _SelectBoxApplyState();
 }
@@ -715,7 +717,7 @@ class _SelectBoxApplyState extends State<SelectBoxApply> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Container(
-        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
@@ -724,18 +726,25 @@ class _SelectBoxApplyState extends State<SelectBoxApply> {
         width: size.width * 1,
         height: size.height * 0.4,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(FeatherIcons.chevronDown, size: 24, color: Colors.grey),
+
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("지원하는 부분",
+                Expanded(
+                  flex: 3,
+                  child: Text("지원하는 부분",
                     style:
                         TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                PositionSmallLinear(),
+                ),
+                Expanded(
+                  flex: 7,
+                  child: PositionSmallLinear(data: widget.tags),
+                )
               ],
             ),
             Row(
