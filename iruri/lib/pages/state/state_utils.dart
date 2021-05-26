@@ -1,27 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:iruri/components/component.dart';
 import 'package:iruri/provider.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:iruri/pages/home/project_detail_components.dart';
-import 'package:iruri/components/palette.dart';
 
 import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'state_applylist.dart';
-import 'state_myproject.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:iruri/components/typhography.dart';
 
 // article
 import 'package:iruri/model/article.dart';
-import 'package:iruri/model/article_sample.dart';
 
 // member
-import 'package:iruri/model/member.dart';
 import 'package:iruri/model/member_sample.dart';
 // provider
 import 'package:provider/provider.dart';

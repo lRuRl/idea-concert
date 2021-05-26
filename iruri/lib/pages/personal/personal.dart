@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:iruri/components/component.dart';
 import 'package:iruri/components/palette.dart';
 import 'package:flutter/services.dart';
+import 'package:iruri/pages/signup/signin.dart';
+import 'package:iruri/provider.dart';
+import 'package:provider/provider.dart';
 import 'dart:io';
 import 'package:device_info/device_info.dart';
 import 'package:iruri/components/spacing.dart';
@@ -73,10 +76,26 @@ class _PersonalPageState extends State<PersonalPage> {
               height: MediaQuery.of(context).size.height * 0.12,
               child: managePortfolio(),
             ),
+            logout()
           ],
         ),
       ),
     );
+  }
+
+  Widget logout() {
+    return Container(
+        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+        width: MediaQuery.of(context).size.width * 1,
+        child: TextButton(
+          style: TextButton.styleFrom(
+            primary: Colors.blue,
+            onSurface: Colors.red,
+          ),
+          onPressed: () => Provider.of<CustomRouter>(context, listen: false)
+              .setRegistrationStatus(false),
+          child: Text('로그아웃', style: TextStyle(color: greyText)),
+        ));
   }
 
   Widget personalInfo() {

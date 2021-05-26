@@ -1,29 +1,3 @@
-/*class User {
-  String message;
-  List<Result> result;
-
-  User({this.message, this.result});
-
-  User.fromJson(Map<String, dynamic> json) {
-    message = json['message'];
-    if (json['result'] != null) {
-      result = new List<Result>();
-      json['result'].forEach((v) {
-        result.add(new Result.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['message'] = this.message;
-    if (this.result != null) {
-      data['result'] = this.result.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}*/
-
 class User {
   List<String> roles;
   String sId;
@@ -54,6 +28,7 @@ class User {
 class ProfileInfo {
   List<String> programs;
   String nickname;
+  String password;
   String phoneNumber;
   String email;
   String location;
@@ -62,6 +37,7 @@ class ProfileInfo {
   ProfileInfo(
       {this.programs,
       this.nickname,
+      this.password,
       this.phoneNumber,
       this.email,
       this.location,
@@ -70,6 +46,7 @@ class ProfileInfo {
   factory ProfileInfo.fromJson(Map<String, dynamic> json) => ProfileInfo(
       programs: List.from(json['programs']),
       nickname: json['nickname'],
+      password: json['password'],
       phoneNumber: json['phoneNumber'],
       email: json['email'],
       location: json['location'],
@@ -79,6 +56,7 @@ class ProfileInfo {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['programs'] = this.programs;
     data['nickname'] = this.nickname;
+    data['password'] = this.password;
     data['phoneNumber'] = this.phoneNumber;
     data['email'] = this.email;
     data['location'] = this.location;

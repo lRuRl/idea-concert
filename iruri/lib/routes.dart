@@ -7,6 +7,7 @@ import 'package:iruri/pages/home/home.dart';
 import 'package:iruri/pages/home/post_article.dart';
 import 'package:iruri/pages/home/project_detail.dart';
 import 'package:iruri/pages/personal/personal.dart';
+import 'package:iruri/pages/signup/signup.dart';
 import 'package:iruri/pages/state/fill_contract.dart';
 import 'package:iruri/pages/state/state_projectlist.dart';
 import 'package:iruri/pages/state/state_myproject.dart';
@@ -52,7 +53,6 @@ class _RoutesState extends State<Routes> {
     '/home/projectdetail': ProjectDetailPage(),
     '/state/projectdetail': StateProjectDetailPage(),
     '/state/fillcontract': FillContractPage(),
-
   };
 
   @override

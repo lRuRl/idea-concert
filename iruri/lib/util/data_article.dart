@@ -11,7 +11,7 @@ class ArticleAPI {
 
   // GET - ONE(ID)
   Future<Article> findById(String id) async {
-    final res = await http.get(baseURL + id);
+    final res = await http.get( Uri.parse(baseURL + id));
 
     if (res.statusCode == 200) {
       return Article.fromJson(jsonDecode(res.body));
@@ -22,8 +22,8 @@ class ArticleAPI {
 
   // GET - ALL
   Future<List<Article>> findAll() async {
-    final res = await http.get(baseURL);
-    // print("http 시작");
+    final res = await http.get(Uri.parse(baseURL));
+
     if (res.statusCode == 200) {
       final parsedJson = json.decode(res.body)['result'] as List;
       final list = parsedJson.map((json) => Article.fromJson(json)).toList();
@@ -64,6 +64,7 @@ class ArticleAPI {
     request.fields['detail[content][genres]'] =
         jsonEncode(data.detail.content.genres);
     request.fields['detail[content][prefer]'] = data.detail.content.prefer;
+    
     // headers for body
     request.headers["Content-Type"] = "application/json";
     // send request
@@ -74,11 +75,9 @@ class ArticleAPI {
       print(event);
     });
   }
-
   // PATCH
   Future<void> update(Article data) async {
-    final res = await http.patch(baseURL, body: data.toJson());
-
+    final res = await http.patch( Uri.parse(baseURL), body: data.toJson());
     if (res.statusCode == 200)
       print('article updated');
     else
@@ -88,7 +87,7 @@ class ArticleAPI {
   // DELETE
   Future<void> delete(String id) async {
     // TODO: check user
-    final res = await http.delete(baseURL);
+    final res = await http.delete( Uri.parse(baseURL));
 
     if (res.statusCode == 200)
       print('article deleted');
