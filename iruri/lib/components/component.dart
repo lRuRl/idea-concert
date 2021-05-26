@@ -111,10 +111,15 @@ class HomeArticle extends StatelessWidget {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                            data.detail.content.genres.toString().substring(
-                                1,
-                                data.detail.content.genres.toString().length -
-                                    1).replaceAll(', ', ' · '),
+                            data.detail.content.genres
+                                .toString()
+                                .substring(
+                                    1,
+                                    data.detail.content.genres
+                                            .toString()
+                                            .length -
+                                        1)
+                                .replaceAll(', ', ' · '),
                             style: articleTagTextStyle),
                       ),
                     ),
@@ -186,7 +191,9 @@ class TagWrapper extends StatelessWidget {
       style: TextButton.styleFrom(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           // primary: colorMapper[tag],
-          backgroundColor: colorMapper[tag] != null ? colorMapper[tag] : themeRed.withOpacity(0.2),
+          backgroundColor: colorMapper[tag] != null
+              ? colorMapper[tag]
+              : themeRed.withOpacity(0.2),
           alignment: Alignment.center,
           elevation: 0.0, // no shadow
 
@@ -274,125 +281,122 @@ class _MyProfileState extends State<MyProfile> {
     final width = MediaQuery.of(context).size.width;
     var profileContent, icon, changeButton, imageChangeButton;
     return FutureBuilder<User>(
-      future: user,
-      builder: (context, snapshot) {
-        String nickname, email, phoneNumber;
-        List<String> roles;
-        nickname = snapshot.data.profileInfo.nickname;
-        phoneNumber = snapshot.data.profileInfo.phoneNumber;
-        email = snapshot.data.profileInfo.email;
-        roles = snapshot.data.roles;
+        future: user,
+        builder: (context, snapshot) {
+          String nickname, email, phoneNumber;
+          List<String> roles;
+          nickname = snapshot.data.profileInfo.nickname;
+          phoneNumber = snapshot.data.profileInfo.phoneNumber;
+          email = snapshot.data.profileInfo.email;
+          roles = snapshot.data.roles;
 
-        if (index == false) {
-          profileContent = showProfileContent(width, height, nickname, email, phoneNumber, roles);
-          icon = changeIcon();
-          changeButton = Container();
-          imageChangeButton = Container();
-        } else {
-          profileContent = changeProfileContent(nicknameEditor_, phoneNumberEditor_, emailEditor_, width, height, roles);
-          icon = Container();
-          changeButton = confirmChangeButton();
-          imageChangeButton = confirmImageChangeButton();
-        }
+          if (index == false) {
+            profileContent = showProfileContent(
+                width, height, nickname, email, phoneNumber, roles);
+            icon = changeIcon();
+            changeButton = Container();
+            imageChangeButton = Container();
+          } else {
+            profileContent = changeProfileContent(nicknameEditor_,
+                phoneNumberEditor_, emailEditor_, width, height, roles);
+            icon = Container();
+            changeButton = confirmChangeButton();
+            imageChangeButton = confirmImageChangeButton();
+          }
 
-        return Container(
-          child: Column(
-          children: <Widget>[
-            //프로필 상단 부분
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("프로필 정보", style: TextStyle(fontWeight: FontWeight.w700), textAlign: TextAlign.left),
-                icon,
-              ],
-            ),
-            //프로필 하단 부분
-            Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
-              Container(
-                //프로필사진 컨테이너
-                width: width * 0.3,
-                margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  color: themeLightGrayOpacity20,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Column(
-                  children: [
-                    Container(
-                      height: height * 0.13,
-                      //width: width * 10,
-                      //padding: EdgeInsets.all(2),
-                      child: //ImageWrapper(imagePath: imagePath),
-                          ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Image.file(File(imagePath))),
-                    ),
-                    imageChangeButton
-                  ],
-                ),
+          return Container(
+              child: Column(
+            children: <Widget>[
+              //프로필 상단 부분
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("프로필 정보",
+                      style: TextStyle(fontWeight: FontWeight.w700),
+                      textAlign: TextAlign.left),
+                  icon,
+                ],
               ),
-              Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
-                  children: [
+              //프로필 하단 부분
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      //프로필사진 컨테이너
+                      width: width * 0.3,
+                      margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                      padding: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        color: themeLightGrayOpacity20,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            height: height * 0.13,
+                            //width: width * 10,
+                            //padding: EdgeInsets.all(2),
+                            child: //ImageWrapper(imagePath: imagePath),
+                                ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.file(File(imagePath))),
+                          ),
+                          imageChangeButton
+                        ],
+                      ),
+                    ),
+                    Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
+                        children: [
+                      Container(
+                        margin: EdgeInsets.fromLTRB(10, 3, 0, 10),
+                        width: width * 0.15,
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          "닉네임",
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(10, 3, 0, 40),
+                        width: width * 0.15,
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          "포지션",
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(10, 0, 0, 10),
+                        width: width * 0.15,
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          "연락처",
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(10, 0, 0, 10),
+                        width: width * 0.15,
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          "이메일",
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ),
+                    ]),
+                    profileContent,
+                  ]),
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 Container(
-                  margin: EdgeInsets.fromLTRB(10, 3, 0, 10),
-                  width: width * 0.15,
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    "닉네임",
-                    style: TextStyle(fontSize: 12),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.fromLTRB(10, 3, 0, 40),
-                  width: width * 0.15,
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    "포지션",
-                    style: TextStyle(fontSize: 12),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.fromLTRB(10, 0, 0, 10),
-                  width: width * 0.15,
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    "연락처",
-                    style: TextStyle(fontSize: 12),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.fromLTRB(10, 0, 0, 10),
-                  width: width * 0.15,
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    "이메일",
-                    style: TextStyle(fontSize: 12),
-                  ),
-                ),
-              ]),
-              profileContent,
-            ]),
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Container(
-                margin: EdgeInsets.all(5),
-                alignment: Alignment.center,
-                child: changeButton,
-              )
-            ])
-          ],
-        ));
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        /*
+                  margin: EdgeInsets.all(5),
+                  alignment: Alignment.center,
+                  child: changeButton,
+                )
+              ])
+            ],
+          ));
+
+          /*
         Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
         children: [
           Container(
@@ -413,9 +417,7 @@ class _MyProfileState extends State<MyProfile> {
           ),
           ]
         );*/
-      });
-    
-    
+        });
   }
 
   //그림 수정 버튼
@@ -549,27 +551,34 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   //프로필 정보 화면 초기상태
-  Widget showProfileContent(final width, final height, String nickname, String phoneNumber, String email, List<String> roles) {
-      return Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
+  Widget showProfileContent(final width, final height, String nickname,
+      String phoneNumber, String email, List<String> roles) {
+    return Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
         children: [
-          Container(
-            margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
-            alignment: Alignment.topCenter,
-            child: Text(nickname, style: TextStyle(fontSize: 9),)
-          ),
-          position(roles),
-          Container(
-            margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
-            alignment: Alignment.topCenter,
-            child: Text( phoneNumber, style: TextStyle(fontSize: 9),),
-          ),
-          Container(
-            margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
-            alignment: Alignment.topCenter,
-            child: Text(email,style: TextStyle(fontSize: 9),)
-          ),
-        ]
-      );
+      Container(
+          margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+          alignment: Alignment.topCenter,
+          child: Text(
+            nickname,
+            style: TextStyle(fontSize: 9),
+          )),
+      position(roles),
+      Container(
+        margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+        alignment: Alignment.topCenter,
+        child: Text(
+          phoneNumber,
+          style: TextStyle(fontSize: 9),
+        ),
+      ),
+      Container(
+          margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+          alignment: Alignment.topCenter,
+          child: Text(
+            email,
+            style: TextStyle(fontSize: 9),
+          )),
+    ]);
   }
 
   //연필 아이콘 누르면 수정하는 화면으로 바뀜
@@ -579,13 +588,14 @@ class _MyProfileState extends State<MyProfile> {
     TextEditingController emailEditor_,
     final width,
     final height,
-    List<String> roles,) {
+    List<String> roles,
+  ) {
     return Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
-      children: [
-        profiletextfield(nicknameEditor_, width, height),
-        changePosition(roles),
-        profiletextfield(phoneNumberEditor_, width, height),
-        profiletextfield(emailEditor_, width, height),
+        children: [
+      profiletextfield(nicknameEditor_, width, height),
+      changePosition(roles),
+      profiletextfield(phoneNumberEditor_, width, height),
+      profiletextfield(emailEditor_, width, height),
     ]);
   }
 
@@ -761,43 +771,27 @@ class Position_Small extends StatelessWidget {
 class PositionSmallLinear extends StatelessWidget {
   // dynamic data
   final List<String> data;
-  final Function onSelected;
-
-  PositionSmallLinear({this.data, this.onSelected});
-
+  PositionSmallLinear({this.data});
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    double bottomMargin;
-    if (data.length >= 4) {
-      bottomMargin = 5;
-    } else {
-      bottomMargin = 5;
-    }
-    return Container(
-        margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-        // padding: EdgeInsets.symmetric(horizontal: 2, vertical: 2),
-        alignment: Alignment.centerRight,
-        // width: size.width * 0.11 * data.length,
-        // height: 50,
-        child: Align(
-            alignment: Alignment.centerRight,
-            child: GridView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                // physics: AlwaysScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    childAspectRatio: 3.5 / 1.5,
-                    crossAxisCount: 6,
-                    crossAxisSpacing: 5),
-                itemCount: data.length,
-                itemBuilder: (context, index) => TagWrapper(
-                      onPressed: () =>
-                          onSelected(data[index]), //_showDialog(context),
-                      tag: data[index],
-                    ))));
+    return GridView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        // physics: AlwaysScrollableScrollPhysics(),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            childAspectRatio: 2 / 1,
+            crossAxisCount: 3,
+            mainAxisSpacing: 3,
+            crossAxisSpacing: 5),
+        itemCount: data.length,
+        itemBuilder: (context, index) => TagWrapper(
+              //_showDialog(context),
+              tag: data[index],
+            ));
   }
 }
+
 class PositionChange extends StatefulWidget {
   @override
   _PositionChangeState createState() => _PositionChangeState();

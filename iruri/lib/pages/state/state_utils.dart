@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:iruri/components/component.dart';
 import 'package:iruri/components/palette.dart';
+import 'package:iruri/components/spacing.dart';
 import 'package:iruri/provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:iruri/pages/home/project_detail_components.dart';
@@ -31,106 +32,89 @@ boxItem(int index, List<Container> items, BuildContext context, Article data) {
   // size
   final size = MediaQuery.of(context).size;
   return Container(
-      margin: EdgeInsets.symmetric(
-        horizontal: 10,
-        vertical: 10,
-      ),
+      margin: marginH10V10,
+      padding: paddingH10V10,
       width: size.width * 0.7,
-      height: size.width * 0.5,
+      height: size.width * 0.4,
       decoration: BoxDecoration(
-        border: Border.all(
-          color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 1),
-        ),
+        border: Border.all(color: lightWhite, width: 2.0),
         borderRadius: BorderRadius.all(Radius.circular(12)),
       ),
-      alignment: Alignment(0, 0),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Expanded(
-              flex: 4,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  GestureDetector(
-                    onTap: () => routerReader.navigateTo(
-                        routerWatcher.currentPage, '/state/projectdetail',
-                        data: data),
-                    child: Container(
-                      width: 90,
-                      height: 90,
+              flex: 6,
+              child: InkWell(
+                onTap: () => routerReader.navigateTo(
+                    routerWatcher.currentPage, '/state/projectdetail',
+                    data: data),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: size.width * 0.25,
+                      height: size.width * 0.25,
                       decoration: BoxDecoration(
                         color: Color.fromRGBO(196, 196, 196, 0.13),
                         borderRadius: BorderRadius.all(Radius.circular(12)),
                       ),
                       child: Center(
                         child: SizedBox(
-                          height: 86,
-                          width: 86,
+                          height: size.width * 0.25,
+                          width: size.width * 0.25,
                           child: data.imagePath != null
                               ? ImageWrapper(image: data.image)
                               : Image.asset('assets/default.png'),
                         ),
                       ),
                     ),
-                  ),
-                  GestureDetector(
-                      onTap: () => routerReader.navigateTo(
-                          routerWatcher.currentPage, '/state/projectdetail',
-                          data: data),
-                      child: Container(
-                        width: size.width * 0.4,
-                        height: size.width * 0.25,
-                        decoration: BoxDecoration(),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                data.detail.content.title.length > 12
-                                    ? boldText2(data.detail.content.title)
-                                    : boldText(data.detail.content.title),
-                              ],
-                            ),
-                            /// TODO: [ DB 연동하기 ]
-                            Text(
-                                "승인대기중 : " +
-                                    // data.detail.applicants.length.toString() +
-                                    "2명",
-                                style: TextStyle(
-                                    fontSize: 10,
-                                    fontFamily: "Roboto",
-                                    color:
-                                        Color.fromRGBO(0x77, 0x77, 0x77, 1))),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("모집 부분",
-                                    style: TextStyle(
-                                        fontSize: 10,
-                                        fontFamily: "Roboto",
-                                        color: Color.fromRGBO(
-                                            0x77, 0x77, 0x77, 1))),
-                                Text(
-                                    'D-' +
-                                        DateTime.parse(data.detail.dueDate)
-                                            .difference(DateTime.now())
-                                            .inDays
-                                            .toString() +
-                                        "  ",
-                                    style: articleDuedateTextStyle2),
-                              ],
-                            ),
-                            Row(
-                              children: [Position_Small()],
-                            )
-                          ],
-                        ),
-                      )),
-                ],
+                    Container(
+                      width: size.width * 0.35,
+                      height: size.width * 0.25,
+                      decoration: BoxDecoration(),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                                'D-' +
+                                    DateTime.parse(data.detail.dueDate)
+                                        .difference(DateTime.now())
+                                        .inDays
+                                        .toString() +
+                                    "  ",
+                                style: articleDuedateTextStyle2),
+                          ),
+                          data.detail.content.title.length > 12
+                              ? boldText2(data.detail.content.title)
+                              : boldText(data.detail.content.title),
+                          SizedBox(height: 3),
+                          PositionSmallLinear(
+                            data: data.detail.content.tags,
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               )),
-          Expanded(flex: 2, child: listItemButton_my(context))
+
+          /// TODO: [ DB 연동하기 ]
+          Expanded(
+            flex: 1,
+            child: Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                    "승인대기중 : " +
+                        // data.detail.applicants.length.toString() +
+                        "2명",
+                    style: articleWriterTextStyle)),
+          ),
+          SizedBox(height: 10,),
+          Expanded(flex: 2, child: listItemButton_my(context)),
         ],
       ));
 }
@@ -332,7 +316,8 @@ Widget selectButton() {
           onPressed: () {},
           child: Text("진행중인 프로젝트"),
           style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             padding: EdgeInsets.only(top: 11, bottom: 11, left: 21, right: 21),
             primary: primary,
             onPrimary: Colors.white,
@@ -341,7 +326,8 @@ Widget selectButton() {
           onPressed: () {},
           child: Text("완료된 프로젝트"),
           style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             padding: EdgeInsets.only(top: 11, bottom: 11, left: 21, right: 21),
             primary: Colors.white,
             onPrimary: Color.fromRGBO(0x82, 0x82, 0x82, 1),
@@ -437,10 +423,9 @@ Widget listItemButton_my(BuildContext context) {
             elevation: 1,
             //fixedSize: Size(90, 30),
             primary: Colors.white,
-            side: BorderSide(
-                color: Color.fromRGBO(0x1b, 0x30, 0x59, 1), width: 1),
-            onSurface: Color.fromRGBO(0x1b, 0x30, 0x59, 1),
-            onPrimary: Color.fromRGBO(0x1b, 0x30, 0x59, 1),
+            side: BorderSide(color: secondary, width: 1),
+            onSurface: secondary,
+            onPrimary: secondary,
           )),
       ElevatedButton(
           onPressed: () {},
@@ -449,7 +434,7 @@ Widget listItemButton_my(BuildContext context) {
               Icon(
                 FeatherIcons.users,
                 size: 14,
-                color: Color.fromRGBO(0x1b, 0x30, 0x59, 1),
+                color: secondary,
               ),
               Text("  신청자 조회",
                   style: TextStyle(
@@ -690,8 +675,8 @@ class _SelectBoxApplyState extends State<SelectBoxApply> {
   // for position selected
   List<String> selectedList;
   void onSelected(List<String> selected) => setState(() {
-    selectedList = selected;
-  });
+        selectedList = selected;
+      });
 
   String currentmode;
   @override
@@ -720,18 +705,18 @@ class _SelectBoxApplyState extends State<SelectBoxApply> {
           children: [
             Align(
               alignment: Alignment.center,
-              child: Icon(FeatherIcons.chevronDown, size: 24, color: Colors.grey),
+              child:
+                  Icon(FeatherIcons.chevronDown, size: 24, color: Colors.grey),
             ),
             Text("업무 선택하기",
-                  style: notoSansTextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      textColor: displayText)),
+                style: notoSansTextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    textColor: displayText)),
             divider,
             GroupedCheckbox(
               options: widget.tags
-                  .map((e) => FormBuilderFieldOption(
-                    value: e))
+                  .map((e) => FormBuilderFieldOption(value: e))
                   .toList(),
               onChanged: onSelected,
               orientation: OptionsOrientation.wrap,
