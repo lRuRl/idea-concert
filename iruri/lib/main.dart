@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:iruri/pages/signup/signin.dart';
 // provicer
 import 'package:iruri/provider.dart';
@@ -24,9 +25,12 @@ class MyApp extends StatelessWidget {
       // 우측 상단에 DEBUG 표시 제거
 
       debugShowCheckedModeBanner: false,
-      home: Provider.of<CustomRouter>(context).isLoggedin
-          ? Routes()
-          : LoginPage(),
+      // home: Provider.of<CustomRouter>(context).isLoggedin
+      //     ? Routes()
+      //     : LoginPage(),
+      home: Routes(),
+      // set theme
+      theme: ThemeData(fontFamily: GoogleFonts.notoSans().fontFamily),
     );
   }
 }

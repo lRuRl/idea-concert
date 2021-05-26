@@ -763,8 +763,9 @@ class Position_Small extends StatelessWidget {
 class PositionSmallLinear extends StatelessWidget {
   // dynamic data
   final List<String> data;
+  final Function onSelected;
 
-  PositionSmallLinear({this.data});
+  PositionSmallLinear({this.data, this.onSelected});
 
   @override
   Widget build(BuildContext context) {
@@ -794,7 +795,7 @@ class PositionSmallLinear extends StatelessWidget {
                 itemCount: data.length,
                 itemBuilder: (context, index) => TagWrapper(
                       onPressed: () =>
-                          print("tag pressed"), //_showDialog(context),
+                          onSelected(data[index]), //_showDialog(context),
                       tag: data[index],
                     ))));
   }

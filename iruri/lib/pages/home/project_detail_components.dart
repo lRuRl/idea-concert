@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:iruri/components/component.dart';
 import 'package:iruri/components/palette.dart';
+import 'package:iruri/components/spacing.dart';
 import 'package:iruri/components/typhography.dart';
 import 'package:iruri/model/article.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -217,52 +218,43 @@ Widget projectDetailContent(BuildContext context, Article data) {
 }
 
 Widget applyButton(BuildContext context, String mode, Article data) {
-  final size = MediaQuery.of(context).size;
-  String currentmode = mode;
-  return ElevatedButton(
+  return TextButton(
       onPressed: () {
-        // showMyDialog(
-        //     context, "신청이 완료 되었습니다.", "자세한 지원 사항은 나의 페이지에서 확인 할 수 있습니다.");
-
         showMaterialModalBottomSheet(
           backgroundColor: Color.fromRGBO(255, 255, 255, 0),
           context: context,
           builder: (context) => SingleChildScrollView(
-              // padding: EdgeInsets.only(bottom: 55),
               controller: ModalScrollController.of(context),
-              child: SelectBoxApply(tags: data.detail.content.tags,)),
+              child: SelectBoxApply(
+                tags: data.detail.content.tags,
+              )),
         );
       },
-      child: Text("지원하기",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-      style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.only(top: 11, bottom: 11, left: 11, right: 11),
-        //fixedSize: Size(90, 30),
-        primary: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
-        onPrimary: Colors.white,
-      ));
+      child: Text("지원하기", style: buttonWhiteTextStyle),
+      style: TextButton.styleFrom(
+          padding: paddingH20V5,
+          backgroundColor: primary,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))));
 }
 
 Widget scrapButton() {
-  return ElevatedButton(
+  return TextButton(
       onPressed: () {},
       child: Container(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Icon(Icons.turned_in_not, size: 20),
+            Icon(FeatherIcons.bookmark, size: 20, color: primary,),
             Text("스크랩",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                style: notoSansTextStyle(fontSize: 16,textColor: primary, fontWeight: FontWeight.w600)),
           ],
         ),
       ),
-      style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.only(top: 11, bottom: 11, left: 21, right: 21),
-        //fixedSize: Size(90, 30),
+      style: TextButton.styleFrom(
+        padding: paddingH6V4,
         primary: Colors.white,
-        side: BorderSide(color: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1), width: 1),
-        onSurface: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
-        onPrimary: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
+        side: BorderSide(color: primary, width: 0.8),
       ));
 }
 

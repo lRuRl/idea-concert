@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:iruri/components/component.dart';
+import 'package:iruri/components/palette.dart';
 import 'package:iruri/provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:iruri/pages/home/project_detail_components.dart';
@@ -701,10 +703,19 @@ class SelectBoxApply extends StatefulWidget {
 }
 
 class _SelectBoxApplyState extends State<SelectBoxApply> {
+  // for position selected
+  List<String> selectedList;
+  void onSelected(List<String> selected) => setState(() {
+    selectedList = selected;
+  });
+
   String currentmode;
   @override
   void initState() {
+    super.initState();
     currentmode = 'user';
+    // selected List
+    selectedList = [];
   }
 
   @override
@@ -718,111 +729,128 @@ class _SelectBoxApplyState extends State<SelectBoxApply> {
               topLeft: Radius.circular(20), topRight: Radius.circular(20)),
         ),
         width: size.width * 1,
-        height: size.height * 0.4,
+        height: size.height * 0.6,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(FeatherIcons.chevronDown, size: 24, color: Colors.grey),
-
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: Text("지원하는 부분",
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                ),
-                Expanded(
-                  flex: 7,
-                  child: PositionSmallLinear(data: widget.tags),
-                )
-              ],
+            Align(
+              alignment: Alignment.center,
+              child: Icon(FeatherIcons.chevronDown, size: 24, color: Colors.grey),
             ),
+            Text("업무 선택하기",
+                  style: notoSansTextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      textColor: displayText)),
+            divider,
+            GroupedCheckbox(
+              options: widget.tags
+                  .map((e) => FormBuilderFieldOption(
+                    value: e))
+                  .toList(),
+              onChanged: onSelected,
+              orientation: OptionsOrientation.wrap,
+              activeColor: primary,
+            ),
+            divider,
+            // PositionSmallLinear(data: widget.tags, onSelected: onSelected,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Column(children: [
-                  ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          currentmode = 'user';
-                        });
-                      },
-                      child: Icon(
-                        FeatherIcons.user,
-                        size: 44,
-                      ),
-                      style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.0)),
-                          side: BorderSide(
-                              color: Color.fromRGBO(0xe0, 0xe0, 0xe0, 1),
-                              width: 1),
-                          elevation: 0,
-                          padding: EdgeInsets.all(20),
-                          //fixedSize: Size(90, 30),
-                          primary: currentmode == 'user'
-                              ? Color.fromRGBO(0xf2, 0xa2, 0x0c, 1)
-                              : Colors.white,
-                          onPrimary: currentmode == 'users'
-                              ? Color.fromRGBO(0xf2, 0xa2, 0x0c, 1)
-                              : Colors.white)),
-                  Text("개인",
-                      style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                ]),
-                Column(children: [
-                  ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          currentmode = 'users';
-                        });
-                      },
-                      child: Icon(
-                        FeatherIcons.users,
-                        size: 44,
-                      ),
-                      style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.0)),
-                          side: BorderSide(
-                              color: Color.fromRGBO(0xe0, 0xe0, 0xe0, 1),
-                              width: 1),
-                          elevation: 0,
-                          padding: EdgeInsets.all(20),
-                          //fixedSize: Size(90, 30),
-                          primary: currentmode == 'users'
-                              ? Color.fromRGBO(0xf2, 0xa2, 0x0c, 1)
-                              : Colors.white,
-                          onPrimary: currentmode == 'user'
-                              ? Color.fromRGBO(0xf2, 0xa2, 0x0c, 1)
-                              : Colors.white)),
-                  Text("그룹",
-                      style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                ]),
+                // made space using wrap
+                Wrap(
+                    direction: Axis.vertical,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: 10,
+                    children: [
+                      ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              currentmode = 'user';
+                            });
+                          },
+                          child: Icon(
+                            FeatherIcons.user,
+                            size: 44,
+                          ),
+                          style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0)),
+                              side: BorderSide(
+                                  color: Color.fromRGBO(0xe0, 0xe0, 0xe0, 1),
+                                  width: 0.5),
+                              elevation: 0,
+                              padding: EdgeInsets.all(20),
+                              //fixedSize: Size(90, 30),
+                              primary: currentmode == 'user'
+                                  ? primary
+                                  : Colors.white,
+                              onPrimary: currentmode == 'users'
+                                  ? primary
+                                  : Colors.white)),
+                      Text("개인",
+                          style: notoSansTextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              textColor: displayText)),
+                    ]),
+                // made space using wrap
+                Wrap(
+                    direction: Axis.vertical,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: 10,
+                    children: [
+                      ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              currentmode = 'users';
+                            });
+                          },
+                          child: Icon(
+                            FeatherIcons.users,
+                            size: 44,
+                          ),
+                          style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0)),
+                              side: BorderSide(
+                                  color: Color.fromRGBO(0xe0, 0xe0, 0xe0, 1),
+                                  width: 0.5),
+                              elevation: 0,
+                              padding: EdgeInsets.all(20),
+                              //fixedSize: Size(90, 30),
+                              primary: currentmode == 'users'
+                                  ? primary
+                                  : Colors.white,
+                              onPrimary: currentmode == 'user'
+                                  ? primary
+                                  : Colors.white)),
+                      Text("그룹",
+                          style: notoSansTextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              textColor: displayText)),
+                    ]),
               ],
             ),
-            ElevatedButton(
+            SizedBox(
+              height: 10,
+            ),
+            TextButton(
                 onPressed: () {
                   showMyDialog(context, "신청이 완료 되었습니다.",
                       "자세한 지원 사항은 나의 페이지에서 확인 할 수 있습니다.");
                 },
-                child: Text("지원하기",
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: size.width / 2 - 48, vertical: 8),
-                  //fixedSize: Size(90, 30),
-                  primary: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
-                  onPrimary: Colors.white,
-                )),
+                child: Text("지원하기", style: buttonWhiteTextStyle),
+                style: TextButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: size.width / 2 - 48, vertical: 8),
+                    backgroundColor: primary)),
             SizedBox(
-              height: 20,
+              height: 10,
             )
           ],
         ));

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 // components
 import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/typhography.dart';
@@ -90,7 +91,7 @@ class _RoutesState extends State<Routes> {
       centerTitle: true,
       title: Text(
         'IRURI',
-        style: appBarTitleTextStyle,
+        style: montSesrratTextStyle(textColor: displayText),
       ),
       backgroundColor: Colors.white,
       shadowColor: themeLightGrayOpacity20,
@@ -100,8 +101,8 @@ class _RoutesState extends State<Routes> {
       actions: <Widget>[
         routerWatcher.index == 0
             ? IconButton(
-                icon: Icon(Icons.add_circle_outline_rounded,
-                    color: themeGrayText),
+                icon: Icon(FeatherIcons.plusCircle,
+                    color: primaryLine),
                 // navigation to article form page
                 onPressed: () => Navigator.push(
                     context, MaterialPageRoute(builder: (_) => PostArticle())),
@@ -112,7 +113,7 @@ class _RoutesState extends State<Routes> {
       leading: routerWatcher.currentPage.split('/').length > 2
           ? IconButton(
               icon:
-                  Icon(Icons.keyboard_arrow_left_rounded, color: themeGrayText),
+                  Icon(Icons.keyboard_arrow_left_rounded, color: primaryLine),
               onPressed: () => routerReader.navigateTo(
                   routerWatcher.currentPage, routerWatcher.prevPage),
             )
@@ -134,16 +135,16 @@ class _RoutesState extends State<Routes> {
       items: [
         // 왼쪽부터 나열 됩니다.
         BottomNavigationBarItem(
-            icon: Icon(Icons.article_outlined),
-            activeIcon: Icon(Icons.article_rounded),
+            icon: Icon(FeatherIcons.home, color: primaryLine,),
+            activeIcon: Icon(FeatherIcons.home),
             label: 'Home'),
         BottomNavigationBarItem(
-            icon: Icon(Icons.palette_outlined),
-            activeIcon: Icon(Icons.palette_rounded),
+            icon: Icon(FeatherIcons.trello, color: primaryLine,),
+            activeIcon: Icon(FeatherIcons.trello),
             label: 'Match'),
         BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline_rounded),
-            activeIcon: Icon(Icons.person),
+            icon: Icon(FeatherIcons.user, color: primaryLine,),
+            activeIcon: Icon(FeatherIcons.user),
             label: 'My')
       ],
       // page index 변경

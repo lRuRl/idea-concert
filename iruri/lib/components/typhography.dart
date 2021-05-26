@@ -25,6 +25,9 @@ TextStyle articleDuedateTextStyle =
 TextStyle articleDuedateTextStyle2 =
     TextStyle(fontSize: 10.0, fontWeight: FontWeight.w600, color: themeOrange);
 
+TextStyle buttonWhiteTextStyle =
+    TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold);
+
 // Markdown standard
 // @param FontWeight
 // NotoSansKR
