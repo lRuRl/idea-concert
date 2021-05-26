@@ -17,7 +17,7 @@ TextStyle bodyTextStyle = TextStyle(
 TextStyle articleTitleTextStyle =
     TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.black);
 TextStyle articleTagTextStyle = TextStyle(
-    fontSize: 10.0, fontWeight: FontWeight.normal, color: Colors.black);
+    fontSize: 11.0, fontWeight: FontWeight.normal, color: Colors.black);
 TextStyle articleWriterTextStyle = TextStyle(
     fontSize: 12.0, fontWeight: FontWeight.normal, color: themeGrayText);
 TextStyle articleDuedateTextStyle =

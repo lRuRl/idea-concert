@@ -45,8 +45,8 @@ class HomeArticle extends StatelessWidget {
           width: size.width * 0.9,
           height: size.width * 0.4,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8), // 8px
-            border: Border.all(color: lightWhite, width: 3.0),
+            borderRadius: BorderRadius.circular(12), // 8px
+            border: Border.all(color: lightWhite, width: 2.0),
           ),
           margin: marginH20V10,
           padding: paddingH10V10,
@@ -166,12 +166,12 @@ class TagWrapper extends StatelessWidget {
 
   // tag color mapper
   Map<String, Color> colorMapper = {
-    '글': tagWrite,
+    '메인글': tagWrite,
     '채색': tagPaint,
     '선화': themeLightOrange,
-    '콘티': tagConti,
+    '그림콘티': tagConti,
     '캐릭터': tagCharacter,
-    '그림': tagDraw,
+    '메인그림': tagDraw,
     '데생': tagDessin,
     '후보정': themeBlue,
     '승인대기': tagApproval_WAIT,
@@ -186,14 +186,12 @@ class TagWrapper extends StatelessWidget {
       style: TextButton.styleFrom(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           // primary: colorMapper[tag],
-          backgroundColor: colorMapper[tag],
+          backgroundColor: colorMapper[tag] != null ? colorMapper[tag] : themeRed.withOpacity(0.2),
           alignment: Alignment.center,
           elevation: 0.0, // no shadow
 
           padding: paddingH3V2),
-      child: tag.substring(0, 1) == '승'
-          ? Text(tag, style: articleTagTextStyle)
-          : Text('# ' + tag, style: articleTagTextStyle),
+      child: Text(tag, style: articleTagTextStyle),
     );
   }
 }

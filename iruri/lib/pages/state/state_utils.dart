@@ -28,13 +28,15 @@ boxItem(int index, List<Container> items, BuildContext context, Article data) {
   // provider
   final routerReader = context.read<CustomRouter>();
   final routerWatcher = context.watch<CustomRouter>();
+  // size
+  final size = MediaQuery.of(context).size;
   return Container(
       margin: EdgeInsets.symmetric(
         horizontal: 10,
         vertical: 10,
       ),
-      height: 210,
-      width: 289,
+      width: size.width * 0.7,
+      height: size.width * 0.5,
       decoration: BoxDecoration(
         border: Border.all(
           color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 1),
@@ -76,8 +78,8 @@ boxItem(int index, List<Container> items, BuildContext context, Article data) {
                           routerWatcher.currentPage, '/state/projectdetail',
                           data: data),
                       child: Container(
-                        width: 150,
-                        height: 90,
+                        width: size.width * 0.4,
+                        height: size.width * 0.25,
                         decoration: BoxDecoration(),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,14 +91,9 @@ boxItem(int index, List<Container> items, BuildContext context, Article data) {
                                 data.detail.content.title.length > 12
                                     ? boldText2(data.detail.content.title)
                                     : boldText(data.detail.content.title),
-                                // GestureDetector(
-                                //   onTap: () => routerReader.navigateTo(
-                                //       routerWatcher.currentPage,
-                                //       '/state/projectdetail'),
-                                //   child: Icon(Icons.chevron_right, size: 25),
-                                // )
                               ],
                             ),
+                            /// TODO: [ DB 연동하기 ]
                             Text(
                                 "승인대기중 : " +
                                     // data.detail.applicants.length.toString() +
@@ -335,14 +332,16 @@ Widget selectButton() {
           onPressed: () {},
           child: Text("진행중인 프로젝트"),
           style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             padding: EdgeInsets.only(top: 11, bottom: 11, left: 21, right: 21),
-            primary: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
+            primary: primary,
             onPrimary: Colors.white,
           )),
       ElevatedButton(
           onPressed: () {},
           child: Text("완료된 프로젝트"),
           style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             padding: EdgeInsets.only(top: 11, bottom: 11, left: 21, right: 21),
             primary: Colors.white,
             onPrimary: Color.fromRGBO(0x82, 0x82, 0x82, 1),
@@ -405,21 +404,6 @@ Widget listItemButton(BuildContext context, Article data) {
             onSurface: Color.fromRGBO(0x1b, 0x30, 0x59, 1),
             onPrimary: Color.fromRGBO(0x1b, 0x30, 0x59, 1),
           )),
-      // ElevatedButton(
-      //     onPressed: () => routerReader.navigateTo(
-      //           routerWatcher.currentPage,
-      //           '/state/projectdetail',
-      //         ),
-      //     child: Text("팀원 조회",
-      //         style: TextStyle(
-      //           fontSize: 12,
-      //         )),
-      //     style: ElevatedButton.styleFrom(
-      //       padding: EdgeInsets.only(top: 11, bottom: 11, left: 21, right: 21),
-      //       // fixedSize: Size(90, 30),
-      //       primary: Color.fromRGBO(0x1B, 0x30, 0x59, 1),
-      //       onPrimary: Colors.white,
-      //     ))
     ],
   );
 }
@@ -521,8 +505,8 @@ Widget myProject(BuildContext context, List<Container> items) {
             )
           ],
         )),
-    Expanded(flex: 4, child: myList(items)),
-    Expanded(flex: 1, child: Text('')),
+    Expanded(flex: 8, child: myList(items)),
+    Expanded(flex: 1, child: SizedBox()),
   ]);
 }
 
@@ -536,7 +520,7 @@ Widget myProject_vertical(BuildContext context, List<Container> items) {
             boldText("내가 올린 프로젝트 "),
           ],
         )),
-    Expanded(flex: 10, child: myList_vertical(items)),
+    Expanded(flex: 8, child: myList_vertical(items)),
     Expanded(flex: 1, child: Text('')),
   ]);
 }
