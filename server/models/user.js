@@ -32,14 +32,16 @@ const infoSchema = new mongoose.Schema({
 const userSchema = new mongoose.Schema({
     // _id
     roles: [String],
+    // added for profile image
+    image : String,
     // url or file path
     portfolio: String,
     info: {
         type: infoSchema,
         _id: false
     },
-    // added for profile image
-    image: String
+    // check for digital sign
+    hasSigned : Boolean
 });
 
 module.exports = mongoose.model('User', userSchema);

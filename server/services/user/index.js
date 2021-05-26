@@ -30,8 +30,14 @@ module.exports = class UserService {
             // create object
             const uploadData = await User.create({
                 roles: roles,
+                info: info,
+                /**
+                 *  init to null or false -> first sign up
+                 *  'hasSigned' is updated just before signing digital autography
+                 */
                 portfolio: null,
-                info: info
+                image : null,
+                hasSigned : false
             });
             // db query
             const res = await uploadData.save();
@@ -63,6 +69,14 @@ module.exports = class UserService {
             return onGetFailure(error);
         }
     }
+    /**
+     *  [ NOTICE ]
+     *  all files are recommended to be uploaded up to 256KB
+     *  if the file is over 256KB, more than 1 chunks will be generated
+     *  and need operation to wrap up all chunks from n:0 to n:k
+     *  more codes are in services/article at line 80
+     *  @author seunghwanly - 2021-05-26
+     */
     // get image from mongodb
     getImage = async (filename) => {
         try {
