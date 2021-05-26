@@ -1,3 +1,7 @@
+# custom ignore
+server/node_modules/*
+iruri/pubspec.lock
+
 
 # Created by https://www.toptal.com/developers/gitignore/api/node,macos,flutter,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,macos,flutter,visualstudiocode
@@ -235,3 +239,4 @@ temp/
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/node,macos,flutter,visualstudiocode
+iruri/pubspec.lock
