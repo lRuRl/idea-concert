@@ -31,6 +31,10 @@ module.exports = (app) => {
         const { status, result } = await userService.readAll();
         return res.status(status).send(result);
     })
+    router.get('/:id', async (req, res) => {
+        const { status, result} = await userService.readOne(req.params.id);
+        return res.status(status).send(result);
+    })
     /**
      *  ⚠️ Image / File 은 모두 Binary로 전달됩니다 ⚠️ 
      *                          @author seunghwanly
