@@ -113,7 +113,9 @@ boxItem(int index, List<Container> items, BuildContext context, Article data) {
                         "2명",
                     style: articleWriterTextStyle)),
           ),
-          SizedBox(height: 10,),
+          SizedBox(
+            height: 10,
+          ),
           Expanded(flex: 2, child: listItemButton_my(context)),
         ],
       ));
@@ -614,7 +616,10 @@ Widget contractTitle(BuildContext context) {
 Widget saveContractButton(BuildContext context) {
   return ElevatedButton(
       onPressed: () {
-        showMyDialog(context, "저장이 완료되었습니다.", "");
+        // showMyDialog(context, "저장이 완료되었습니다.", "");
+        showcontractDialog(context)((result) {
+          Navigator.pop(context);
+        });
       },
       child: Text("계약서 저장하기",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
@@ -823,5 +828,124 @@ class _SelectBoxApplyState extends State<SelectBoxApply> {
             )
           ],
         ));
+  }
+}
+
+class ContractContentElement extends StatefulWidget {
+  List<bool> checkState = [false, false, false, false];
+
+  List<bool> getCheckState() {
+    return this.checkState;
+  }
+
+  @override
+  _ContractContentElementState createState() => _ContractContentElementState();
+}
+
+class _ContractContentElementState extends State<ContractContentElement> {
+  // List<bool> checkState;
+  @override
+  void initState() {
+    widget.checkState = [false, false, false, false];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        // width: MediaQuery.of(context).size.width * 0.5,
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        element(0, "전자서명 및 전자문서의 법적 효력에 대해 동의합니다."),
+        element(1, "서명 완료 후 전송되는 전자문서를 원본으로\n인정합니다."),
+        element(2, "모든 서명 참여자가 전자서명에 정당한 권한을\n가지는 것을 확인했습니다."),
+        element(3, "기타 자세한 내용은 전자서명 이용약관에 따라\n 동의합니다. "),
+      ],
+    ));
+  }
+
+  Widget element(int index, String str) {
+    return Row(
+      children: [
+        InkWell(
+          splashColor: Color.fromRGBO(0, 0, 0, 0),
+          onTap: () {
+            index == 3
+                ? showDetailSignElementDialog(context).then((result) {
+                    setState(() {
+                      widget.checkState[3] = true;
+                    });
+                  })
+                : setState(() {
+                    widget.checkState[index] = !widget.checkState[index];
+                  });
+          },
+          child: Container(
+            margin: EdgeInsets.symmetric(vertical: 8),
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: widget.checkState[index]
+                    ? themeLightOrange
+                    : Color.fromRGBO(0xee, 0xee, 0xee, 1)),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              child: widget.checkState[index]
+                  ? Icon(
+                      Icons.check,
+                      size: 17.0,
+                      color: Colors.white,
+                    )
+                  : Icon(
+                      Icons.circle,
+                      size: 17.0,
+                      color: Color.fromRGBO(0xee, 0xee, 0xee, 1),
+                    ),
+            ),
+          ),
+        ),
+        index == 3
+            ? openToS(context)
+            : Text(str,
+                softWrap: true,
+                style: notoSansTextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w400,
+                    textColor: Color.fromRGBO(0x4f, 0x4f, 0x4f, 1)))
+      ],
+    );
+  }
+
+  Widget openToS(BuildContext context) {
+    return Row(
+      children: [
+        Text('기타 자세한 내용은 \n동의합니다.',
+            softWrap: true,
+            style: notoSansTextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w400,
+                textColor: Color.fromRGBO(0x4f, 0x4f, 0x4f, 1))),
+        InkWell(
+            onTap: () => {
+                  showDetailSignElementDialog(context).then((result) {
+                    setState(() {
+                      widget.checkState[3] = true;
+                    });
+                  })
+                },
+            child: Text('전자서명 이용약관\n',
+                softWrap: true,
+                style: TextStyle(
+                    fontSize: 10,
+                    decoration: TextDecoration.underline,
+                    fontWeight: FontWeight.w400,
+                    color: Color.fromRGBO(0x4f, 0x4f, 0x4f, 1)))),
+        Text('에 따라\n',
+            // softWrap: true,
+            style: notoSansTextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w400,
+                textColor: Color.fromRGBO(0x4f, 0x4f, 0x4f, 1))),
+      ],
+    );
   }
 }

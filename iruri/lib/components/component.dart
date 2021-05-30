@@ -992,16 +992,16 @@ class _AgreeContractState extends State<AgreeContract> {
                           decoration: BoxDecoration(
                               shape: BoxShape.circle, color: themeLightOrange),
                           child: Padding(
-                            padding: const EdgeInsets.all(10.0),
+                            padding: const EdgeInsets.all(3.0),
                             child: _value
                                 ? Icon(
                                     Icons.check,
-                                    size: 10.0,
+                                    size: 18.0,
                                     color: Colors.white,
                                   )
                                 : Icon(
                                     Icons.check_box_outline_blank,
-                                    size: 10.0,
+                                    size: 18.0,
                                     color: themeLightOrange,
                                   ),
                           ),
