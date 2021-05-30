@@ -100,11 +100,11 @@ class ArticleAPI {
 
   String convertPosition(String position) {
     Map<String, String> positiionMap = {
-      "글콘티": "writeMains",
-      "메인글": "writeContis",
+      "메인글": "writeMains",
+      "글콘티": "writeContis",
       "메인그림": "drawMains",
       "그림콘티": "drawContis",
-      "뎃셍": "drawDessins",
+      "데셍": "drawDessins",
       "선화": "drawLines",
       "캐릭터": "drawChars",
       "채색": "drawColors",

@@ -1,14 +1,14 @@
+import 'dart:io';
+
+import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:iruri/components/component.dart';
 import 'package:iruri/components/palette.dart';
-import 'package:flutter/services.dart';
-import 'package:iruri/pages/signup/signin.dart';
-import 'package:iruri/provider.dart';
-import 'package:provider/provider.dart';
-import 'dart:io';
-import 'package:device_info/device_info.dart';
 import 'package:iruri/components/spacing.dart';
 import 'package:iruri/components/typhography.dart';
+import 'package:iruri/provider.dart';
+import 'package:provider/provider.dart';
 
 class PersonalPage extends StatefulWidget {
   @override
@@ -17,6 +17,8 @@ class PersonalPage extends StatefulWidget {
 
 class _PersonalPageState extends State<PersonalPage> {
   ScrollController scrollController = new ScrollController();
+
+  var mobileID;
 
   @override
   Widget build(BuildContext context) {
@@ -83,27 +85,34 @@ class _PersonalPageState extends State<PersonalPage> {
     );
   }
 
-  Widget logout() {
-    return Container(
-        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-        width: MediaQuery.of(context).size.width * 1,
-        child: TextButton(
-          style: TextButton.styleFrom(
-            primary: Colors.blue,
-            onSurface: Colors.red,
-          ),
-          onPressed: () => Provider.of<CustomRouter>(context, listen: false)
-              .setRegistrationStatus(false),
-          child: Text('로그아웃', style: TextStyle(color: greyText)),
-        ));
+  Future<String> getMobileID() async {
+    final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+    String id = '';
+    try {
+      if (Platform.isAndroid) {
+        //안드로이드 기기의 경우
+        final AndroidDeviceInfo androidData =
+            await deviceInfoPlugin.androidInfo; //androidInfo를 가져옴
+        id = androidData.androidId;
+      } else if (Platform.isIOS) {
+        //IOS의 경우
+        final IosDeviceInfo iosData =
+            await deviceInfoPlugin.iosInfo; //iosInfo를 가져옴
+        id = iosData.identifierForVendor;
+      }
+    } on PlatformException {
+      id = '';
+    }
+    return id;
   }
 
-  Widget personalInfo() {
-    return Container(
-      child: MyProfile(),
-    );
+  @override
+  initState() {
+    super.initState();
+    mobileID = getMobileID();
   }
 
+  //unique ID 생성 (기기의 고유식별번호(uuid) 이용)
   Widget introduction() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,33 +151,71 @@ class _PersonalPageState extends State<PersonalPage> {
     );
   }
 
-  //unique ID 생성 (기기의 고유식별번호(uuid) 이용)
-  Future<String> getMobileID() async {
-    final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
-    String id = '';
-    try {
-      if (Platform.isAndroid) {
-        //안드로이드 기기의 경우
-        final AndroidDeviceInfo androidData =
-            await deviceInfoPlugin.androidInfo; //androidInfo를 가져옴
-        id = androidData.androidId;
-      } else if (Platform.isIOS) {
-        //IOS의 경우
-        final IosDeviceInfo iosData =
-            await deviceInfoPlugin.iosInfo; //iosInfo를 가져옴
-        id = iosData.identifierForVendor;
-      }
-    } on PlatformException {
-      id = '';
-    }
-    return id;
+  Widget logout() {
+    return Container(
+        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+        width: MediaQuery.of(context).size.width * 1,
+        child: TextButton(
+          style: TextButton.styleFrom(
+            primary: Colors.blue,
+            onSurface: Colors.red,
+          ),
+          onPressed: () => Provider.of<CustomRouter>(context, listen: false)
+              .setRegistrationStatus(false),
+          child: Text('로그아웃', style: TextStyle(color: greyText)),
+        ));
   }
 
-  var mobileID;
-  @override
-  initState() {
-    super.initState();
-    mobileID = getMobileID();
+  Widget managePortfolio() {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Expanded(
+          flex: 1,
+          child: Text("포트폴리오 관리",
+              style: TextStyle(fontWeight: FontWeight.w700),
+              textAlign: TextAlign.left)),
+      Expanded(
+          flex: 1,
+          child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                    width: 300,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: themeLightGrayOpacity20),
+                    child: TextFormField(
+                      enabled: false,
+                      maxLines: 1,
+                      decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: new BorderSide(
+                                  color: themeLightGrayOpacity20, width: 1),
+                              borderRadius: BorderRadius.circular(8)),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: new BorderSide(
+                                  color: themeLightGrayOpacity20, width: 1),
+                              borderRadius: BorderRadius.circular(8)),
+                          disabledBorder: OutlineInputBorder(
+                              borderSide: new BorderSide(
+                                  color: themeLightGrayOpacity20, width: 1),
+                              borderRadius: BorderRadius.circular(8)),
+                          fillColor: Colors.white,
+                          labelStyle:
+                              TextStyle(color: themeGrayText, fontSize: 13),
+                          labelText: 'URL 또는 드라이브 링크'),
+                    )),
+                ElevatedButton(
+                    onPressed: () {},
+                    child: Text("조회", style: buttonWhiteTextStyle,),
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      padding: EdgeInsets.all(12),
+                      primary: themeDeepBlue,
+                      onPrimary: Colors.white,
+                    )),
+              ]))
+    ]);
   }
 
   Widget personalCode() {
@@ -200,7 +247,7 @@ class _PersonalPageState extends State<PersonalPage> {
                                   color: themeLightGrayOpacity20,
                                   width: 1,
                                 ),
-                                borderRadius: BorderRadius.circular(30),
+                                borderRadius: BorderRadius.circular(8),
                                 color: themeLightGrayOpacity20),
                             child: Center(
                                 child: Text(
@@ -212,11 +259,17 @@ class _PersonalPageState extends State<PersonalPage> {
                           ElevatedButton(
                               onPressed: () {
                                 Clipboard.setData(
-                                    new ClipboardData(text: snapshot.data));
+                                        new ClipboardData(text: snapshot.data))
+                                    .then((value) =>
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                          content: Text('클립보드로 복사되었습니다.'),
+                                        )));
                               },
-                              child: Text("복사"),
+                              child: Text("복사", style: buttonWhiteTextStyle),
                               style: ElevatedButton.styleFrom(
-                                padding: EdgeInsets.all(3),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                padding: EdgeInsets.all(12),
                                 primary: themeDeepBlue,
                                 onPrimary: Colors.white,
                               )),
@@ -225,54 +278,9 @@ class _PersonalPageState extends State<PersonalPage> {
         });
   }
 
-  Widget managePortfolio() {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Expanded(
-          flex: 1,
-          child: Text("포트폴리오 관리",
-              style: TextStyle(fontWeight: FontWeight.w700),
-              textAlign: TextAlign.left)),
-      Expanded(
-          flex: 1,
-          child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                    width: 300,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: themeLightGrayOpacity20),
-                    child: TextFormField(
-                      enabled: false,
-                      maxLines: 1,
-                      decoration: InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: new BorderSide(
-                                  color: themeLightGrayOpacity20, width: 1),
-                              borderRadius: BorderRadius.circular(30)),
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: new BorderSide(
-                                  color: themeLightGrayOpacity20, width: 1),
-                              borderRadius: BorderRadius.circular(30)),
-                          disabledBorder: OutlineInputBorder(
-                              borderSide: new BorderSide(
-                                  color: themeLightGrayOpacity20, width: 1),
-                              borderRadius: BorderRadius.circular(30)),
-                          fillColor: Colors.white,
-                          labelStyle:
-                              TextStyle(color: themeGrayText, fontSize: 13),
-                          labelText: 'URL 또는 드라이브 링크'),
-                    )),
-                ElevatedButton(
-                    onPressed: () {},
-                    child: Text("조회"),
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.all(3),
-                      primary: themeDeepBlue,
-                      onPrimary: Colors.white,
-                    )),
-              ]))
-    ]);
+  Widget personalInfo() {
+    return Container(
+      child: MyProfile(),
+    );
   }
 }

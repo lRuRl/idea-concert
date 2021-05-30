@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:iruri/components/component.dart';
 import 'package:iruri/components/palette.dart';
+import 'package:iruri/components/spacing.dart';
 import 'package:iruri/components/typhography.dart';
 import 'package:iruri/model/profile_info.dart';
 import 'package:iruri/provider.dart';
@@ -53,15 +55,15 @@ class _UserInfoState extends State<UserInfo> {
         ),
         child: ListView(
           shrinkWrap: true,
-          padding: const EdgeInsets.all(0),
+          padding: paddingH20V20,
           children: <Widget>[
             emailForm(),
             passwordForm(),
             nameForm(),
             phoneNumberForm(),
             agreeTerm(),
+            defaultImage(context),
             nextButton(),
-            defaultImage(context)
           ],
         ));
   }
@@ -188,29 +190,31 @@ class _UserInfoState extends State<UserInfo> {
         width: MediaQuery.of(context).size.width * 0.5,
         height: MediaQuery.of(context).size.height * 0.15,
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 30),
-          child: Image.asset('assets/default.png')));
+            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 30),
+            child: Image.asset('assets/default.png')));
   }
 
   void setUserInfo() {
     setState(() {
-      user = new User(
-          roles: selectedTags,
-          profileInfo: new ProfileInfo(
-              email: infoController['email'].text,
-              password: infoController['password'].text,
-              phoneNumber: infoController['phoneNumber'].text,
-              nickname: infoController['nickname'].text));
+      user = User(
+          id: infoController['email'].text,
+          pw: infoController['password'].text,
+          profileInfo: ProfileInfo(
+            name: infoController['nickname'].text,
+            phoneNumber: infoController['phoneNumber'].text,
+            roles: selectedTags,
+          ));
     });
   }
 
   Future<void> postUserInfo() async {
     setUserInfo();
+    print(user.toJson().toString());
     await api.postNewUserInfo(user);
   }
 
   Widget nextButton() {
-    return ElevatedButton(
+    return TextButton(
         onPressed: () {
           if (_value1 == true && _value2 == true) {
             selectModal();
@@ -219,13 +223,12 @@ class _UserInfoState extends State<UserInfo> {
                 .showSnackBar(SnackBar(content: Text('약관 동의가 필요합니다.')));
           }
         },
-        child: Text("다음"),
-        style: ElevatedButton.styleFrom(
-          padding: EdgeInsets.only(top: 11, bottom: 11, left: 21, right: 21),
-          primary: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
-          onPrimary: Colors.white,
-          // fixedSize: Size(90, 30),
-        ));
+        child: Text("다음", style: buttonWhiteTextStyle),
+        style: TextButton.styleFrom(
+            padding: paddingH20V10,
+            backgroundColor: primary,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8))));
   }
 
   Widget agreeTerm() {
@@ -249,8 +252,8 @@ class _UserInfoState extends State<UserInfo> {
                     });
                   },
                   child: Container(
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: themeLightOrange),
+                    decoration:
+                        BoxDecoration(shape: BoxShape.circle, color: primary),
                     child: Padding(
                       padding: const EdgeInsets.all(2.0),
                       child: _value1
@@ -262,7 +265,7 @@ class _UserInfoState extends State<UserInfo> {
                           : Icon(
                               Icons.check_box_outline_blank,
                               size: 20.0,
-                              color: themeLightOrange,
+                              color: primary,
                             ),
                     ),
                   ),
@@ -284,8 +287,8 @@ class _UserInfoState extends State<UserInfo> {
                     });
                   },
                   child: Container(
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: themeLightOrange),
+                    decoration:
+                        BoxDecoration(shape: BoxShape.circle, color: primary),
                     child: Padding(
                       padding: const EdgeInsets.all(2.0),
                       child: _value2
@@ -297,7 +300,7 @@ class _UserInfoState extends State<UserInfo> {
                           : Icon(
                               Icons.check_box_outline_blank,
                               size: 20.0,
-                              color: themeLightOrange,
+                              color: primary,
                             ),
                     ),
                   ),
@@ -344,8 +347,7 @@ class _UserInfoState extends State<UserInfo> {
                             },
                             child: Container(
                               decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: themeLightOrange),
+                                  shape: BoxShape.circle, color: primary),
                               child: Padding(
                                 padding: const EdgeInsets.all(2.0),
                                 child: select[i]
@@ -357,7 +359,7 @@ class _UserInfoState extends State<UserInfo> {
                                     : Icon(
                                         Icons.check_box_outline_blank,
                                         size: 20.0,
-                                        color: themeLightOrange,
+                                        color: primary,
                                       ),
                               ),
                             ),
@@ -391,8 +393,8 @@ class _UserInfoState extends State<UserInfo> {
                             Padding(
                               padding: const EdgeInsets.all(10.0),
                               child: Icon(
-                                Icons.create_outlined,
-                                size: 30.0,
+                                FeatherIcons.edit2,
+                                size: 24.0,
                                 color: Colors.black87,
                               ),
                             ),
@@ -420,27 +422,26 @@ class _UserInfoState extends State<UserInfo> {
                           ),
                         ],
                       ),
-                      selectOptions(0, "글"),
-                      selectOptions(1, "채색"),
-                      selectOptions(2, "선화"),
-                      selectOptions(3, "콘티"),
+
+                      /// TODO : [ 메인글, 글콘티, 메인그림, 그림콘티, 캐릭터, 채색, 뎃셍, 후보정 ] 8개로 맞춰주세여
+                      selectOptions(0, "메인글"),
+                      selectOptions(1, "글콘티"),
+                      selectOptions(2, "메인그림"),
+                      selectOptions(3, "그림콘티"),
                       selectOptions(4, "캐릭터"),
-                      selectOptions(5, "그림"),
+                      selectOptions(5, "채색"),
                       selectOptions(6, "데생"),
-                      selectOptions(7, "후보정"),
+                      selectOptions(7, "선화"),
                       SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.8,
-                          child: ElevatedButton(
-                              child: Text("회원가입 완료",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold)),
-                              style: ElevatedButton.styleFrom(
-                                padding: EdgeInsets.only(top: 11, bottom: 11),
-                                //fixedSize: Size(90, 30),
-                                primary: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
-                                onPrimary: Colors.white,
-                              ),
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          child: TextButton(
+                              child:
+                                  Text("회원가입 완료", style: buttonWhiteTextStyle),
+                              style: TextButton.styleFrom(
+                                  padding: paddingH10V10,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8)),
+                                  backgroundColor: primary),
                               onPressed: () {
                                 postUserInfo().then((value) =>
                                     ScaffoldMessenger.of(context).showSnackBar(

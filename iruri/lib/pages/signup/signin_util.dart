@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iruri/components/palette.dart';
+import 'package:iruri/components/spacing.dart';
+import 'package:iruri/components/typhography.dart';
 import 'package:iruri/pages/signup/signup.dart';
 import 'package:iruri/provider.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +19,7 @@ Widget appName(BuildContext context) {
   return Container(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Text('IRURI',
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)));
+          style: montSesrratTextStyle(fontSize: 30, fontWeight: FontWeight.bold)));
 }
 
 Widget getUserInfo(BuildContext context) {
@@ -40,8 +42,8 @@ Widget getUserInfo(BuildContext context) {
                   borderSide: new BorderSide(color: Colors.grey, width: 1),
                   borderRadius: BorderRadius.circular(30)),
               fillColor: Colors.white,
-              labelStyle: TextStyle(color: themeGrayText),
-              labelText: 'Email address or Id',
+              labelStyle: montSesrratTextStyle(textColor: greyText, fontSize: 14),
+              labelText: 'Enter e-mail',
             ),
           ),
         ),
@@ -60,8 +62,8 @@ Widget getUserInfo(BuildContext context) {
                   borderSide: new BorderSide(color: Colors.grey, width: 1),
                   borderRadius: BorderRadius.circular(30)),
               fillColor: Colors.white,
-              labelStyle: TextStyle(color: themeGrayText),
-              labelText: 'Password',
+              labelStyle: montSesrratTextStyle(textColor: greyText, fontSize: 14),
+              labelText: 'Enter Password',
             ),
           ),
         ),
@@ -82,14 +84,14 @@ Widget loginButton(BuildContext context) {
             routerReader.navigateTo(routerWatcher.currentPage, '/');
           },
           child: Text("로그인",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: buttonWhiteTextStyle),
           style: ElevatedButton.styleFrom(
             shape: new RoundedRectangleBorder(
               borderRadius: new BorderRadius.circular(30.0),
             ),
-            padding: EdgeInsets.only(top: 11, bottom: 11, left: 11, right: 11),
+            padding: paddingH10V10,
             //fixedSize: Size(90, 30),
-            primary: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
+            primary: primary,
             onPrimary: Colors.white,
           )));
 }

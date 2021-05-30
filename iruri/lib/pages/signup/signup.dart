@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/typhography.dart';
 import 'package:iruri/pages/signup/signup_util.dart';
@@ -28,6 +29,8 @@ class _SignUpPageeState extends State<SignUpPage> {
           backgroundColor: Colors.white,
           shadowColor: themeLightGrayOpacity20,
           elevation: 1.0,
+          // leading -> Navigator pop
+          leading: TextButton.icon(onPressed: () => Navigator.pop(context), icon: Icon(FeatherIcons.chevronLeft, color: primaryLine,), label: Text(''))
         ),
         body: SingleChildScrollView(
             controller: scrollController,

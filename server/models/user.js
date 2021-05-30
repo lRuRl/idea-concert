@@ -4,13 +4,18 @@ const bcrypt = require('bcrypt');
 
 // define schema
 const infoSchema = new mongoose.Schema({
-    nickname: String,
-    password: String,
+    // data from sign-up
+    name: String,
     phoneNumber: String,
-    email: String,
+    // additional information from sign-up
+    roles: [String],
+    // edit in personal page
+    nickname: String,
     programs: [String],
     location: String,
-    desc: String
+    desc: String,
+    genres: [String],
+    career: String
 });
 
 // TODO: 비밀번호 암호화
@@ -30,18 +35,27 @@ const infoSchema = new mongoose.Schema({
 // });
 
 const userSchema = new mongoose.Schema({
+    // information for sign-in
+    // id = email 
+    id: {
+        type: String,
+        required: true
+    },
+    pw: {
+        type: String,
+        required: true
+    },
     // _id
-    roles: [String],
-    // added for profile image
-    image : String,
-    // url or file path
-    portfolio: String,
     info: {
         type: infoSchema,
         _id: false
     },
+    // added for profile image
+    image: String,
+    // url or file path
+    portfolio: String,
     // check for digital sign
-    hasSigned : Boolean
+    hasSigned: Boolean
 });
 
 module.exports = mongoose.model('User', userSchema);

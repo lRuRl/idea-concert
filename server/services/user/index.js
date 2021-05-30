@@ -20,24 +20,41 @@ module.exports = class UserService {
      *      - expire user info  -> DELETE ALL INFO in _id
      *      - delete uploaded portfolio file
      */
-    // 1) POST : new User to application
+    // 1) POST : new User to application [ SIGN-UP ]
     post = async (body) => {
         try {
             // from data
             const {
-                roles, info
+                id, pw, info
             } = body;
+            const {
+                name, phoneNumber, roles
+            } = info;
+            console.log('roles : ' + JSON.stringify(roles))
             // create object
             const uploadData = await User.create({
-                roles: roles,
-                info: info,
+                id: id,
+                pw: pw,
+                info: {
+                    name: name,
+                    phoneNumber: phoneNumber,
+                    roles: roles != null ? JSON.parse(roles) : [],
+                    // set null leftovers
+                    nickname: null,
+                    programs: [],
+                    location: null,
+                    desc: null,
+                    genres: [],
+                    career: null
+                },
                 /**
-                 *  init to null or false -> first sign up
-                 *  'hasSigned' is updated just before signing digital autography
+                 *  @param portfolio    init null : pdf, docx, ...
+                 *  @param image        init null : profile image
+                 *  @param hasSigned    init null : true, if user has signed digital autography
                  */
                 portfolio: null,
-                image : null,
-                hasSigned : false
+                image: null,
+                hasSigned: false
             });
             // db query
             const res = await uploadData.save();
@@ -115,7 +132,7 @@ module.exports = class UserService {
             const { roles, info } = body;
             // update data
             var updateData;
-            if(img === undefined || !img) {
+            if (img === undefined || !img) {
                 updateData = {
                     roles: roles,
                     info: info,
@@ -189,6 +206,19 @@ module.exports = class UserService {
                 .catch((err) => onDeleteNotFound);
             if (!resChunk) return onDeleteFailure(resChunk);
             return onDeleteSuccess(resChunk);
+        }
+    }
+    /** @function signIn check id and pw */
+    signIn = async (id, pw) => {
+        console.log(id, pw)
+        const res = await User.findOne({ id: id });
+        if (!res) return onGetNotFound;
+        else {
+            if (res.pw === pw) return onGetSuccess(res);
+            else return {
+                status: 400,
+                result: 'wrong password'
+            };
         }
     }
 }
