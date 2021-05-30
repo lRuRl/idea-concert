@@ -226,7 +226,7 @@ Widget applyButton(BuildContext context, String mode, Article data) {
           builder: (context) => SingleChildScrollView(
               controller: ModalScrollController.of(context),
               child: SelectBoxApply(
-                tags: data.detail.content.tags,
+                data: data,
               )),
         );
       },
@@ -290,7 +290,7 @@ showMyDialog(BuildContext context, String str1, String str2) {
         elevation: 5.0,
         child: Container(
             width: MediaQuery.of(context).size.width * 0.85,
-            height: MediaQuery.of(context).size.height / 3.5,
+            height: MediaQuery.of(context).size.height / 4,
             padding: EdgeInsets.all(10.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -341,7 +341,8 @@ showMyDialog(BuildContext context, String str1, String str2) {
                           //fixedSize: Size(90, 30),
                           primary: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
                           onPrimary: Colors.white,
-                        )))
+                        ))),
+                SizedBox(height: 10,)
               ],
             )),
       );

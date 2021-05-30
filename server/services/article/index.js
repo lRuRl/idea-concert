@@ -177,9 +177,15 @@ module.exports = class ArticleSerive {
         try {
             // in position array
             var applicantMap = {}
-            for (const pos of position) {
-                applicantMap[`detail.applicant.${pos}`] = uid;
+            
+            if (Array.isArray(position)) {
+                for (const pos of position) {
+                    applicantMap[`detail.applicant.${pos}`] = uid;
+                }
+            } else {
+                applicantMap[`detail.applicant.${position}`] = uid;
             }
+
             const res = await Article.findByIdAndUpdate(
                 id,
                 {

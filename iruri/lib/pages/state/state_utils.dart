@@ -4,6 +4,7 @@ import 'package:iruri/components/component.dart';
 import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/spacing.dart';
 import 'package:iruri/provider.dart';
+import 'package:iruri/util/data_article.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:iruri/pages/home/project_detail_components.dart';
 
@@ -670,8 +671,8 @@ Future<File> fromAsset(String asset, String filename) async {
 }
 
 class SelectBoxApply extends StatefulWidget {
-  final List<String> tags;
-  SelectBoxApply({this.tags});
+  final Article data;
+  SelectBoxApply({this.data});
   @override
   _SelectBoxApplyState createState() => _SelectBoxApplyState();
 }
@@ -690,6 +691,12 @@ class _SelectBoxApplyState extends State<SelectBoxApply> {
     currentmode = 'user';
     // selected List
     selectedList = [];
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    selectedList.clear();
   }
 
   @override
@@ -720,7 +727,7 @@ class _SelectBoxApplyState extends State<SelectBoxApply> {
                     textColor: displayText)),
             divider,
             GroupedCheckbox(
-              options: widget.tags
+              options: widget.data.detail.content.tags
                   .map((e) => FormBuilderFieldOption(value: e))
                   .toList(),
               onChanged: onSelected,
@@ -813,8 +820,11 @@ class _SelectBoxApplyState extends State<SelectBoxApply> {
             ),
             TextButton(
                 onPressed: () {
-                  showMyDialog(context, "신청이 완료 되었습니다.",
-                      "자세한 지원 사항은 나의 페이지에서 확인 할 수 있습니다.");
+                  ArticleAPI()
+                      .apply(widget.data.id, selectedList, 'tester', 'new')
+                      .then((value) => showMyDialog(context, "신청이 완료 되었습니다.",
+                          "자세한 지원 사항은 나의 페이지에서 확인 할 수 있습니다."))
+                      .then((value) => Navigator.pop(context));
                 },
                 child: Text("지원하기", style: buttonWhiteTextStyle),
                 style: TextButton.styleFrom(

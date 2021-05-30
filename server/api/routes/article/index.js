@@ -72,7 +72,7 @@ module.exports = (app) => {
         var position = req.query.position;
         var uid = req.query.uid;
         var job = req.query.job;
-
+        console.log(`position : ${position}, uid : ${uid}, job : ${job}`);
         if (job === 'new') {
             const { status, result } = await articleService.postApply(req.params.id, position, uid);
             return res.status(status).send(result);
