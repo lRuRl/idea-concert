@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iruri/components/palette.dart';
+import 'package:iruri/components/spacing.dart';
+import 'package:iruri/components/typhography.dart';
 import 'package:iruri/pages/signup/signup.dart';
 import 'package:iruri/provider.dart';
 import 'package:provider/provider.dart';
@@ -82,14 +84,14 @@ Widget loginButton(BuildContext context) {
             routerReader.navigateTo(routerWatcher.currentPage, '/');
           },
           child: Text("로그인",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: buttonWhiteTextStyle),
           style: ElevatedButton.styleFrom(
             shape: new RoundedRectangleBorder(
               borderRadius: new BorderRadius.circular(30.0),
             ),
-            padding: EdgeInsets.only(top: 11, bottom: 11, left: 11, right: 11),
+            padding: paddingH10V10,
             //fixedSize: Size(90, 30),
-            primary: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
+            primary: primary,
             onPrimary: Colors.white,
           )));
 }
