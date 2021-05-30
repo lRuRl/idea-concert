@@ -30,6 +30,7 @@ module.exports = class UserService {
             const {
                 name, phoneNumber, roles
             } = info;
+            console.log('roles : ' + JSON.stringify(roles))
             // create object
             const uploadData = await User.create({
                 id: id,
@@ -37,11 +38,11 @@ module.exports = class UserService {
                 info: {
                     name: name,
                     phoneNumber: phoneNumber,
-                    rolse: roles != null ? JSON.parse(roles) : [],
+                    roles: roles != null ? JSON.parse(roles) : [],
                     // set null leftovers
-                    nickname : null,
-                    programs : [],
-                    location : null,
+                    nickname: null,
+                    programs: [],
+                    location: null,
                     desc: null,
                     genres: [],
                     career: null
@@ -52,8 +53,8 @@ module.exports = class UserService {
                  *  @param hasSigned    init null : true, if user has signed digital autography
                  */
                 portfolio: null,
-                image : null,
-                hasSigned : false
+                image: null,
+                hasSigned: false
             });
             // db query
             const res = await uploadData.save();
@@ -131,7 +132,7 @@ module.exports = class UserService {
             const { roles, info } = body;
             // update data
             var updateData;
-            if(img === undefined || !img) {
+            if (img === undefined || !img) {
                 updateData = {
                     roles: roles,
                     info: info,
@@ -205,6 +206,19 @@ module.exports = class UserService {
                 .catch((err) => onDeleteNotFound);
             if (!resChunk) return onDeleteFailure(resChunk);
             return onDeleteSuccess(resChunk);
+        }
+    }
+    /** @function signIn check id and pw */
+    signIn = async (id, pw) => {
+        console.log(id, pw)
+        const res = await User.findOne({ id: id });
+        if (!res) return onGetNotFound;
+        else {
+            if (res.pw === pw) return onGetSuccess(res);
+            else return {
+                status: 400,
+                result: 'wrong password'
+            };
         }
     }
 }

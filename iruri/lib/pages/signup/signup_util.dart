@@ -196,10 +196,10 @@ class _UserInfoState extends State<UserInfo> {
 
   void setUserInfo() {
     setState(() {
-      user = new User(
+      user = User(
           id: infoController['email'].text,
           pw: infoController['password'].text,
-          profileInfo: new ProfileInfo(
+          profileInfo: ProfileInfo(
             name: infoController['nickname'].text,
             phoneNumber: infoController['phoneNumber'].text,
             roles: selectedTags,
@@ -209,6 +209,7 @@ class _UserInfoState extends State<UserInfo> {
 
   Future<void> postUserInfo() async {
     setUserInfo();
+    print(user.toJson().toString());
     await api.postNewUserInfo(user);
   }
 

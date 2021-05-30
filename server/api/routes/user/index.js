@@ -31,8 +31,15 @@ module.exports = (app) => {
         const { status, result } = await userService.readAll();
         return res.status(status).send(result);
     })
+    /** @function signIn */
+    router.get('/sign-in', async (req, res) => {
+        const { id, pw } = req.body;
+        const { status, result } = await userService.signIn(id, pw);
+        return res.status(status).send(result);
+    })
+    /** @function findUserById */
     router.get('/:id', async (req, res) => {
-        const { status, result} = await userService.readOne(req.params.id);
+        const { status, result } = await userService.readOne(req.params.id);
         return res.status(status).send(result);
     })
     /**
@@ -89,4 +96,5 @@ module.exports = (app) => {
         const { status, result } = await userService.deletePortfolio(req.params.id);
         return res.status(status).send(result);
     })
+    
 }
