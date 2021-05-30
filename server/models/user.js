@@ -4,14 +4,17 @@ const bcrypt = require('bcrypt');
 
 // define schema
 const infoSchema = new mongoose.Schema({
-    nickname: String,
-    password: String,
+    // data from sign-up
+    name: String,
     phoneNumber: String,
-    email: String,
+    // additional information from sign-up
+    roles: [String],
+    // edit in personal page
+    nickname: String,
     programs: [String],
     location: String,
     desc: String,
-    favorites: [ String],
+    genres: [String],
     career: String
 });
 
@@ -33,18 +36,19 @@ const infoSchema = new mongoose.Schema({
 
 const userSchema = new mongoose.Schema({
     // information for sign-in
-    id : {
-        type : String, 
-        required : true   
+    // id = email 
+    id: {
+        type: String,
+        required: true
     },
-    pw : {
-        type : String,
+    pw: {
+        type: String,
         required: true
     },
     // _id
-    roles: [String],
+
     // added for profile image
-    image : String,
+    image: String,
     // url or file path
     portfolio: String,
     info: {
@@ -52,7 +56,7 @@ const userSchema = new mongoose.Schema({
         _id: false
     },
     // check for digital sign
-    hasSigned : Boolean
+    hasSigned: Boolean
 });
 
 module.exports = mongoose.model('User', userSchema);
