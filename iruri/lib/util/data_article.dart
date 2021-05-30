@@ -11,7 +11,7 @@ class ArticleAPI {
 
   // GET - ONE(ID)
   Future<Article> findById(String id) async {
-    final res = await http.get( Uri.parse(baseURL + id));
+    final res = await http.get(Uri.parse(baseURL + id));
 
     if (res.statusCode == 200) {
       return Article.fromJson(jsonDecode(res.body));
@@ -54,8 +54,10 @@ class ArticleAPI {
     // request.fields['detail[applicants]'] = jsonEncode(data.detail.applicants);
     request.fields['detail[period][from]'] = data.detail.period.from;
     request.fields['detail[period][to]'] = data.detail.period.to;
-    request.fields['detail[condition][projectType]'] = data.detail.condition.projectType;
-    request.fields['detail[condition][contractType]'] = data.detail.condition.contractType;
+    request.fields['detail[condition][projectType]'] =
+        data.detail.condition.projectType;
+    request.fields['detail[condition][contractType]'] =
+        data.detail.condition.contractType;
     request.fields['detail[condition][wage]'] = data.detail.condition.wage;
     request.fields['detail[content][title]'] = data.detail.content.title;
     request.fields['detail[content][desc]'] = data.detail.content.desc;
@@ -64,7 +66,7 @@ class ArticleAPI {
     request.fields['detail[content][genres]'] =
         jsonEncode(data.detail.content.genres);
     request.fields['detail[content][prefer]'] = data.detail.content.prefer;
-    
+
     // headers for body
     request.headers["Content-Type"] = "application/json";
     // send request
@@ -75,9 +77,10 @@ class ArticleAPI {
       print(event);
     });
   }
+
   // PATCH
   Future<void> update(Article data) async {
-    final res = await http.patch( Uri.parse(baseURL), body: data.toJson());
+    final res = await http.patch(Uri.parse(baseURL), body: data.toJson());
     if (res.statusCode == 200)
       print('article updated');
     else
@@ -87,11 +90,65 @@ class ArticleAPI {
   // DELETE
   Future<void> delete(String id) async {
     // TODO: check user
-    final res = await http.delete( Uri.parse(baseURL));
+    final res = await http.delete(Uri.parse(baseURL));
 
     if (res.statusCode == 200)
       print('article deleted');
     else
       throw Exception('article delete error\n>' + res.body.toString());
+  }
+
+  String convertPosition(String position) {
+    Map<String, String> positiionMap = {
+      "글콘티": "writeMains",
+      "메인글": "writeContis",
+      "메인그림": "drawMains",
+      "그림콘티": "drawContis",
+      "뎃셍": "drawDessins",
+      "선화": "drawLines",
+      "캐릭터": "drawChars",
+      "채색": "drawColors",
+      "후보정": "drawAfters"
+    };
+    return positiionMap[position];
+  }
+
+  // apply
+  Future<void> apply(
+      String articleId, List<String> position, String uid, String job) async {
+    // test uid
+    String testUid = "609a84c2bc084d78594849d0";
+    // for test
+    uid = testUid;
+    // make query
+    String query = '';
+
+    /// add [position] to query
+    for (int i = 0; i < position.length; ++i) {
+      if (i == 0) {
+        query += '?position=' + convertPosition(position[i]);
+      } else {
+        query += '&position=' + convertPosition(position[i]);
+      }
+    }
+
+    /// add [uid] to query
+    if (query.length > 0) {
+      query += '&uid=' + uid;
+    }
+    /// add [job] to query
+    if (query.length > 0) {
+      query += '&job=' + job;
+    }
+    // http.patch
+    String uri = baseURL + 'apply/' + articleId + query;
+    print(uri);
+    final res = await http.patch(Uri.parse(uri));
+    // result
+    if (res.statusCode == 200) {
+      print('apply successed');
+    } else {
+      throw Exception('apply error\n> ' + res.body.toString());
+    }
   }
 }
