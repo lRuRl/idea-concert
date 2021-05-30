@@ -10,7 +10,9 @@ const infoSchema = new mongoose.Schema({
     email: String,
     programs: [String],
     location: String,
-    desc: String
+    desc: String,
+    favorites: [ String],
+    career: String
 });
 
 // TODO: 비밀번호 암호화
@@ -30,6 +32,15 @@ const infoSchema = new mongoose.Schema({
 // });
 
 const userSchema = new mongoose.Schema({
+    // information for sign-in
+    id : {
+        type : String, 
+        required : true   
+    },
+    pw : {
+        type : String,
+        required: true
+    },
     // _id
     roles: [String],
     // added for profile image
