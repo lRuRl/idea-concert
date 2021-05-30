@@ -19,7 +19,7 @@ Widget appName(BuildContext context) {
   return Container(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Text('IRURI',
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)));
+          style: montSesrratTextStyle(fontSize: 30, fontWeight: FontWeight.bold)));
 }
 
 Widget getUserInfo(BuildContext context) {
@@ -42,8 +42,8 @@ Widget getUserInfo(BuildContext context) {
                   borderSide: new BorderSide(color: Colors.grey, width: 1),
                   borderRadius: BorderRadius.circular(30)),
               fillColor: Colors.white,
-              labelStyle: TextStyle(color: themeGrayText),
-              labelText: 'Email address or Id',
+              labelStyle: montSesrratTextStyle(textColor: greyText, fontSize: 14),
+              labelText: 'Enter e-mail',
             ),
           ),
         ),
@@ -62,8 +62,8 @@ Widget getUserInfo(BuildContext context) {
                   borderSide: new BorderSide(color: Colors.grey, width: 1),
                   borderRadius: BorderRadius.circular(30)),
               fillColor: Colors.white,
-              labelStyle: TextStyle(color: themeGrayText),
-              labelText: 'Password',
+              labelStyle: montSesrratTextStyle(textColor: greyText, fontSize: 14),
+              labelText: 'Enter Password',
             ),
           ),
         ),

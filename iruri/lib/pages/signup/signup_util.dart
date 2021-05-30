@@ -55,7 +55,7 @@ class _UserInfoState extends State<UserInfo> {
         ),
         child: ListView(
           shrinkWrap: true,
-          padding: paddingH10V10,
+          padding: paddingH20V20,
           children: <Widget>[
             emailForm(),
             passwordForm(),

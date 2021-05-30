@@ -20,20 +20,36 @@ module.exports = class UserService {
      *      - expire user info  -> DELETE ALL INFO in _id
      *      - delete uploaded portfolio file
      */
-    // 1) POST : new User to application
+    // 1) POST : new User to application [ SIGN-UP ]
     post = async (body) => {
         try {
             // from data
             const {
-                roles, info
+                id, pw, info
             } = body;
+            const {
+                name, phoneNumber, roles
+            } = info;
             // create object
             const uploadData = await User.create({
-                roles: roles,
-                info: info,
+                id: id,
+                pw: pw,
+                info: {
+                    name: name,
+                    phoneNumber: phoneNumber,
+                    rolse: roles != null ? JSON.parse(roles) : [],
+                    // set null leftovers
+                    nickname : null,
+                    programs : [],
+                    location : null,
+                    desc: null,
+                    genres: [],
+                    career: null
+                },
                 /**
-                 *  init to null or false -> first sign up
-                 *  'hasSigned' is updated just before signing digital autography
+                 *  @param portfolio    init null : pdf, docx, ...
+                 *  @param image        init null : profile image
+                 *  @param hasSigned    init null : true, if user has signed digital autography
                  */
                 portfolio: null,
                 image : null,

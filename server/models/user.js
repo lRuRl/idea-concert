@@ -46,15 +46,14 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     // _id
-
-    // added for profile image
-    image: String,
-    // url or file path
-    portfolio: String,
     info: {
         type: infoSchema,
         _id: false
     },
+    // added for profile image
+    image: String,
+    // url or file path
+    portfolio: String,
     // check for digital sign
     hasSigned: Boolean
 });
