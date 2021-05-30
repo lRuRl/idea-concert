@@ -287,8 +287,8 @@ class _MyProfileState extends State<MyProfile> {
           List<String> roles;
           nickname = snapshot.data.profileInfo.nickname;
           phoneNumber = snapshot.data.profileInfo.phoneNumber;
-          email = snapshot.data.profileInfo.email;
-          roles = snapshot.data.roles;
+          email = snapshot.data.id;
+          roles = snapshot.data.profileInfo.roles;
 
           if (index == false) {
             profileContent = showProfileContent(
@@ -472,13 +472,11 @@ class _MyProfileState extends State<MyProfile> {
                               onPressed: () {
                                 changeIndex();
                                 updateDB(User(
-                                    sId: this._id,
-                                    roles: ["roles"],
+                                    uid: this._id,
                                     portfolio: null,
                                     profileInfo: ProfileInfo(
                                       nickname: nicknameEditor_.text,
                                       phoneNumber: phoneNumberEditor_.text,
-                                      email: emailEditor_.text,
                                     )));
                               },
                               child: Text("확인",

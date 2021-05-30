@@ -190,19 +190,20 @@ class _UserInfoState extends State<UserInfo> {
         width: MediaQuery.of(context).size.width * 0.5,
         height: MediaQuery.of(context).size.height * 0.15,
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 30),
-          child: Image.asset('assets/default.png')));
+            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 30),
+            child: Image.asset('assets/default.png')));
   }
 
   void setUserInfo() {
     setState(() {
       user = new User(
-          roles: selectedTags,
+          id: infoController['email'].text,
+          pw: infoController['password'].text,
           profileInfo: new ProfileInfo(
-              email: infoController['email'].text,
-              password: infoController['password'].text,
-              phoneNumber: infoController['phoneNumber'].text,
-              nickname: infoController['nickname'].text));
+            name: infoController['nickname'].text,
+            phoneNumber: infoController['phoneNumber'].text,
+            roles: selectedTags,
+          ));
     });
   }
 
@@ -223,10 +224,10 @@ class _UserInfoState extends State<UserInfo> {
         },
         child: Text("다음", style: buttonWhiteTextStyle),
         style: TextButton.styleFrom(
-          padding: paddingH20V10,
-          backgroundColor: primary,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))
-        ));
+            padding: paddingH20V10,
+            backgroundColor: primary,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8))));
   }
 
   Widget agreeTerm() {
@@ -250,8 +251,8 @@ class _UserInfoState extends State<UserInfo> {
                     });
                   },
                   child: Container(
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: primary),
+                    decoration:
+                        BoxDecoration(shape: BoxShape.circle, color: primary),
                     child: Padding(
                       padding: const EdgeInsets.all(2.0),
                       child: _value1
@@ -285,8 +286,8 @@ class _UserInfoState extends State<UserInfo> {
                     });
                   },
                   child: Container(
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: primary),
+                    decoration:
+                        BoxDecoration(shape: BoxShape.circle, color: primary),
                     child: Padding(
                       padding: const EdgeInsets.all(2.0),
                       child: _value2
@@ -345,8 +346,7 @@ class _UserInfoState extends State<UserInfo> {
                             },
                             child: Container(
                               decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: primary),
+                                  shape: BoxShape.circle, color: primary),
                               child: Padding(
                                 padding: const EdgeInsets.all(2.0),
                                 child: select[i]
@@ -421,6 +421,7 @@ class _UserInfoState extends State<UserInfo> {
                           ),
                         ],
                       ),
+
                       /// TODO : [ 메인글, 글콘티, 메인그림, 그림콘티, 캐릭터, 채색, 뎃셍, 후보정 ] 8개로 맞춰주세여
                       selectOptions(0, "메인글"),
                       selectOptions(1, "글콘티"),
@@ -433,13 +434,13 @@ class _UserInfoState extends State<UserInfo> {
                       SizedBox(
                           width: MediaQuery.of(context).size.width * 0.9,
                           child: TextButton(
-                              child: Text("회원가입 완료",
-                                  style: buttonWhiteTextStyle),
+                              child:
+                                  Text("회원가입 완료", style: buttonWhiteTextStyle),
                               style: TextButton.styleFrom(
-                                padding: paddingH10V10,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                backgroundColor: primary
-                              ),
+                                  padding: paddingH10V10,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8)),
+                                  backgroundColor: primary),
                               onPressed: () {
                                 postUserInfo().then((value) =>
                                     ScaffoldMessenger.of(context).showSnackBar(
