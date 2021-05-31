@@ -77,8 +77,8 @@ module.exports = (app) => {
             const { status, result } = await articleService.postApply(req.params.id, position, uid);
             return res.status(status).send(result);
         }
-        else if (job === 'delete') {
-            const { status, result } = await articleService.deleteApply(req.params.id, position, uid);
+        else if(job === 'delete' || job === 'confirm' || job === 'contractWait' || job === 'contractComplete'){
+            const { status, result } = await articleService.modifyApply(req.params.id, position, uid, job);
             return res.status(status).send(result);
         }
         else return res.status(400).send('wrong info or needes parameter(query) job');
