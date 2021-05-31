@@ -42,7 +42,7 @@ boxItem(int index, List<Container> items, BuildContext context, Article data) {
       margin: marginH10V10,
       padding: paddingH10V10,
       width: size.width * 0.7,
-      height: size.width * 0.41,
+      height: size.width * 0.45,
       decoration: BoxDecoration(
         border: Border.all(color: lightWhite, width: 2.0),
         borderRadius: BorderRadius.all(Radius.circular(12)),
@@ -51,7 +51,7 @@ boxItem(int index, List<Container> items, BuildContext context, Article data) {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Expanded(
-              flex: 6,
+              flex: 8,
               child: InkWell(
                 onTap: () => routerReader.navigateTo(
                     routerWatcher.currentPage, '/state/projectdetail',
@@ -69,7 +69,7 @@ boxItem(int index, List<Container> items, BuildContext context, Article data) {
                       child: Center(
                         child: SizedBox(
                           height: size.width * 0.25,
-                          width: size.width * 0.25,
+                          width: size.width * 0.35,
                           child: data.imagePath != null
                               ? ImageWrapper(image: data.image)
                               : Image.asset('assets/default.png'),
@@ -77,7 +77,7 @@ boxItem(int index, List<Container> items, BuildContext context, Article data) {
                       ),
                     ),
                     Container(
-                      width: size.width * 0.35,
+                      width: size.width * 0.37,
                       height: size.width * 0.25,
                       decoration: BoxDecoration(),
                       child: Column(
@@ -116,14 +116,14 @@ boxItem(int index, List<Container> items, BuildContext context, Article data) {
                 alignment: Alignment.centerRight,
                 child: Text(
                     "승인대기중 : " +
-                        // data.detail.applicants.length.toString() +
-                        "2명",
+                        data.detail.applicant.getAppllicantCount().toString() +
+                        '명',
                     style: articleWriterTextStyle)),
           ),
-          SizedBox(
-            height: 10,
-          ),
-          Expanded(flex: 2, child: listItemButton_my(context)),
+          // SizedBox(
+          //   height: 4,
+          // ),
+          Expanded(flex: 3, child: listItemButton_my(context)),
         ],
       ));
 }
@@ -142,7 +142,7 @@ boxItem_apply(
       width: 289,
       decoration: BoxDecoration(
         border: Border.all(
-          color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 1),
+          color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 3),
         ),
         borderRadius: BorderRadius.all(Radius.circular(12)),
       ),
@@ -287,6 +287,28 @@ Widget applyProject(BuildContext context, List<Container> items) {
   ]);
 }
 
+Widget applicant_vertical(BuildContext context, List<Container> items) {
+  return Container(
+      margin: EdgeInsets.symmetric(
+        vertical: 15,
+      ),
+      child: Column(children: [
+        Expanded(
+            flex: 1,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                boldText16("  지원자 조회"),
+              ],
+            )),
+        Expanded(
+          flex: 10,
+          child: myList_vertical(items),
+        ),
+        Expanded(flex: 1, child: Text('')),
+      ]));
+}
+
 Widget applyProject_vertical(BuildContext context, List<Container> items) {
   return Container(
       margin: EdgeInsets.symmetric(vertical: 15),
@@ -305,6 +327,10 @@ Widget applyProject_vertical(BuildContext context, List<Container> items) {
         ),
         Expanded(flex: 1, child: Text('')),
       ]));
+}
+
+Widget boldText16(String txt) {
+  return Text(txt, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold));
 }
 
 Widget boldText(String txt) {
@@ -1072,13 +1098,14 @@ containerApplys(int index, BuildContext context, User data) {
   final routerWatcher = context.watch<CustomRouter>();
   return Container(
       margin: EdgeInsets.symmetric(
-        horizontal: 10,
+        // horizontal: 10,
         vertical: 2,
       ),
       height: 210,
-      width: 450,
+      width: MediaQuery.of(context).size.width * 0.5,
       decoration: BoxDecoration(
         border: Border.all(
+          width: 2.0,
           color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 1),
         ),
         borderRadius: BorderRadius.all(Radius.circular(12)),
@@ -1094,19 +1121,19 @@ containerApplys(int index, BuildContext context, User data) {
                 children: [
                   GestureDetector(
                     onTap: () => routerReader.navigateTo(
-                        routerWatcher.currentPage, '/state/projectdetail',
+                        routerWatcher.currentPage, '/personal',
                         data: data),
                     child: Container(
-                      width: 90,
-                      height: 90,
+                      width: 120,
+                      height: 120,
                       decoration: BoxDecoration(
                         color: Color.fromRGBO(196, 196, 196, 0.13),
                         borderRadius: BorderRadius.all(Radius.circular(12)),
                       ),
                       child: Center(
                         child: SizedBox(
-                          height: 100,
-                          width: 100,
+                          height: 90,
+                          width: 90,
                           // child: data.image. != null
                           //     ? ImageWrapper(image: data.image)
                           //     : Image.asset('assets/default.png'),
@@ -1118,11 +1145,12 @@ containerApplys(int index, BuildContext context, User data) {
                   ),
                   GestureDetector(
                       onTap: () => routerReader.navigateTo(
-                          routerWatcher.currentPage, '/state/projectdetail',
+                          routerWatcher.currentPage, '/personal',
                           data: data),
                       child: Container(
-                        width: 150,
-                        height: 105,
+                        padding: EdgeInsets.symmetric(vertical: 8),
+                        width: 210,
+                        height: 120,
                         color: Colors.white,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1131,15 +1159,47 @@ containerApplys(int index, BuildContext context, User data) {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                ApprovalState(
-                                  stateIndex: index % 3,
+                                boldText(
+                                  data.profileInfo.name,
+                                ),
+                                InkWell(
+                                  onTap: () => routerReader.navigateTo(
+                                      routerWatcher.currentPage, '/personal',
+                                      data: data),
+                                  child:
+                                      Icon(FeatherIcons.chevronRight, size: 15),
                                 ),
                               ],
                             ),
+                            SizedBox(
+                              height: 8,
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text("지역 : 서울 / 한국",
+                                // SizedBox(
+                                //   width: 8,
+                                // ),
+                                Container(
+                                  // color: Colors.black,
+                                  alignment: Alignment.centerRight,
+                                  width:
+                                      data.profileInfo.roles.length * 50.0 + 8,
+                                  child: PositionSmallLinear(
+                                      data: data.profileInfo.roles),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                    data.profileInfo.location == null
+                                        ? '지역 : 미작성'
+                                        : "지역 : " + data.profileInfo.location,
                                     style: TextStyle(
                                         fontSize: 10,
                                         fontFamily: "Roboto",
@@ -1150,7 +1210,12 @@ containerApplys(int index, BuildContext context, User data) {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text("선호 장르 : 로맨스/코미디/판타지",
+                                Text(
+                                    data.profileInfo.genres?.isEmpty ?? true
+                                        ? '선호 장르 : 미작성'
+                                        : '선호 장르 : ' +
+                                            getGenreList(
+                                                data.profileInfo.genres),
                                     style: TextStyle(
                                         fontSize: 10,
                                         fontFamily: "Roboto",
@@ -1161,7 +1226,12 @@ containerApplys(int index, BuildContext context, User data) {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text("경력 : 1년 이상",
+                                Text(
+                                    data.profileInfo.career == null
+                                        ? '경력 : 미작성'
+                                        : '경력 : ' +
+                                            data.profileInfo.career +
+                                            '년 이상',
                                     style: TextStyle(
                                         fontSize: 10,
                                         fontFamily: "Roboto",
@@ -1169,9 +1239,6 @@ containerApplys(int index, BuildContext context, User data) {
                                             0x77, 0x77, 0x77, 1))),
                               ],
                             ),
-                            Row(
-                              children: [Position_Small()],
-                            )
                           ],
                         ),
                       ))
@@ -1180,23 +1247,62 @@ containerApplys(int index, BuildContext context, User data) {
           Expanded(
               flex: 1,
               child: Container(
-                  decoration:
-                      BoxDecoration(border: Border(top: BorderSide(width: 1))),
+                  decoration: BoxDecoration(
+                      border: Border(
+                          top: BorderSide(
+                    width: 1.5,
+                    color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 1),
+                  ))),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                              decoration: BoxDecoration(
-                                  border: Border(right: BorderSide(width: 1))),
-                              child: Text("승인 수락")),
-                          Container(child: Text("승인 거절")),
-                        ],
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                            alignment: Alignment.center,
+                            height: 210 / 5,
+                            width: MediaQuery.of(context).size.width * 0.5,
+                            decoration: BoxDecoration(
+                                border: Border(
+                                    right: BorderSide(
+                              width: 1.5,
+                              color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 1),
+                            ))),
+                            child: boldText(
+                              '승인 수락',
+                            )),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                            alignment: Alignment.center,
+                            height: 210 / 5,
+                            width: MediaQuery.of(context).size.width * 0.5,
+                            child: boldText(
+                              '승인 거절',
+                            )),
                       )
                     ],
                   ))),
         ],
       ));
+}
+
+String getGenreList(List<String> genres) {
+  String result = '';
+  for (int i = 0; i < genres.length; i++) {
+    result += genres[i];
+    if (i != genres.length - 1) {
+      result += '/';
+    }
+  }
+  return result;
+}
+
+List<Widget> rolesLinearTag(List<String> roles) {
+  Widget element;
+  for (int i = 0; i < roles.length; i++) {
+    // element =
+    // PositionSmallLinear()
+  }
 }

@@ -55,7 +55,7 @@ class _ApplyListPageState extends State<ApplyListPage> {
                         return Center(child: Text('500 - server'));
                       } else {
                         return Container(
-                          width: MediaQuery.of(context).size.width * 1,
+                          width: MediaQuery.of(context).size.width * 0.78,
                           height: MediaQuery.of(context).size.height * 0.98,
                           child: applyProject_vertical(
                               context,

@@ -197,7 +197,7 @@ class TagWrapper extends StatelessWidget {
           alignment: Alignment.center,
           elevation: 0.0, // no shadow
 
-          padding: paddingH3V2),
+          padding: paddingH2V1),
       child: Text(tag, style: articleTagTextStyle),
     );
   }
@@ -778,11 +778,11 @@ class PositionSmallLinear extends StatelessWidget {
         physics: NeverScrollableScrollPhysics(),
         // physics: AlwaysScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            childAspectRatio: 2 / 1,
-            crossAxisCount: 3,
+            childAspectRatio: 2.3,
+            crossAxisCount: data.length <= 3 ? data.length : 3,
             mainAxisSpacing: 3,
             crossAxisSpacing: 5),
-        itemCount: data.length,
+        itemCount: data.length > 3 ? 3 : data.length,
         itemBuilder: (context, index) => TagWrapper(
               //_showDialog(context),
               tag: data[index],

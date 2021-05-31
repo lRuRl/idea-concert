@@ -18,7 +18,20 @@ const contentSchema = new mongoose.Schema({
 const periodSchema = new mongoose.Schema({
     from: { type: Date, default: Date.now },
     to: { type: Date, default: Date.now }
-})
+});
+/**
+ * status for applicant in article
+    * @enum {number}
+    * 승인대기 : 0
+    * 승인거절 : -1
+    * 승인완료 : 1
+    * 계약서대기 : 2
+    * 계약서작성완료 : 3
+ */
+const applicantSchema = new mongoose.Schema({
+    uid: { type: String, required: true },
+    status: { type: Number, required: true }
+});
 // middle document
 const detailSchema = new mongoose.Schema({
     status: String,
@@ -61,15 +74,15 @@ const detailSchema = new mongoose.Schema({
         }
     */
     applicant: {
-        writeMains: [{ type: String }],
-        writeContis: [{ type: String }],
-        drawMains: [{ type: String }],
-        drawContis: [{ type: String }],
-        drawDessins: [{ type: String }],
-        drawLines: [{ type: String }],
-        drawChars: [{ type: String }],
-        drawColors: [{ type: String }],
-        drawAfters: [{ type: String }],
+        writeMains: [{ type: applicantSchema, _id: false }],
+        writeContis: [{ type: applicantSchema, _id: false }],
+        drawMains: [{ type: applicantSchema, _id: false }],
+        drawContis: [{ type: applicantSchema, _id: false }],
+        drawDessins: [{ type: applicantSchema, _id: false }],
+        drawLines: [{ type: applicantSchema, _id: false }],
+        drawChars: [{ type: applicantSchema, _id: false }],
+        drawColors: [{ type: applicantSchema, _id: false }],
+        drawAfters: [{ type: applicantSchema, _id: false }],
     }
 });
 // parent document

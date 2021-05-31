@@ -177,13 +177,19 @@ module.exports = class ArticleSerive {
         try {
             // in position array
             var applicantMap = {}
-            
+
             if (Array.isArray(position)) {
                 for (const pos of position) {
-                    applicantMap[`detail.applicant.${pos}`] = uid;
+                    applicantMap[`detail.applicant.${pos}`] = {
+                        uid: uid,
+                        status: 0
+                    };
                 }
             } else {
-                applicantMap[`detail.applicant.${position}`] = uid;
+                applicantMap[`detail.applicant.${position}`] = {
+                    uid: uid,
+                    status: 0
+                };
             }
 
             const res = await Article.findByIdAndUpdate(
@@ -202,37 +208,29 @@ module.exports = class ArticleSerive {
             return onUpdateFailure(error);
         }
     }
-    // remove applicant from the article
-    deleteApply = async (id, position, uid) => {
+    /**
+     * @function modifyApplicantStatus -1, 1, 2, 3
+     * @param {ObjectId} id        the article object id
+     * @param {String} position  the name of position to update
+     * @param {String} uid       the uid of applicant to update
+     * @param {String} job      the task to modify status -> delete, confirm, contractWait, contractComplete
+     * @returns updatedResult
+     */
+    modifyApply = async (id, position, uid, job) => {
+        const modifyMap = { "delete": -1, "confirm": 1, "contractWait": 2, "contractComplete": 3 };
         try {
-            /**
-             *  this function is only available for publishers !
-             *  1) one-by-one
-             *      removes uid from article-applicant one at a time
-             *      simple API ==> ex) ?position=drawMains&uid=user123456
-             *  2) multiple
-             *      candidate 1 : set < index of position , index of uid >
-             *      by setting same index, it would be easier to make object to remove from DB
-             *      ex) position = [ 'drawMains', 'drawContis']
-             *          uid = ['user123', 'user123', 'user456']
-             *      The problem is that troubles in same postion with multi-uid
-             *      there can't be any information by using just 2 querys to know like below
-             *      ex) remove list
-             *      drawMains : [ 'user123', 'user456']
-             *      drawContis : [ 'user123']
-             *  As this server is made up for demo-version, only handles one-by-one
-             *  @author seunghwanly
-             *  @since 2021-05-26
-             */
-            const path = `detail.applicant.${position}`;
-            const res = await Article.findByIdAndUpdate(
-                id,
-                {
-                    $pull: {
-                        path: uid
+            const res = await Article.findById(id, function (err, doc) {
+                const { applicant } = doc.detail;
+                for (let i = 0; i < applicant[position].length; ++i) {
+                    if (applicant[position][i].uid === uid) {
+                        applicant[position][i].status = modifyMap[job];
+                        doc.save(function (err) {
+                            if (err) throw err;
+                            else return;
+                        })
                     }
                 }
-            );
+            });
             if (!res) return onUpdateNotFound;
             return onUpdateSuccess(res);
         } catch (error) {
