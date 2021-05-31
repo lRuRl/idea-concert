@@ -14,6 +14,7 @@ import 'package:iruri/pages/state/state_projectlist.dart';
 import 'package:iruri/pages/state/state_myproject.dart';
 import 'package:iruri/pages/state/state_applylist.dart';
 import 'package:iruri/pages/state/state_myproject.dart';
+import 'package:iruri/pages/state/state_applys.dart';
 import 'package:iruri/pages/state/state_projectlist.dart';
 import 'package:iruri/pages/state/state_detailpage.dart';
 
@@ -54,6 +55,7 @@ class _RoutesState extends State<Routes> {
     '/home/projectdetail': ProjectDetailPage(),
     '/state/projectdetail': StateProjectDetailPage(),
     '/state/fillcontract': FillContractPage(),
+    '/state/stateapplys': StateApplys(),
   };
 
   @override
@@ -69,7 +71,7 @@ class _RoutesState extends State<Routes> {
             // used in keyboard dismiss and so on
             onTap: () => FocusScope.of(context).requestFocus(new FocusNode()),
             child: Container(
-              color: Colors.white,  // background color added
+              color: Colors.white, // background color added
               // child: page[currentPageIndex]['page'],
               // use Provier<CustomRouter>
               child: page[routerWatcher.currentPage],
@@ -101,8 +103,7 @@ class _RoutesState extends State<Routes> {
       actions: <Widget>[
         routerWatcher.index == 0
             ? IconButton(
-                icon: Icon(FeatherIcons.plusCircle,
-                    color: primaryLine),
+                icon: Icon(FeatherIcons.plusCircle, color: primaryLine),
                 // navigation to article form page
                 onPressed: () => Navigator.push(
                     context, MaterialPageRoute(builder: (_) => PostArticle())),
@@ -112,8 +113,7 @@ class _RoutesState extends State<Routes> {
       // 2중으로 들어간 경우에는 뒤로가기 만들어주기
       leading: routerWatcher.currentPage.split('/').length > 2
           ? IconButton(
-              icon:
-                  Icon(Icons.keyboard_arrow_left_rounded, color: primaryLine),
+              icon: Icon(Icons.keyboard_arrow_left_rounded, color: primaryLine),
               onPressed: () => routerReader.navigateTo(
                   routerWatcher.currentPage, routerWatcher.prevPage),
             )
@@ -135,15 +135,24 @@ class _RoutesState extends State<Routes> {
       items: [
         // 왼쪽부터 나열 됩니다.
         BottomNavigationBarItem(
-            icon: Icon(FeatherIcons.home, color: primaryLine,),
+            icon: Icon(
+              FeatherIcons.home,
+              color: primaryLine,
+            ),
             activeIcon: Icon(FeatherIcons.home),
             label: 'Home'),
         BottomNavigationBarItem(
-            icon: Icon(FeatherIcons.trello, color: primaryLine,),
+            icon: Icon(
+              FeatherIcons.trello,
+              color: primaryLine,
+            ),
             activeIcon: Icon(FeatherIcons.trello),
             label: 'Match'),
         BottomNavigationBarItem(
-            icon: Icon(FeatherIcons.user, color: primaryLine,),
+            icon: Icon(
+              FeatherIcons.user,
+              color: primaryLine,
+            ),
             activeIcon: Icon(FeatherIcons.user),
             label: 'My')
       ],
