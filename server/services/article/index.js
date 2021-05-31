@@ -177,13 +177,19 @@ module.exports = class ArticleSerive {
         try {
             // in position array
             var applicantMap = {}
-            
+
             if (Array.isArray(position)) {
                 for (const pos of position) {
-                    applicantMap[`detail.applicant.${pos}`] = uid;
+                    applicantMap[`detail.applicant.${pos}`] = {
+                        uid: uid,
+                        status: 0
+                    };
                 }
             } else {
-                applicantMap[`detail.applicant.${position}`] = uid;
+                applicantMap[`detail.applicant.${position}`] = {
+                    uid: uid,
+                    status: 0
+                };
             }
 
             const res = await Article.findByIdAndUpdate(
@@ -224,15 +230,20 @@ module.exports = class ArticleSerive {
              *  @author seunghwanly
              *  @since 2021-05-26
              */
-            const path = `detail.applicant.${position}`;
-            const res = await Article.findByIdAndUpdate(
-                id,
-                {
-                    $pull: {
-                        path: uid
+            const path = `detail.applicant.${position}.uid`;
+            const res = await Article.findById(id, function (err, doc) {
+                const { applicant } = doc.detail;
+                for (let i = 0; i < applicant[position].length; ++i) {
+                    if (applicant[position][i].uid === uid) {
+                        applicant[position][i].status = -1;
+
+                        doc.save(function (err) {
+                            if (err) throw err;
+                            else return;
+                        })
                     }
                 }
-            );
+            });
             if (!res) return onUpdateNotFound;
             return onUpdateSuccess(res);
         } catch (error) {
