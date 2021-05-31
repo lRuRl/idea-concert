@@ -56,7 +56,7 @@ class _StateApplysState extends State<StateApplys> {
                         return Container(
                           width: MediaQuery.of(context).size.width * 1,
                           height: MediaQuery.of(context).size.height * 0.98,
-                          child: applyProject_vertical(
+                          child: applicant_vertical(
                               context,
                               List<Container>.generate(snapshot.data.length,
                                   (index) {

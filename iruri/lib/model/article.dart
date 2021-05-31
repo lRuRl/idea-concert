@@ -182,6 +182,20 @@ class Applicant {
       this.writeContis,
       this.writeMains});
 
+  int getAppllicantCount() {
+    int result = 0;
+    result += this.drawAfters?.isEmpty ?? true ? 0 : drawAfters.length;
+    result += this.drawChars?.isEmpty ?? true ? 0 : drawChars.length;
+    result += this.drawColors?.isEmpty ?? true ? 0 : drawColors.length;
+    result += this.drawContis?.isEmpty ?? true ? 0 : drawContis.length;
+    result += this.drawDessins?.isEmpty ?? true ? 0 : drawDessins.length;
+    result += this.drawLines?.isEmpty ?? true ? 0 : drawLines.length;
+    result += this.drawMains?.isEmpty ?? true ? 0 : drawMains.length;
+    result += this.writeContis?.isEmpty ?? true ? 0 : writeContis.length;
+    result += this.writeMains?.isEmpty ?? true ? 0 : writeMains.length;
+    return result;
+  }
+
   factory Applicant.fromJson(Map<String, dynamic> json) => Applicant(
         writeMains: List<String>.from(json['writeMains']),
         writeContis: List<String>.from(json['writeContis']),
