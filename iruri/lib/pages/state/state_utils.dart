@@ -5,6 +5,7 @@ import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/spacing.dart';
 import 'package:iruri/provider.dart';
 import 'package:iruri/util/data_article.dart';
+import 'package:iruri/util/data_user.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:iruri/pages/home/project_detail_components.dart';
 
@@ -16,6 +17,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:iruri/components/typhography.dart';
 
+// pages
+import 'package:iruri/pages/state/state_applys.dart';
+
 // article
 import 'package:iruri/model/article.dart';
 
@@ -25,6 +29,7 @@ import 'package:iruri/model/member_sample.dart';
 import 'package:provider/provider.dart';
 // model
 import 'package:iruri/model/article.dart';
+import 'package:iruri/model/profile_info.dart';
 
 boxItem(int index, List<Container> items, BuildContext context, Article data) {
   // provider
@@ -36,7 +41,7 @@ boxItem(int index, List<Container> items, BuildContext context, Article data) {
       margin: marginH10V10,
       padding: paddingH10V10,
       width: size.width * 0.7,
-      height: size.width * 0.4,
+      height: size.width * 0.41,
       decoration: BoxDecoration(
         border: Border.all(color: lightWhite, width: 2.0),
         borderRadius: BorderRadius.all(Radius.circular(12)),
@@ -431,7 +436,8 @@ Widget listItemButton_my(BuildContext context) {
             onPrimary: secondary,
           )),
       ElevatedButton(
-          onPressed: () {},
+          onPressed: () => routerReader.navigateTo(
+              routerWatcher.currentPage, '/state/stateapplys'),
           child: Row(
             children: [
               Icon(
@@ -958,4 +964,139 @@ class _ContractContentElementState extends State<ContractContentElement> {
       ],
     );
   }
+}
+
+containerApplys(int index, BuildContext context, User data) {
+  // provider
+  final routerReader = context.read<CustomRouter>();
+  final routerWatcher = context.watch<CustomRouter>();
+  return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: 2,
+      ),
+      height: 210,
+      width: 450,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 1),
+        ),
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+      ),
+      alignment: Alignment(0, 0),
+      child: Column(
+        children: [
+          Expanded(
+              flex: 4,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  GestureDetector(
+                    onTap: () => routerReader.navigateTo(
+                        routerWatcher.currentPage, '/state/projectdetail',
+                        data: data),
+                    child: Container(
+                      width: 90,
+                      height: 90,
+                      decoration: BoxDecoration(
+                        color: Color.fromRGBO(196, 196, 196, 0.13),
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                      ),
+                      child: Center(
+                        child: SizedBox(
+                          height: 100,
+                          width: 100,
+                          // child: data.image. != null
+                          //     ? ImageWrapper(image: data.image)
+                          //     : Image.asset('assets/default.png'),
+
+                          child: Image.asset('assets/default.png'),
+                        ),
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                      onTap: () => routerReader.navigateTo(
+                          routerWatcher.currentPage, '/state/projectdetail',
+                          data: data),
+                      child: Container(
+                        width: 150,
+                        height: 105,
+                        color: Colors.white,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                ApprovalState(
+                                  stateIndex: index % 3,
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("지역 : 서울 / 한국",
+                                    style: TextStyle(
+                                        fontSize: 10,
+                                        fontFamily: "Roboto",
+                                        color: Color.fromRGBO(
+                                            0x77, 0x77, 0x77, 1))),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("선호 장르 : 로맨스/코미디/판타지",
+                                    style: TextStyle(
+                                        fontSize: 10,
+                                        fontFamily: "Roboto",
+                                        color: Color.fromRGBO(
+                                            0x77, 0x77, 0x77, 1))),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("경력 : 1년 이상",
+                                    style: TextStyle(
+                                        fontSize: 10,
+                                        fontFamily: "Roboto",
+                                        color: Color.fromRGBO(
+                                            0x77, 0x77, 0x77, 1))),
+                              ],
+                            ),
+                            Row(
+                              children: [Position_Small()],
+                            )
+                          ],
+                        ),
+                      ))
+                ],
+              )),
+          Expanded(
+              flex: 1,
+              child: Container(
+                  decoration:
+                      BoxDecoration(border: Border(top: BorderSide(width: 1))),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                              decoration: BoxDecoration(
+                                  border: Border(right: BorderSide(width: 1))),
+                              child: Text("승인 수락")),
+                          Container(child: Text("승인 거절")),
+                        ],
+                      )
+                    ],
+                  ))),
+        ],
+      ));
 }

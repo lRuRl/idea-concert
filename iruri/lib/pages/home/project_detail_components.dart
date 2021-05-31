@@ -342,7 +342,9 @@ showMyDialog(BuildContext context, String str1, String str2) {
                           primary: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
                           onPrimary: Colors.white,
                         ))),
-                SizedBox(height: 10,)
+                SizedBox(
+                  height: 10,
+                )
               ],
             )),
       );
