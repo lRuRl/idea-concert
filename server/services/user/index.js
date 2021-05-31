@@ -210,7 +210,6 @@ module.exports = class UserService {
     }
     /** @function signIn check id and pw */
     signIn = async (id, pw) => {
-        console.log(id, pw)
         const res = await User.findOne({ id: id });
         if (!res) return onGetNotFound;
         else {

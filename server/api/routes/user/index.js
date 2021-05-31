@@ -32,8 +32,10 @@ module.exports = (app) => {
         return res.status(status).send(result);
     })
     /** @function signIn */
-    router.get('/sign-in', async (req, res) => {
-        const { id, pw } = req.body;
+    router.post('/sign-in', async (req, res) => {
+        let { id, pw } = req.body;
+        console.log(req.body);
+
         const { status, result } = await userService.signIn(id, pw);
         return res.status(status).send(result);
     })

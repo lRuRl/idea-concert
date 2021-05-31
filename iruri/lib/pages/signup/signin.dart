@@ -34,8 +34,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 appImage(context),
                 appName(context),
-                getUserInfo(context),
-                loginButton(context),
+                UserSigninInfo(),
                 findInfo(context),
                 selectLogin(context)
               ],
