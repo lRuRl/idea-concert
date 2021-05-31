@@ -161,15 +161,15 @@ class Period {
 }
 
 class Applicant {
-  final List<String> writeMains; // 메인글
-  final List<String> writeContis; // 글콘티
-  final List<String> drawMains; // 메인그림
-  final List<String> drawContis; // 그림콘티
-  final List<String> drawDessins; // 그림뎃셍
-  final List<String> drawLines; // 선화
-  final List<String> drawChars; // 캐릭터
-  final List<String> drawColors; // 채색
-  final List<String> drawAfters; // 후보정
+  final List<ApplicantDetail> writeMains; // 메인글
+  final List<ApplicantDetail> writeContis; // 글콘티
+  final List<ApplicantDetail> drawMains; // 메인그림
+  final List<ApplicantDetail> drawContis; // 그림콘티
+  final List<ApplicantDetail> drawDessins; // 그림뎃셍
+  final List<ApplicantDetail> drawLines; // 선화
+  final List<ApplicantDetail> drawChars; // 캐릭터
+  final List<ApplicantDetail> drawColors; // 채색
+  final List<ApplicantDetail> drawAfters; // 후보정
 
   Applicant(
       {this.drawAfters,
@@ -197,15 +197,24 @@ class Applicant {
   }
 
   factory Applicant.fromJson(Map<String, dynamic> json) => Applicant(
-        writeMains: List<String>.from(json['writeMains']),
-        writeContis: List<String>.from(json['writeContis']),
-        drawMains: List<String>.from(json['drawMains']),
-        drawContis: List<String>.from(json['drawContis']),
-        drawDessins: List<String>.from(json['drawDessins']),
-        drawChars: List<String>.from(json['drawChars']),
-        drawColors: List<String>.from(json['drawColors']),
-        drawAfters: List<String>.from(json['drawAfters']),
-        drawLines: List<String>.from(json['drawLines']),
+        writeMains: List<ApplicantDetail>.from(
+            json['writeMains'].map((e) => ApplicantDetail.fromJson(e))),
+        writeContis: List<ApplicantDetail>.from(
+            json['writeContis'].map((e) => ApplicantDetail.fromJson(e))),
+        drawMains: List<ApplicantDetail>.from(
+            json['drawMains'].map((e) => ApplicantDetail.fromJson(e))),
+        drawContis: List<ApplicantDetail>.from(
+            json['drawContis'].map((e) => ApplicantDetail.fromJson(e))),
+        drawDessins: List<ApplicantDetail>.from(
+            json['drawDessins'].map((e) => ApplicantDetail.fromJson(e))),
+        drawChars: List<ApplicantDetail>.from(
+            json['drawChars'].map((e) => ApplicantDetail.fromJson(e))),
+        drawColors: List<ApplicantDetail>.from(
+            json['drawColors'].map((e) => ApplicantDetail.fromJson(e))),
+        drawAfters: List<ApplicantDetail>.from(
+            json['drawAfters'].map((e) => ApplicantDetail.fromJson(e))),
+        drawLines: List<ApplicantDetail>.from(
+            json['drawLines'].map((e) => ApplicantDetail.fromJson(e))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -219,4 +228,14 @@ class Applicant {
         "drawAfters": jsonEncode(drawAfters),
         "drawLines": jsonEncode(drawLines)
       };
+}
+
+class ApplicantDetail {
+  final String uid;
+  final int status;
+  ApplicantDetail({this.status, this.uid});
+  // cast
+  factory ApplicantDetail.fromJson(Map<String, dynamic> json) =>
+      ApplicantDetail(uid: json['uid'], status: json['status']);
+  Map<String, dynamic> toJson() => {"uid": uid, "status": status};
 }
