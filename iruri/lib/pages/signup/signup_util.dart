@@ -423,15 +423,14 @@ class _UserInfoState extends State<UserInfo> {
                         ],
                       ),
 
-                      /// TODO : [ 메인글, 글콘티, 메인그림, 그림콘티, 캐릭터, 채색, 뎃셍, 후보정 ] 8개로 맞춰주세여
                       selectOptions(0, "메인글"),
                       selectOptions(1, "글콘티"),
                       selectOptions(2, "메인그림"),
                       selectOptions(3, "그림콘티"),
                       selectOptions(4, "캐릭터"),
                       selectOptions(5, "채색"),
-                      selectOptions(6, "데생"),
-                      selectOptions(7, "선화"),
+                      selectOptions(6, "뎃셍"),
+                      selectOptions(7, "후보정"),
                       SizedBox(
                           width: MediaQuery.of(context).size.width * 0.9,
                           child: TextButton(

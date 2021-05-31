@@ -25,10 +25,10 @@ class MyApp extends StatelessWidget {
       // 우측 상단에 DEBUG 표시 제거
 
       debugShowCheckedModeBanner: false,
-      // home: Provider.of<CustomRouter>(context).isLoggedin
-      //     ? Routes()
-      //     : LoginPage(),
-      home: Routes(),
+      home: Provider.of<CustomRouter>(context).isLoggedin
+          ? Routes()
+          : LoginPage(),
+      // home: Routes(),
       // set theme
       theme: ThemeData(fontFamily: GoogleFonts.notoSans().fontFamily),
     );

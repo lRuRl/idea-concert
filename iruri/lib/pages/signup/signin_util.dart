@@ -2,9 +2,130 @@ import 'package:flutter/material.dart';
 import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/spacing.dart';
 import 'package:iruri/components/typhography.dart';
+import 'package:iruri/model/profile_info.dart';
 import 'package:iruri/pages/signup/signup.dart';
 import 'package:iruri/provider.dart';
+import 'package:iruri/util/data_user.dart';
 import 'package:provider/provider.dart';
+
+class UserSigninInfo extends StatefulWidget {
+  @override
+  _UserSigninInfoState createState() => _UserSigninInfoState();
+}
+
+class _UserSigninInfoState extends State<UserSigninInfo> {
+  UserAPI api;
+  User user;
+  bool isChecked;
+  Map<String, TextEditingController> infoController =
+      new Map<String, TextEditingController>();
+
+  @override
+  void initState() {
+    super.initState();
+
+    api = new UserAPI();
+    isChecked = false;
+    infoController['id'] = new TextEditingController();
+    infoController['pwd'] = new TextEditingController();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: [getUserInfo(context), loginButton(context)],
+      ),
+    );
+  }
+
+  Widget getUserInfo(BuildContext context) {
+    return Container(
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        width: MediaQuery.of(context).size.width * 0.8,
+        child: Column(children: <Widget>[
+          Padding(
+            //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
+            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            child: TextFormField(
+              controller: infoController['id'],
+              decoration: InputDecoration(
+                focusedBorder: OutlineInputBorder(
+                    borderSide: new BorderSide(color: Colors.grey, width: 1),
+                    borderRadius: BorderRadius.circular(30)),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: new BorderSide(color: Colors.grey, width: 1),
+                    borderRadius: BorderRadius.circular(30)),
+                disabledBorder: OutlineInputBorder(
+                    borderSide: new BorderSide(color: Colors.grey, width: 1),
+                    borderRadius: BorderRadius.circular(30)),
+                fillColor: Colors.white,
+                labelStyle:
+                    montSesrratTextStyle(textColor: greyText, fontSize: 14),
+                labelText: 'Enter e-mail',
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15),
+            child: TextFormField(
+              controller: infoController['pwd'],
+              obscureText: true,
+              decoration: InputDecoration(
+                focusedBorder: OutlineInputBorder(
+                    borderSide: new BorderSide(color: Colors.grey, width: 1),
+                    borderRadius: BorderRadius.circular(30)),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: new BorderSide(color: Colors.grey, width: 1),
+                    borderRadius: BorderRadius.circular(30)),
+                disabledBorder: OutlineInputBorder(
+                    borderSide: new BorderSide(color: Colors.grey, width: 1),
+                    borderRadius: BorderRadius.circular(30)),
+                fillColor: Colors.white,
+                labelStyle:
+                    montSesrratTextStyle(textColor: greyText, fontSize: 14),
+                labelText: 'Enter Password',
+              ),
+            ),
+          ),
+        ]));
+  }
+
+  Future<bool> checkIdPwd() async {
+    final id = infoController['id'].text;
+    final pwd = infoController['pwd'].text;
+
+    return isChecked = await api.signIn(context, id, pwd);
+  }
+
+  Widget loginButton(BuildContext context) {
+    final routerReader = context.read<CustomRouter>();
+    final routerWatcher = context.watch<CustomRouter>();
+
+    return Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+        child: ElevatedButton(
+            onPressed: () async {
+              await checkIdPwd();
+              if (checkIdPwd() != null && isChecked == true) {
+                Provider.of<CustomRouter>(context, listen: false)
+                    .setRegistrationStatus(true);
+                routerReader.navigateTo(routerWatcher.currentPage, '/');
+              }
+            },
+            child: Text("로그인", style: buttonWhiteTextStyle),
+            style: ElevatedButton.styleFrom(
+              shape: new RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(30.0),
+              ),
+              padding: paddingH10V10,
+              //fixedSize: Size(90, 30),
+              primary: primary,
+              onPrimary: Colors.white,
+            )));
+  }
+}
 
 Widget appImage(BuildContext context) {
   return Center(
@@ -19,85 +140,11 @@ Widget appName(BuildContext context) {
   return Container(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Text('IRURI',
-          style: montSesrratTextStyle(fontSize: 30, fontWeight: FontWeight.bold)));
-}
-
-Widget getUserInfo(BuildContext context) {
-  return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      width: MediaQuery.of(context).size.width * 0.8,
-      child: Column(children: <Widget>[
-        Padding(
-          //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
-          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-          child: TextFormField(
-            decoration: InputDecoration(
-              focusedBorder: OutlineInputBorder(
-                  borderSide: new BorderSide(color: Colors.grey, width: 1),
-                  borderRadius: BorderRadius.circular(30)),
-              enabledBorder: OutlineInputBorder(
-                  borderSide: new BorderSide(color: Colors.grey, width: 1),
-                  borderRadius: BorderRadius.circular(30)),
-              disabledBorder: OutlineInputBorder(
-                  borderSide: new BorderSide(color: Colors.grey, width: 1),
-                  borderRadius: BorderRadius.circular(30)),
-              fillColor: Colors.white,
-              labelStyle: montSesrratTextStyle(textColor: greyText, fontSize: 14),
-              labelText: 'Enter e-mail',
-            ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15),
-          child: TextFormField(
-            obscureText: true,
-            decoration: InputDecoration(
-              focusedBorder: OutlineInputBorder(
-                  borderSide: new BorderSide(color: Colors.grey, width: 1),
-                  borderRadius: BorderRadius.circular(30)),
-              enabledBorder: OutlineInputBorder(
-                  borderSide: new BorderSide(color: Colors.grey, width: 1),
-                  borderRadius: BorderRadius.circular(30)),
-              disabledBorder: OutlineInputBorder(
-                  borderSide: new BorderSide(color: Colors.grey, width: 1),
-                  borderRadius: BorderRadius.circular(30)),
-              fillColor: Colors.white,
-              labelStyle: montSesrratTextStyle(textColor: greyText, fontSize: 14),
-              labelText: 'Enter Password',
-            ),
-          ),
-        ),
-      ]));
-}
-
-Widget loginButton(BuildContext context) {
-  final routerReader = context.read<CustomRouter>();
-  final routerWatcher = context.watch<CustomRouter>();
-
-  return Container(
-      width: MediaQuery.of(context).size.width * 0.8,
-      padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-      child: ElevatedButton(
-          onPressed: () {
-            Provider.of<CustomRouter>(context, listen: false)
-                .setRegistrationStatus(true);
-            routerReader.navigateTo(routerWatcher.currentPage, '/');
-          },
-          child: Text("로그인",
-              style: buttonWhiteTextStyle),
-          style: ElevatedButton.styleFrom(
-            shape: new RoundedRectangleBorder(
-              borderRadius: new BorderRadius.circular(30.0),
-            ),
-            padding: paddingH10V10,
-            //fixedSize: Size(90, 30),
-            primary: primary,
-            onPrimary: Colors.white,
-          )));
+          style:
+              montSesrratTextStyle(fontSize: 30, fontWeight: FontWeight.bold)));
 }
 
 Widget findInfo(BuildContext context) {
-
   return Container(
       width: MediaQuery.of(context).size.width * 0.8,
       padding: EdgeInsets.symmetric(horizontal: 25),
@@ -105,9 +152,7 @@ Widget findInfo(BuildContext context) {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             TextButton(
-              style: TextButton.styleFrom(
-                primary: themeGrayText
-              ),
+              style: TextButton.styleFrom(primary: themeGrayText),
               onPressed: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => SignUpPage()));
@@ -116,17 +161,13 @@ Widget findInfo(BuildContext context) {
             ),
             Text('|', style: TextStyle(color: themeGrayText)),
             TextButton(
-              style: TextButton.styleFrom(
-                primary: themeGrayText
-              ),
+              style: TextButton.styleFrom(primary: themeGrayText),
               onPressed: null,
               child: Text('아이디 찾기'),
             ),
             Text('|', style: TextStyle(color: themeGrayText)),
             TextButton(
-              style: TextButton.styleFrom(
-                primary: themeGrayText
-              ),
+              style: TextButton.styleFrom(primary: themeGrayText),
               onPressed: null,
               child: Text('비밀번호 찾기'),
             )
