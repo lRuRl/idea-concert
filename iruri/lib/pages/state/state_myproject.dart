@@ -57,7 +57,7 @@ class _MyprojectPageState extends State<MyprojectPage> {
                         return Center(child: Text('500 - server'));
                       } else {
                         return Container(
-                          width: MediaQuery.of(context).size.width * 1,
+                          width: MediaQuery.of(context).size.width * 0.80,
                           height: MediaQuery.of(context).size.height * 0.98,
                           child: myProject_vertical(
                               context,

@@ -41,7 +41,7 @@ boxItem(int index, List<Container> items, BuildContext context, Article data) {
       margin: marginH10V10,
       padding: paddingH10V10,
       width: size.width * 0.7,
-      height: size.width * 0.30,
+      height: size.width * 0.45,
       decoration: BoxDecoration(
         border: Border.all(color: lightWhite, width: 2.0),
         borderRadius: BorderRadius.all(Radius.circular(12)),
@@ -141,7 +141,7 @@ boxItem_apply(
       width: 289,
       decoration: BoxDecoration(
         border: Border.all(
-          color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 1),
+          color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 3),
         ),
         borderRadius: BorderRadius.all(Radius.circular(12)),
       ),
