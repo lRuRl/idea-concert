@@ -6,6 +6,7 @@ import 'package:iruri/components/spacing.dart';
 import 'package:iruri/provider.dart';
 import 'package:iruri/util/data_article.dart';
 import 'package:iruri/util/data_user.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:iruri/pages/home/project_detail_components.dart';
 
@@ -407,12 +408,23 @@ Widget listItemButton_my(BuildContext context) {
   // provider
   final routerReader = context.read<CustomRouter>();
   final routerWatcher = context.watch<CustomRouter>();
+  List<String> types = ["A형", "B형", "C형", "D형"];
+  Contract contract = new Contract(types);
+
   return Row(
     crossAxisAlignment: CrossAxisAlignment.center,
     mainAxisAlignment: MainAxisAlignment.spaceAround,
     children: [
       ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            showMaterialModalBottomSheet(
+              backgroundColor: Color.fromRGBO(255, 255, 255, 0),
+              context: context,
+              builder: (context) => SingleChildScrollView(
+                  controller: ModalScrollController.of(context),
+                  child: UploadContract(contract: contract)),
+            );
+          },
           child: Row(
             children: [
               Icon(
@@ -833,6 +845,94 @@ class _SelectBoxApplyState extends State<SelectBoxApply> {
                       .then((value) => Navigator.pop(context));
                 },
                 child: Text("지원하기", style: buttonWhiteTextStyle),
+                style: TextButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: size.width / 2 - 48, vertical: 8),
+                    backgroundColor: primary)),
+            SizedBox(
+              height: 10,
+            )
+          ],
+        ));
+  }
+}
+
+class Contract {
+  final List<String> types;
+
+  Contract(this.types);
+}
+
+class UploadContract extends StatefulWidget {
+  final Contract contract;
+  UploadContract({this.contract});
+  @override
+  _UploadContractState createState() => _UploadContractState();
+}
+
+class _UploadContractState extends State<UploadContract> {
+  // for position selected
+  List<String> selectedList;
+  void onSelected(List<String> selected) => setState(() {
+        selectedList = selected;
+      });
+
+  String currentmode;
+  @override
+  void initState() {
+    super.initState();
+    selectedList = [];
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    selectedList.clear();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+    return Container(
+        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+        ),
+        width: size.width * 1,
+        height: size.height * 0.3,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Align(
+              alignment: Alignment.center,
+              child:
+                  Icon(FeatherIcons.chevronDown, size: 24, color: Colors.grey),
+            ),
+            Text("계약서 선택하기",
+                style: notoSansTextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    textColor: displayText)),
+            divider,
+            GroupedCheckbox(
+              options: widget.contract.types
+                  .map((e) => FormBuilderFieldOption(value: e))
+                  .toList(),
+              onChanged: onSelected,
+              orientation: OptionsOrientation.wrap,
+              activeColor: primary,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            TextButton(
+                onPressed: () {},
+                child: Text("저장하기", style: buttonWhiteTextStyle),
                 style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8)),
