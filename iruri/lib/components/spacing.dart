@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 const marginH20V20 = EdgeInsets.all(20);
 const marginH20V10 = EdgeInsets.symmetric(horizontal: 20, vertical: 10);
 const marginH10V10 = EdgeInsets.symmetric(horizontal: 10, vertical: 10);
+const marginH3V3 = EdgeInsets.symmetric(horizontal: 3, vertical: 3);
 
 // padding
 const paddingH20 = EdgeInsets.symmetric(horizontal: 20);

@@ -31,26 +31,8 @@ class _PersonalPageState extends State<PersonalPage> {
               controller: scrollController,
               child: Column(
                 children: <Widget>[
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(255, 255, 255, 1),
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                    width: MediaQuery.of(context).size.width * 1,
-                    height: MediaQuery.of(context).size.height * 0.55,
-                    child: Column(
-                      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          color: Color.fromRGBO(255, 255, 255, 1),
-                          width: MediaQuery.of(context).size.width * 1,
-                          height: MediaQuery.of(context).size.height * 0.25,
-                          child: MyProfile(userData: user.currentUser),
-                        ),
-                      ],
-                    ),
-                  ),
-                  subContainerWithTopBorder(personalCode(context, '123456789')),
+                  MyProfile(userData: user.currentUser),
+                  subContainerWithTopBorder(personalCode(context, user.currentUser.uid)),
                   subContainerWithTopBorder(managePortfolio()),
                   logout()
                 ],

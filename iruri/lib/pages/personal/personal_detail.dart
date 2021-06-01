@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:iruri/components/component.dart';
 //components
 import 'package:iruri/components/palette.dart';
+import 'package:iruri/components/spacing.dart';
 // model
 import 'package:iruri/model/user.dart';
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////                              프로필 정보 : 석운                             /////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -43,154 +46,125 @@ class _MyProfileState extends State<MyProfile> {
     Navigator.of(context).pop();
   }
 
-  // updateDB(User data) {
-  //   api.updateUserInfo(data);
-  // }
-
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
-    var profileContent, icon, changeButton, imageChangeButton;
-    return FutureBuilder<User>(
-        future: Future.delayed(Duration.zero),
-        builder: (context, snapshot) {
-          String nickname, email, phoneNumber;
-          List<String> roles;
-          nickname = snapshot.data.profileInfo.nickname;
-          phoneNumber = snapshot.data.profileInfo.phoneNumber;
-          email = snapshot.data.id;
-          roles = snapshot.data.profileInfo.roles;
-
-          if (index == false) {
-            profileContent = showProfileContent(
-                width, height, nickname, email, phoneNumber, roles);
-            icon = changeIcon();
-            changeButton = Container();
-            imageChangeButton = Container();
-          } else {
-            profileContent = changeProfileContent(nicknameEditor_,
-                phoneNumberEditor_, emailEditor_, width, height, roles);
-            icon = Container();
-            changeButton = confirmChangeButton();
-            imageChangeButton = confirmImageChangeButton();
-          }
-
-          return Container(
+    final data = widget.userData;
+    final size = MediaQuery.of(context).size;
+    return Container(
+        width: size.width,
+        height: size.height * 0.5,
+        padding: paddingH20V20,
+        child: Column(
+          children: <Widget>[
+            //프로필 상단 부분
+            Expanded(
+                flex: 1,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("프로필 정보",
+                        style: TextStyle(fontWeight: FontWeight.w700)),
+                    TextButton.icon(
+                      onPressed: () => print('edit'),
+                      icon:
+                          Icon(FeatherIcons.edit, size: 20, color: primaryLine),
+                      label: SizedBox(),
+                      style: TextButton.styleFrom(
+                          alignment: Alignment.centerRight),
+                    ),
+                  ],
+                )),
+            SizedBox(height: 10),
+            Expanded(
+                flex: 4,
+                child:
+                    //프로필 하단 부분
+                    /// [profileImage] only byte stream from server
+                    Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                      Expanded(
+                          flex: 3,
+                          child: Container(
+                              decoration: BoxDecoration(
+                                color: themeLightGrayOpacity20,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: widget.userData.image != null
+                                  ? ImageWrapper(image: widget.userData.image)
+                                  : Image.asset('assets/default.png'))),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                          flex: 6,
+                          child: Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
+                              children: [
+                            subProfileItem(
+                                '닉네임',
+                                Text(data.profileInfo.nickname != null
+                                    ? data.profileInfo.nickname
+                                    : "정보가 없습니다.")),
+                            subProfileItem(
+                                '관심분야',
+                                Text(data.profileInfo.roles.length != 0
+                                    ? data.profileInfo.roles
+                                        .toString()
+                                        .replaceAll(RegExp(r"(\[)|(\])"), '')
+                                    : "정보가 없습니다.")),
+                            subProfileItem(
+                                '연락처',
+                                Text(data.profileInfo.phoneNumber != null
+                                    ? data.profileInfo.phoneNumber
+                                    : "정보가 없습니다.")),
+                            subProfileItem('email',
+                                Text(data.id != null ? data.id : "정보가 없습니다.")),
+                            subProfileItem(
+                                '선호장르',
+                                Text(data.profileInfo.genres.length != 0
+                                    ? data.profileInfo.genres
+                                        .toString()
+                                        .replaceAll(RegExp(r"(\[)|(\])"), '')
+                                    : "정보가 없습니다.")),
+                            subProfileItem(
+                                '경력',
+                                Text(data.profileInfo.career != null
+                                    ? data.profileInfo.career
+                                    : "정보가 없습니다.")),
+                          ])),
+                    ])),
+            divider,
+            SizedBox(height: 10),
+            Expanded(
+              flex: 3,
               child: Column(
-            children: <Widget>[
-              //프로필 상단 부분
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text("프로필 정보",
-                      style: TextStyle(fontWeight: FontWeight.w700),
-                      textAlign: TextAlign.left),
-                  icon,
+                  Text('자기소개', style: TextStyle(fontWeight: FontWeight.w700)),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Text(
+                      data.profileInfo.desc != null
+                          ? data.profileInfo.desc
+                          : '정보가 없습니다.',
+                      textAlign: TextAlign.left)
                 ],
               ),
-              //프로필 하단 부분
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      //프로필사진 컨테이너
-                      width: width * 0.3,
-                      margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        color: themeLightGrayOpacity20,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: height * 0.13,
-                            //width: width * 10,
-                            //padding: EdgeInsets.all(2),
-                            child: //ImageWrapper(imagePath: imagePath),
-                                ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Container(color: Colors.red,),),
-                          ),
-                          imageChangeButton
-                        ],
-                      ),
-                    ),
-                    Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
-                        children: [
-                      Container(
-                        margin: EdgeInsets.fromLTRB(10, 3, 0, 10),
-                        width: width * 0.15,
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          "닉네임",
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.fromLTRB(10, 3, 0, 40),
-                        width: width * 0.15,
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          "포지션",
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.fromLTRB(10, 0, 0, 10),
-                        width: width * 0.15,
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          "연락처",
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.fromLTRB(10, 0, 0, 10),
-                        width: width * 0.15,
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          "이메일",
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      ),
-                    ]),
-                    profileContent,
-                  ]),
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Container(
-                  margin: EdgeInsets.all(5),
-                  alignment: Alignment.center,
-                  child: changeButton,
-                )
-              ])
-            ],
-          ));
-
-          /*
-        Column(//프로필 내용 컨테이너(닉네임, 포지션, 연락처, 이메일)
-        children: [
-          Container(
-            margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
-            alignment: Alignment.topCenter,
-            child: Text(nickname,style: TextStyle(fontSize: 9),)
-          ),
-          position(roles),
-          Container(
-            margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
-            alignment: Alignment.topCenter,
-            child: Text( phoneNumber, style: TextStyle(fontSize: 9),),
-          ),
-          Container(
-            margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
-            alignment: Alignment.topCenter,
-            child: Text(email,style: TextStyle(fontSize: 9),)
-          ),
-          ]
-        );*/
-        });
+            )
+          ],
+        ));
   }
+
+  Container subProfileItem(String name, Widget child) => Container(
+        margin: marginH3V3,
+        alignment: Alignment.centerLeft,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[Text(name), child],
+        ),
+      );
 
   //그림 수정 버튼
   Widget confirmImageChangeButton() {
@@ -267,7 +241,7 @@ class _MyProfileState extends State<MyProfile> {
   //초기 프로필 정보 화면에서 연필모양 아이콘 => 누르면 수정하는 화면으로 바뀜
   Widget changeIcon() {
     return IconButton(
-      icon: Icon(Icons.create_outlined),
+      icon: Icon(FeatherIcons.edit),
       iconSize: 20,
       onPressed: () => showDialog(
           context: context,
@@ -325,7 +299,7 @@ class _MyProfileState extends State<MyProfile> {
           margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
           alignment: Alignment.topCenter,
           child: Text(
-            nickname,
+            nickname != null ? nickname : 'nickname',
             style: TextStyle(fontSize: 9),
           )),
       position(roles),
