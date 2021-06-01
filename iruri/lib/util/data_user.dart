@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:iruri/model/profile_info.dart';
+import 'package:iruri/model/user.dart';
 import 'package:iruri/util/interface.dart';
 
 class UserAPI {
@@ -59,18 +59,26 @@ class UserAPI {
     }
   }
 
-  Future<bool> signIn(BuildContext context, String id, String pw) async {
+  /** [findUserById] find user information by uid */
+  Future<User> findUserById(String id) async {
+    final res = await http.get(Uri.parse(baseURL + "/" + id));
+    if (res.statusCode == 200) {
+      return User.fromJson(jsonDecode(res.body));
+    } else {
+      throw Exception(res.body.toString());
+    }
+  }
+
+  Future<User> signIn(String id, String pw) async {
     final info = {"id": id, "pw": pw};
     final headers = {"Content-type": "application/json"};
     final res = await http.post(Uri.parse(baseURL + "sign-in/"),
         headers: headers, body: jsonEncode((info)));
     if (res.statusCode == 200) {
-      return true;
+      return User.fromJson(jsonDecode(res.body)['result']);
     } else {
       print(res.body.toString());
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('잘못 입력하셨습니다.')));
-      return false;
+      throw Exception('wrong information');
     }
   }
 }

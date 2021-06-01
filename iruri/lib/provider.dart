@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iruri/model/user.dart';
 
 class CustomRouter with ChangeNotifier {
   int _tapIndex = 0;
@@ -31,6 +32,17 @@ class CustomRouter with ChangeNotifier {
 
     // data
     _data = data;
+    notifyListeners();
+  }
+}
+
+class UserState with ChangeNotifier {
+  User _user;
+
+  User get currentUser => _user;
+
+  void setUser(User user) {
+    _user = user;
     notifyListeners();
   }
 }

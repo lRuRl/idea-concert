@@ -7,7 +7,7 @@ import 'package:iruri/components/component.dart';
 import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/spacing.dart';
 import 'package:iruri/components/typhography.dart';
-import 'package:iruri/model/profile_info.dart';
+import 'package:iruri/model/user.dart';
 import 'package:iruri/provider.dart';
 import 'package:iruri/util/data_user.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
