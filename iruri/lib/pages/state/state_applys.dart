@@ -9,7 +9,12 @@ import 'package:iruri/provider.dart';
 // UserAPI
 import 'package:iruri/util/data_user.dart';
 
+// article
+import 'package:iruri/model/article.dart';
+
 class StateApplys extends StatefulWidget {
+  final Article article;
+  StateApplys({this.article});
   @override
   _StateApplysState createState() => _StateApplysState();
 }
@@ -60,8 +65,8 @@ class _StateApplysState extends State<StateApplys> {
                               context,
                               List<Container>.generate(snapshot.data.length,
                                   (index) {
-                                return containerApplys(
-                                    index, context, snapshot.data[index]);
+                                return containerApplys(index, context,
+                                    snapshot.data[index], widget.article);
                               })),
                         );
                       }

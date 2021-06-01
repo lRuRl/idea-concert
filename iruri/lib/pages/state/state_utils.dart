@@ -123,7 +123,7 @@ boxItem(int index, List<Container> items, BuildContext context, Article data) {
           // SizedBox(
           //   height: 4,
           // ),
-          Expanded(flex: 3, child: listItemButton_my(context)),
+          Expanded(flex: 3, child: listItemButton_my(context, data)),
         ],
       ));
 }
@@ -430,7 +430,7 @@ Widget listItemButton(BuildContext context, Article data) {
 }
 
 //내가 올린 프로젝트 (위)
-Widget listItemButton_my(BuildContext context) {
+Widget listItemButton_my(BuildContext context, Article article) {
   // provider
   final routerReader = context.read<CustomRouter>();
   final routerWatcher = context.watch<CustomRouter>();
@@ -475,7 +475,8 @@ Widget listItemButton_my(BuildContext context) {
           )),
       ElevatedButton(
           onPressed: () => routerReader.navigateTo(
-              routerWatcher.currentPage, '/state/stateapplys'),
+              routerWatcher.currentPage, '/state/stateapplys',
+              data: article),
           child: Row(
             children: [
               Icon(
@@ -1092,10 +1093,11 @@ class _ContractContentElementState extends State<ContractContentElement> {
   }
 }
 
-containerApplys(int index, BuildContext context, User data) {
+containerApplys(int index, BuildContext context, User data, Article article) {
   // provider
   final routerReader = context.read<CustomRouter>();
   final routerWatcher = context.watch<CustomRouter>();
+  Article articleData = routerReader.data;
   return Container(
       margin: EdgeInsets.symmetric(
         // horizontal: 10,
@@ -1257,30 +1259,51 @@ containerApplys(int index, BuildContext context, User data) {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Expanded(
-                        flex: 1,
-                        child: Container(
-                            alignment: Alignment.center,
-                            height: 210 / 5,
-                            width: MediaQuery.of(context).size.width * 0.5,
-                            decoration: BoxDecoration(
-                                border: Border(
-                                    right: BorderSide(
-                              width: 1.5,
-                              color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 1),
-                            ))),
-                            child: boldText(
-                              '승인 수락',
-                            )),
-                      ),
+                          flex: 1,
+                          child: InkWell(
+                            child: Container(
+                                alignment: Alignment.center,
+                                height: 210 / 5,
+                                width: MediaQuery.of(context).size.width * 0.5,
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                        right: BorderSide(
+                                  width: 1.5,
+                                  color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 1),
+                                ))),
+                                child: boldText(
+                                  '승인 수락',
+                                )),
+                            onTap: () {
+                              ArticleAPI()
+                                  .applyStateUpdate(
+                                      articleData.id,
+                                      data.profileInfo.roles,
+                                      data.uid,
+                                      'confirm')
+                                  .then((value) => showMyDialog(
+                                      context, "승인이 수락되었습니다. ", ""));
+                            },
+                          )),
                       Expanded(
                         flex: 1,
-                        child: Container(
+                        child: InkWell(
+                          child: Container(
                             alignment: Alignment.center,
                             height: 210 / 5,
                             width: MediaQuery.of(context).size.width * 0.5,
                             child: boldText(
                               '승인 거절',
-                            )),
+                            ),
+                          ),
+                          onTap: () {
+                            ArticleAPI()
+                                .applyStateUpdate(articleData.id,
+                                    data.profileInfo.roles, data.uid, 'delete')
+                                .then((value) =>
+                                    showMyDialog(context, "승인이 거절되었습니다. ", ""));
+                          },
+                        ),
                       )
                     ],
                   ))),
