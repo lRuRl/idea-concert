@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/gestures.dart';
@@ -114,6 +116,8 @@ class _ProfileEditState extends State<ProfileEdit> {
                                   image: DecorationImage(
                                       image: profileImage != null
                                           ? FileImage(profileImage)
+                                          : prevData.imageChunk != null 
+                                          ? MemoryImage(base64Decode(prevData.imageChunk))
                                           : AssetImage("assets/default.png"),
                                       fit: BoxFit.cover)),
                             ),
@@ -284,7 +288,7 @@ class _ProfileEditState extends State<ProfileEdit> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  portfolio != null ? portfolio.name : '정보가 없습니다.',
+                  portfolio != null ? portfolio.name : widget.prevData.portfolio != null ? widget.prevData.portfolio.substring(widget.prevData.portfolio.indexOf('-')+1) : '정보가 없습니다.',
                   style: articleTagTextStyle,
                   maxLines: null,
                 ),

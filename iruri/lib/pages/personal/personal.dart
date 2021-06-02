@@ -47,7 +47,9 @@ class _PersonalPageState extends State<PersonalPage> {
               subContainerWithTopBorder(subComponentDetail(
                   context: context,
                   onPressed: () => print('portfolio'),
-                  child: Text(user.currentUser.portfolio.substring(user.currentUser.portfolio.indexOf('-')+1),
+                  child: Text(
+                      user.currentUser.portfolio.substring(
+                          user.currentUser.portfolio.indexOf('-') + 1),
                       style: articleWriterTextStyle),
                   name: '포트폴리오 관리',
                   btnName: '조회')),
