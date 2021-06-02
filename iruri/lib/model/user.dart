@@ -8,7 +8,9 @@ class User {
   String pw;
   String uid;
   String image;
+  String imageChunk;
   String portfolio;
+  String portfolioChunk;
   ProfileInfo profileInfo;
   bool hasSigned;
 
@@ -16,7 +18,9 @@ class User {
       {this.hasSigned,
       this.id,
       this.image,
+      this.imageChunk,
       this.portfolio,
+      this.portfolioChunk,
       this.profileInfo,
       this.pw,
       this.uid});
@@ -26,7 +30,9 @@ class User {
       pw: json['pw'],
       uid: json['_id'],
       image: json['image'],
+      imageChunk: json['imageChunk'],      
       portfolio: json['portfolio'],
+      portfolioChunk: json['portfolioChunk'],
       hasSigned: json['hasSigned'],
       profileInfo: ProfileInfo.fromJson(json['info']));
 

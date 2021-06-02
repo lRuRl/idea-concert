@@ -52,8 +52,10 @@ const userSchema = new mongoose.Schema({
     },
     // added for profile image
     image: String,
+    imageChunk : String,
     // url or file path
     portfolio: String,
+    portfolioChunk: String,
     // check for digital sign
     hasSigned: Boolean
 });
