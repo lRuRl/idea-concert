@@ -8,6 +8,7 @@ import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/spacing.dart';
 // model
 import 'package:iruri/model/user.dart';
+import 'package:iruri/pages/personal/personal_edit.dart';
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////                              프로필 정보 : 석운                             /////////////////////
@@ -65,7 +66,15 @@ class _MyProfileState extends State<MyProfile> {
                     Text("프로필 정보",
                         style: TextStyle(fontWeight: FontWeight.w700)),
                     TextButton.icon(
-                      onPressed: () => print('edit'),
+                      // edit profile
+                      onPressed: () => showModalBottomSheet(
+                        isScrollControlled: true,
+                        backgroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(20))),
+                          context: context,
+                          builder: (context) => ProfileEdit(prevData: data)),
                       icon:
                           Icon(FeatherIcons.edit, size: 20, color: primaryLine),
                       label: SizedBox(),
@@ -104,9 +113,9 @@ class _MyProfileState extends State<MyProfile> {
                                 '닉네임',
                                 Text(data.profileInfo.nickname != null
                                     ? data.profileInfo.nickname
-                                    : "정보가 없습니다.")),
+                                    : "정보가 없습니다.",)),
                             subProfileItem(
-                                '관심분야',
+                                '전문분야',
                                 Text(data.profileInfo.roles.length != 0
                                     ? data.profileInfo.roles
                                         .toString()
