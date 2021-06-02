@@ -13,6 +13,7 @@ void main() {
       MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => CustomRouter(false)),
+      ChangeNotifierProvider(create: (context) => UserState())
     ],
     child: MyApp(),
   ));
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
       // 우측 상단에 DEBUG 표시 제거
 
       debugShowCheckedModeBanner: false,
-      home: Provider.of<CustomRouter>(context).isLoggedin
+      home: Provider.of<UserState>(context).currentUser != null
           ? Routes()
           : LoginPage(),
       // home: Routes(),
