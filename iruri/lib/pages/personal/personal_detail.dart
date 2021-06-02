@@ -68,8 +68,8 @@ class _MyProfileState extends State<MyProfile> {
                     TextButton.icon(
                       // edit profile
                       onPressed: () => showModalBottomSheet(
-                        isScrollControlled: true,
-                        backgroundColor: Colors.white,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.vertical(
                                   top: Radius.circular(20))),
@@ -100,7 +100,7 @@ class _MyProfileState extends State<MyProfile> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: widget.userData.image != null
-                                  ? ImageWrapper(image: widget.userData.image)
+                                  ? ImageWrapper(image: widget.userData.imageChunk)
                                   : Image.asset('assets/default.png'))),
                       SizedBox(
                         width: 10,
@@ -111,16 +111,21 @@ class _MyProfileState extends State<MyProfile> {
                               children: [
                             subProfileItem(
                                 '닉네임',
-                                Text(data.profileInfo.nickname != null
-                                    ? data.profileInfo.nickname
-                                    : "정보가 없습니다.",)),
+                                Text(
+                                  data.profileInfo.nickname != null
+                                      ? data.profileInfo.nickname
+                                      : "정보가 없습니다.",
+                                )),
                             subProfileItem(
                                 '전문분야',
-                                Text(data.profileInfo.roles.length != 0
-                                    ? data.profileInfo.roles
-                                        .toString()
-                                        .replaceAll(RegExp(r"(\[)|(\])"), '')
-                                    : "정보가 없습니다.")),
+                                Text(
+                                  data.profileInfo.roles.length != 0
+                                      ? data.profileInfo.roles
+                                          .toString()
+                                          .replaceAll(RegExp(r"(\[)|(\])"), '')
+                                      : "정보가 없습니다.",
+                                  overflow: TextOverflow.visible,
+                                )),
                             subProfileItem(
                                 '연락처',
                                 Text(data.profileInfo.phoneNumber != null
@@ -130,11 +135,14 @@ class _MyProfileState extends State<MyProfile> {
                                 Text(data.id != null ? data.id : "정보가 없습니다.")),
                             subProfileItem(
                                 '선호장르',
-                                Text(data.profileInfo.genres.length != 0
-                                    ? data.profileInfo.genres
-                                        .toString()
-                                        .replaceAll(RegExp(r"(\[)|(\])"), '')
-                                    : "정보가 없습니다.")),
+                                Text(
+                                    data.profileInfo.genres.length != 0
+                                        ? data.profileInfo.genres
+                                            .toString()
+                                            .replaceAll(
+                                                RegExp(r"(\[)|(\])"), '')
+                                        : "정보가 없습니다.",
+                                    overflow: TextOverflow.visible)),
                             subProfileItem(
                                 '경력',
                                 Text(data.profileInfo.career != null
@@ -171,7 +179,13 @@ class _MyProfileState extends State<MyProfile> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[Text(name), child],
+          children: <Widget>[
+            Text(name),
+            SizedBox(width: 15),
+            Flexible(
+              child: child,
+            )
+          ],
         ),
       );
 

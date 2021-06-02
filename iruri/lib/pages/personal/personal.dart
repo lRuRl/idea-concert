@@ -26,19 +26,36 @@ class _PersonalPageState extends State<PersonalPage> {
   Widget build(BuildContext context) {
     final user = context.watch<UserState>();
     if (user.currentUser != null) {
-    return Container(
-            child: SingleChildScrollView(
-              controller: scrollController,
-              child: Column(
-                children: <Widget>[
-                  MyProfile(userData: user.currentUser),
-                  subContainerWithTopBorder(personalCode(context, user.currentUser.uid)),
-                  subContainerWithTopBorder(managePortfolio()),
-                  logout()
-                ],
-              ),
-            ),
-          );
+      return Container(
+        child: SingleChildScrollView(
+          controller: scrollController,
+          child: Column(
+            children: <Widget>[
+              MyProfile(userData: user.currentUser),
+              subContainerWithTopBorder(subComponentDetail(
+                  context: context,
+                  onPressed: () => Clipboard.setData(
+                          new ClipboardData(text: user.currentUser.uid))
+                      .then((value) =>
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('클립보드로 복사되었습니다.'),
+                          ))),
+                  child:
+                      Text(user.currentUser.uid, style: articleWriterTextStyle),
+                  name: '고유코드 정보',
+                  btnName: '복사')),
+              subContainerWithTopBorder(subComponentDetail(
+                  context: context,
+                  onPressed: () => print('portfolio'),
+                  child: Text(user.currentUser.portfolio.substring(user.currentUser.portfolio.indexOf('-')+1),
+                      style: articleWriterTextStyle),
+                  name: '포트폴리오 관리',
+                  btnName: '조회')),
+              logout()
+            ],
+          ),
+        ),
+      );
     } else {
       return Center(child: Text('사용자정보가 없습니다.'));
     }
@@ -73,68 +90,17 @@ class _PersonalPageState extends State<PersonalPage> {
         ));
   }
 
-  Widget managePortfolio() {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Expanded(
-          flex: 1,
-          child: Text("포트폴리오 관리",
-              style: TextStyle(fontWeight: FontWeight.w700),
-              textAlign: TextAlign.left)),
-      Expanded(
-          flex: 1,
-          child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                    width: 300,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: themeLightGrayOpacity20),
-                    child: TextFormField(
-                      enabled: false,
-                      maxLines: 1,
-                      decoration: InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: new BorderSide(
-                                  color: themeLightGrayOpacity20, width: 1),
-                              borderRadius: BorderRadius.circular(8)),
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: new BorderSide(
-                                  color: themeLightGrayOpacity20, width: 1),
-                              borderRadius: BorderRadius.circular(8)),
-                          disabledBorder: OutlineInputBorder(
-                              borderSide: new BorderSide(
-                                  color: themeLightGrayOpacity20, width: 1),
-                              borderRadius: BorderRadius.circular(8)),
-                          fillColor: Colors.white,
-                          labelStyle:
-                              TextStyle(color: themeGrayText, fontSize: 13),
-                          labelText: 'URL 또는 드라이브 링크'),
-                    )),
-                ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      "조회",
-                      style: buttonWhiteTextStyle,
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      padding: EdgeInsets.all(12),
-                      primary: themeDeepBlue,
-                      onPrimary: Colors.white,
-                    )),
-              ]))
-    ]);
-  }
-
-  Widget personalCode(BuildContext context, String code) {
+  Widget subComponentDetail(
+      {BuildContext context,
+      Function onPressed,
+      Widget child,
+      String name,
+      String btnName}) {
     final size = MediaQuery.of(context).size;
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Expanded(
           flex: 1,
-          child: Text("고유코드 정보",
+          child: Text(name,
               style: TextStyle(fontWeight: FontWeight.w700),
               textAlign: TextAlign.left)),
       Expanded(
@@ -153,21 +119,11 @@ class _PersonalPageState extends State<PersonalPage> {
                       ),
                       borderRadius: BorderRadius.circular(8),
                       color: themeLightGrayOpacity20),
-                  child: Center(
-                      child: Text(
-                    code,
-                    style: articleTagTextStyle,
-                  )),
+                  child: Center(child: child),
                 ),
                 ElevatedButton(
-                    onPressed: () {
-                      Clipboard.setData(new ClipboardData(text: code)).then(
-                          (value) => ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
-                                content: Text('클립보드로 복사되었습니다.'),
-                              )));
-                    },
-                    child: Text("복사", style: buttonWhiteTextStyle),
+                    onPressed: onPressed,
+                    child: Text(btnName, style: buttonWhiteTextStyle),
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8)),

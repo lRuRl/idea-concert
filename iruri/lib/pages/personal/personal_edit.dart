@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -10,6 +11,11 @@ import 'package:iruri/components/input_decoration.dart';
 import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/spacing.dart';
 import 'package:iruri/components/typhography.dart';
+// provider
+import '../../provider.dart';
+import 'package:provider/provider.dart';
+// api
+import '../../util/data_user.dart' as api;
 // model
 import 'package:iruri/model/user.dart';
 
@@ -66,140 +72,147 @@ class _ProfileEditState extends State<ProfileEdit> {
   Widget build(BuildContext context) {
     final prevData = widget.prevData;
     final size = MediaQuery.of(context).size;
-    return Container(
-      padding: EdgeInsets.only(top: 40.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // exit
-          TextButton.icon(
-              onPressed: () => Navigator.pop(context),
-              icon: Icon(FeatherIcons.chevronDown, size: 24, color: subLine),
-              label: SizedBox()),
-          GestureDetector(
-              onTap: () => FocusScope.of(context).requestFocus(new FocusNode()),
-              child: FormBuilder(
-                  key: formKey,
-                  child: SingleChildScrollView(
-                    controller: controller,
-                    child: ListView(
-                      padding: paddingH20V20,
-                      shrinkWrap: true,
+    return SingleChildScrollView(
+        controller: controller,
+        child: GestureDetector(
+            onTap: () => FocusScope.of(context).requestFocus(new FocusNode()),
+            child: FormBuilder(
+              key: formKey,
+              child: ListView(
+                controller: controller,
+                padding: paddingH20V20,
+                shrinkWrap: true,
+                children: [
+                  // exit
+                  Container(
+                      margin: EdgeInsets.only(top: 50),
+                      child: TextButton.icon(
+                          onPressed: () => Navigator.pop(context),
+                          icon: Icon(FeatherIcons.chevronDown,
+                              size: 24, color: subLine),
+                          label: SizedBox())),
+                  // Title
+                  Text('프로필 수정', style: articleTitleTextStyle),
+                  SizedBox(height: 20),
+
+                  /// [Form] the form for personal update
+                  /// [image] on left side and [nickname, phoneNumber, career] are on right side
+                  /// all the texts will be saved with formKey through global key
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // Title
-                        Text('프로필 수정', style: articleTitleTextStyle),
-                        SizedBox(height: 20),
-
-                        /// [Form] the form for personal update
-                        /// [image] on left side and [nickname, phoneNumber, career] are on right side
-                        /// all the texts will be saved with formKey through global key
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              // profile image
-                              Stack(
-                                alignment: AlignmentDirectional.centerStart,
-                                children: <Widget>[
-                                  Container(
-                                    width: size.width * 0.4,
-                                    height: size.width * 0.4,
-                                    decoration: BoxDecoration(
-                                        border: Border.all(color: subLine),
-                                        borderRadius: BorderRadius.circular(8),
-                                        image: DecorationImage(
-                                            image: profileImage != null
-                                                ? FileImage(profileImage)
-                                                : AssetImage(
-                                                    "assets/default.png"),
-                                            fit: BoxFit.cover)),
-                                  ),
-                                  Positioned(
-                                    right: 10.0,
-                                    top: 10.0,
-                                    child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                            elevation: 16.0,
-                                            primary: themeOrange,
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        8) // 8px
-                                                )),
-                                        onPressed: onProfileImageUploadPressed,
-                                        child: Text("수정",
-                                            style: notoSansTextStyle(
-                                                fontSize: 14,
-                                                textColor: Colors.white,
-                                                fontWeight: FontWeight.w600))),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  subComponentOnRight(
-                                      nameKor: '닉네임',
-                                      nameEng: 'nickname',
-                                      width: size.width * 0.4,
-                                      initialValue:
-                                          prevData.profileInfo.nickname != null
-                                              ? prevData.profileInfo.nickname
-                                              : ''),
-                                  SizedBox(height: 10),
-                                  subComponentOnRight(
-                                      nameKor: '연락처',
-                                      nameEng: 'phoneNumber',
-                                      width: size.width * 0.4,
-                                      initialValue:
-                                          prevData.profileInfo.phoneNumber !=
-                                                  null
-                                              ? prevData.profileInfo.phoneNumber
-                                              : ''),
-                                  SizedBox(height: 10),
-                                  subComponentOnRight(
-                                      nameKor: '경력',
-                                      nameEng: 'career',
-                                      width: size.width * 0.4,
-                                      initialValue:
-                                          prevData.profileInfo.career != null
-                                              ? prevData.profileInfo.career
-                                              : ''),
-                                ],
-                              )
-                            ]),
-                        SizedBox(height: 20),
-
-                        /// [multiChoices] are available here
-                        /// [roles, genres] will be selected using multichoice
-                        subComponentMultiChoice(
-                            nameKor: '전문분야',
-                            nameEng: 'roles',
-                            map: roleChoices,
-                            initialValue: prevData.profileInfo.roles),
-                        subComponentMultiChoice(
-                            nameKor: '선호장르',
-                            nameEng: 'genres',
-                            map: genreChoices,
-                            initialValue: prevData.profileInfo.genres),
-                        divider,
-                        SizedBox(height: 10),
-                        subComponentFileUpload(nameKor: '포트폴리오 업로드'),
-                        SizedBox(height: 20),
-                        /// [updateProfile] by tap below button
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8)),
-                            backgroundColor: primary,
-                          ),
-                          child: Text("수정하기", style: buttonWhiteTextStyle),
-                          onPressed: () => print('dd'),
+                        // profile image
+                        Stack(
+                          alignment: AlignmentDirectional.centerStart,
+                          children: <Widget>[
+                            Container(
+                              width: size.width * 0.4,
+                              height: size.width * 0.4,
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: subLine),
+                                  borderRadius: BorderRadius.circular(8),
+                                  image: DecorationImage(
+                                      image: profileImage != null
+                                          ? FileImage(profileImage)
+                                          : AssetImage("assets/default.png"),
+                                      fit: BoxFit.cover)),
+                            ),
+                            Positioned(
+                              right: 10.0,
+                              top: 10.0,
+                              child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      elevation: 16.0,
+                                      primary: themeOrange,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8) // 8px
+                                          )),
+                                  onPressed: onProfileImageUploadPressed,
+                                  child: Text("수정",
+                                      style: notoSansTextStyle(
+                                          fontSize: 14,
+                                          textColor: Colors.white,
+                                          fontWeight: FontWeight.w600))),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            subComponentwithWidth(
+                                nameKor: '닉네임',
+                                nameEng: 'nickname',
+                                width: size.width * 0.4,
+                                initialValue:
+                                    prevData.profileInfo.nickname != null
+                                        ? prevData.profileInfo.nickname
+                                        : '',
+                                isLimit: true),
+                            SizedBox(height: 10),
+                            subComponentwithWidth(
+                                nameKor: '연락처',
+                                nameEng: 'phoneNumber',
+                                width: size.width * 0.4,
+                                initialValue:
+                                    prevData.profileInfo.phoneNumber != null
+                                        ? prevData.profileInfo.phoneNumber
+                                        : '',
+                                isLimit: true),
+                            SizedBox(height: 10),
+                            subComponentwithWidth(
+                                nameKor: '경력',
+                                nameEng: 'career',
+                                width: size.width * 0.4,
+                                initialValue:
+                                    prevData.profileInfo.career != null
+                                        ? prevData.profileInfo.career
+                                        : '',
+                                isLimit: true),
+                          ],
                         )
-                      ],
+                      ]),
+                  SizedBox(height: 20),
+
+                  /// [multiChoices] are available here
+                  /// [roles, genres] will be selected using multichoice
+                  subComponentMultiChoice(
+                      nameKor: '전문분야',
+                      nameEng: 'roles',
+                      map: roleChoices,
+                      initialValue: prevData.profileInfo.roles),
+                  subComponentMultiChoice(
+                      nameKor: '선호장르',
+                      nameEng: 'genres',
+                      map: genreChoices,
+                      initialValue: prevData.profileInfo.genres),
+                  divider,
+                  SizedBox(height: 10),
+                  subComponentwithWidth(
+                      nameKor: '자기소개',
+                      nameEng: 'desc',
+                      width: size.width,
+                      initialValue: prevData.profileInfo.desc != null
+                          ? prevData.profileInfo.desc
+                          : '',
+                      isLimit: false),
+                  SizedBox(height: 10),
+                  subComponentFileUpload(nameKor: '포트폴리오 업로드'),
+                  SizedBox(height: 20),
+
+                  /// [updateProfile] by tap below button
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      backgroundColor: primary,
                     ),
-                  ))),
-        ],
-      ),
-    );
+                    child: Text("수정하기", style: buttonWhiteTextStyle),
+                    onPressed: () => uploadTask(context),
+                  ),
+                  SizedBox(height: 50),
+                ],
+              ),
+            )));
   }
 
   void onProfileImageUploadPressed() async {
@@ -214,11 +227,12 @@ class _ProfileEditState extends State<ProfileEdit> {
     }
   }
 
-  Container subComponentOnRight(
+  Container subComponentwithWidth(
           {@required String nameKor,
           @required String nameEng,
           @required double width,
-          @required String initialValue}) =>
+          @required String initialValue,
+          bool isLimit}) =>
       Container(
           width: width,
           child: Column(
@@ -231,6 +245,9 @@ class _ProfileEditState extends State<ProfileEdit> {
                   child: new FormBuilderTextField(
                     name: nameEng,
                     initialValue: initialValue,
+
+                    /// [TODO] maxLine null is not showing any text inside
+                    /// [maxLine : null] needs [expand : true]
                     decoration: borderTextInputBox(displaySuffixIcon: false),
                     style: TextStyle(fontSize: 12, color: greyText),
                   )),
@@ -287,4 +304,53 @@ class _ProfileEditState extends State<ProfileEdit> {
           ],
         ),
       );
+
+  /// upload files and text together
+  /// this function needs params that declared globally
+  Future<void> uploadTask(BuildContext context) async {
+    /// set the [User Object] using setState(() {});
+    /// through [formKey] used upon
+    /// #1 save current key state by [formKey.save]
+    formKey.currentState.save();
+
+    /// #2 set [User] object
+    User uploadUser = new User(
+
+        /// properties that are same as before
+        id: widget.prevData.id,
+        pw: widget.prevData.pw,
+        uid: widget.prevData.uid,
+        hasSigned: widget.prevData.hasSigned,
+        image: widget.prevData.image,
+        portfolio: widget.prevData.portfolio,
+
+        /// properties updated
+        /// [nickname, phoneNumber,career,roles, genres, desc]
+        profileInfo: ProfileInfo(
+            nickname: formKey.currentState.value['nickname'],
+            phoneNumber: formKey.currentState.value['phoneNumber'],
+            career: formKey.currentState.value['career'],
+            roles: formKey.currentState.value['roles'],
+            genres: formKey.currentState.value['genres'],
+            desc: formKey.currentState.value['desc']));
+
+    /// #3 use [api] to save result
+    await api.UserAPI()
+        .updateUserProfile(uploadUser, profileImage, portfolio)
+
+        /// pop screen using [Navigator.pop] and then show snack bar with msg
+        /// using [ScaffoldMessenger]
+        .then((value) => Navigator.pop(context))
+        .then((value) => ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('성공적으로 업데이트 했습니다.'))))
+
+        /// set updated user information using [Provider]
+        .then((value) async {
+      /// get User Info
+      /// use [findUserById] function
+      final response = await api.UserAPI().findUserById(widget.prevData.uid);
+      final reader = context.read<UserState>();
+      reader.setUser(response);
+    });
+  }
 }
