@@ -1044,7 +1044,7 @@ class _ContractContentElementState extends State<ContractContentElement> {
             : Text(str,
                 softWrap: true,
                 style: notoSansTextStyle(
-                    fontSize: 10,
+                    fontSize: 11,
                     fontWeight: FontWeight.w400,
                     textColor: Color.fromRGBO(0x4f, 0x4f, 0x4f, 1)))
       ],
@@ -1057,7 +1057,7 @@ class _ContractContentElementState extends State<ContractContentElement> {
         Text('기타 자세한 내용은 \n동의합니다.',
             softWrap: true,
             style: notoSansTextStyle(
-                fontSize: 10,
+                fontSize: 11,
                 fontWeight: FontWeight.w400,
                 textColor: Color.fromRGBO(0x4f, 0x4f, 0x4f, 1))),
         InkWell(
@@ -1071,14 +1071,14 @@ class _ContractContentElementState extends State<ContractContentElement> {
             child: Text('전자서명 이용약관\n',
                 softWrap: true,
                 style: TextStyle(
-                    fontSize: 10,
+                    fontSize: 12.5,
                     decoration: TextDecoration.underline,
                     fontWeight: FontWeight.w400,
                     color: Color.fromRGBO(0x4f, 0x4f, 0x4f, 1)))),
         Text('에 따라\n',
             // softWrap: true,
             style: notoSansTextStyle(
-                fontSize: 10,
+                fontSize: 11,
                 fontWeight: FontWeight.w400,
                 textColor: Color.fromRGBO(0x4f, 0x4f, 0x4f, 1))),
       ],
