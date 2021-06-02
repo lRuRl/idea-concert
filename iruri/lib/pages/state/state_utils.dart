@@ -23,14 +23,11 @@ import 'package:iruri/pages/state/state_applys.dart';
 
 // article
 import 'package:iruri/model/article.dart';
-
-// member
-import 'package:iruri/model/member_sample.dart';
 // provider
 import 'package:provider/provider.dart';
 // model
 import 'package:iruri/model/article.dart';
-import 'package:iruri/model/profile_info.dart';
+import 'package:iruri/model/user.dart';
 
 boxItem(int index, List<Container> items, BuildContext context, Article data) {
   // provider
@@ -108,8 +105,6 @@ boxItem(int index, List<Container> items, BuildContext context, Article data) {
                   ],
                 ),
               )),
-
-          /// TODO: [ DB 연동하기 ]
           Expanded(
             flex: 1,
             child: Align(
@@ -562,58 +557,58 @@ Widget stateprojectDetailContent(BuildContext context, Article data) {
     Text("팀원 관리",
         style: TextStyle(fontWeight: FontWeight.w700),
         textAlign: TextAlign.left),
-    manageTeam(context),
+    // manageTeam(context),
   ]));
 }
 
-Widget manageTeam(BuildContext context) {
-  return Container(
-      height: MediaQuery.of(context).size.height * 0.25,
-      width: MediaQuery.of(context).size.width * 1,
-      child: ListView.builder(
-        scrollDirection: Axis.vertical,
-        itemCount: memberListSample.length,
-        itemBuilder: (context, index) {
-          return Container(
-            width: MediaQuery.of(context).size.width * 1,
-            margin: EdgeInsets.symmetric(vertical: 7),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Icon(
-                    Icons.remove_circle_outline,
-                    size: 20,
-                  ),
-                ),
-                Expanded(
-                    flex: 4,
-                    child: Container(
-                        alignment: Alignment.centerRight,
-                        height: 20,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: List<Widget>.generate(
-                                memberListSample[index].roles.length,
-                                (indexs) => Container(
-                                      margin: EdgeInsets.only(left: 10),
-                                      child: TagWrapper(
-                                        onPressed: () {},
-                                        tag: memberListSample[index]
-                                            .roles[indexs],
-                                      ),
-                                    ))))),
-                Expanded(
-                    flex: 5,
-                    child: nicknameEdit(
-                        "@" + memberListSample[index].info.nickname)),
-              ],
-            ),
-          );
-        },
-      ));
-}
+// Widget manageTeam(BuildContext context) {
+//   return Container(
+//       height: MediaQuery.of(context).size.height * 0.25,
+//       width: MediaQuery.of(context).size.width * 1,
+//       child: ListView.builder(
+//         scrollDirection: Axis.vertical,
+//         itemCount: memberListSample.length,
+//         itemBuilder: (context, index) {
+//           return Container(
+//             width: MediaQuery.of(context).size.width * 1,
+//             margin: EdgeInsets.symmetric(vertical: 7),
+//             child: Row(
+//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//               children: [
+//                 Expanded(
+//                   flex: 1,
+//                   child: Icon(
+//                     Icons.remove_circle_outline,
+//                     size: 20,
+//                   ),
+//                 ),
+//                 Expanded(
+//                     flex: 4,
+//                     child: Container(
+//                         alignment: Alignment.centerRight,
+//                         height: 20,
+//                         child: Row(
+//                             mainAxisAlignment: MainAxisAlignment.end,
+//                             children: List<Widget>.generate(
+//                                 memberListSample[index].roles.length,
+//                                 (indexs) => Container(
+//                                       margin: EdgeInsets.only(left: 10),
+//                                       child: TagWrapper(
+//                                         onPressed: () {},
+//                                         tag: memberListSample[index]
+//                                             .roles[indexs],
+//                                       ),
+//                                     ))))),
+//                 Expanded(
+//                     flex: 5,
+//                     child: nicknameEdit(
+//                         "@" + memberListSample[index].info.nickname)),
+//               ],
+//             ),
+//           );
+//         },
+//       ));
+// }
 
 Widget nicknameEdit(String nickname) {
   return Container(

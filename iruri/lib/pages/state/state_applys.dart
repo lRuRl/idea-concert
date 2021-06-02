@@ -8,7 +8,7 @@ import 'package:iruri/provider.dart';
 
 // UserAPI
 import 'package:iruri/util/data_user.dart';
-import 'package:iruri/model/profile_info.dart';
+import 'package:iruri/model/user.dart';
 
 // article
 import 'package:iruri/model/article.dart';

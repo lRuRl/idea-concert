@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/spacing.dart';
 import 'package:iruri/components/typhography.dart';
-import 'package:iruri/model/profile_info.dart';
+import 'package:iruri/model/user.dart';
 import 'package:iruri/pages/signup/signup.dart';
 import 'package:iruri/provider.dart';
 import 'package:iruri/util/data_user.dart';
@@ -91,11 +91,11 @@ class _UserSigninInfoState extends State<UserSigninInfo> {
         ]));
   }
 
-  Future<bool> checkIdPwd() async {
+  Future<User> checkIdPwd() async {
     final id = infoController['id'].text;
     final pwd = infoController['pwd'].text;
 
-    return isChecked = await api.signIn(context, id, pwd);
+    return await api.signIn(id, pwd);
   }
 
   Widget loginButton(BuildContext context) {
@@ -107,11 +107,17 @@ class _UserSigninInfoState extends State<UserSigninInfo> {
         padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
         child: ElevatedButton(
             onPressed: () async {
-              await checkIdPwd();
-              if (checkIdPwd() != null && isChecked == true) {
+              var res = await checkIdPwd();
+              if (res != null) {
+                // set current User
+                Provider.of<UserState>(context, listen: false).setUser(res);
+                // set router
                 Provider.of<CustomRouter>(context, listen: false)
                     .setRegistrationStatus(true);
                 routerReader.navigateTo(routerWatcher.currentPage, '/');
+              } else {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text('잘못 입력하셨습니다.')));
               }
             },
             child: Text("로그인", style: buttonWhiteTextStyle),

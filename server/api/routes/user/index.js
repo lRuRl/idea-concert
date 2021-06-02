@@ -26,17 +26,15 @@ module.exports = (app) => {
         const { status, result } = await userService.post(req.body);
         return res.status(status).send(result);
     });
-    // 2) R[Get]
-    router.get('/', async (req, res) => {
-        const { status, result } = await userService.readAll();
-        return res.status(status).send(result);
-    })
     /** @function signIn */
     router.post('/sign-in', async (req, res) => {
         let { id, pw } = req.body;
-        console.log(req.body);
-
         const { status, result } = await userService.signIn(id, pw);
+        return res.status(status).send(result);
+    })
+    // 2) R[Get]
+    router.get('/', async (req, res) => {
+        const { status, result } = await userService.readAll();
         return res.status(status).send(result);
     })
     /** @function findUserById */
