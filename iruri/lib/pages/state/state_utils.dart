@@ -6,6 +6,7 @@ import 'package:iruri/components/spacing.dart';
 import 'package:iruri/provider.dart';
 import 'package:iruri/util/data_article.dart';
 import 'package:iruri/util/data_user.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:iruri/pages/home/project_detail_components.dart';
 
@@ -109,12 +110,13 @@ boxItem(int index, List<Container> items, BuildContext context, Article data) {
             child: Align(
                 alignment: Alignment.centerRight,
                 child: Text(
-                    "승인대기중 : " +
-                        data.detail.applicant.getAppllicantCount().toString() +
-                        '명',
+                    "승인대기중 : " + getUidList(data).length.toString() + '명',
                     style: articleWriterTextStyle)),
           ),
-          Expanded(flex: 3, child: listItemButton_my(context)),
+          // SizedBox(
+          //   height: 4,
+          // ),
+          Expanded(flex: 3, child: listItemButton_my(context, data)),
         ],
       ));
 }
@@ -421,16 +423,27 @@ Widget listItemButton(BuildContext context, Article data) {
 }
 
 //내가 올린 프로젝트 (위)
-Widget listItemButton_my(BuildContext context) {
+Widget listItemButton_my(BuildContext context, Article article) {
   // provider
   final routerReader = context.read<CustomRouter>();
   final routerWatcher = context.watch<CustomRouter>();
+  List<String> types = ["A형", "B형", "C형", "D형"];
+  Contract contract = new Contract(types);
+
   return Row(
     crossAxisAlignment: CrossAxisAlignment.center,
     mainAxisAlignment: MainAxisAlignment.spaceAround,
     children: [
       ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            showMaterialModalBottomSheet(
+              backgroundColor: Color.fromRGBO(255, 255, 255, 0),
+              context: context,
+              builder: (context) => SingleChildScrollView(
+                  controller: ModalScrollController.of(context),
+                  child: UploadContract(contract: contract)),
+            );
+          },
           child: Row(
             children: [
               Icon(
@@ -455,7 +468,8 @@ Widget listItemButton_my(BuildContext context) {
           )),
       ElevatedButton(
           onPressed: () => routerReader.navigateTo(
-              routerWatcher.currentPage, '/state/stateapplys'),
+              routerWatcher.currentPage, '/state/stateapplys',
+              data: article),
           child: Row(
             children: [
               Icon(
@@ -865,6 +879,94 @@ class _SelectBoxApplyState extends State<SelectBoxApply> {
   }
 }
 
+class Contract {
+  final List<String> types;
+
+  Contract(this.types);
+}
+
+class UploadContract extends StatefulWidget {
+  final Contract contract;
+  UploadContract({this.contract});
+  @override
+  _UploadContractState createState() => _UploadContractState();
+}
+
+class _UploadContractState extends State<UploadContract> {
+  // for position selected
+  List<String> selectedList;
+  void onSelected(List<String> selected) => setState(() {
+        selectedList = selected;
+      });
+
+  String currentmode;
+  @override
+  void initState() {
+    super.initState();
+    selectedList = [];
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    selectedList.clear();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+    return Container(
+        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+        ),
+        width: size.width * 1,
+        height: size.height * 0.3,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Align(
+              alignment: Alignment.center,
+              child:
+                  Icon(FeatherIcons.chevronDown, size: 24, color: Colors.grey),
+            ),
+            Text("계약서 선택하기",
+                style: notoSansTextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    textColor: displayText)),
+            divider,
+            GroupedCheckbox(
+              options: widget.contract.types
+                  .map((e) => FormBuilderFieldOption(value: e))
+                  .toList(),
+              onChanged: onSelected,
+              orientation: OptionsOrientation.wrap,
+              activeColor: primary,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            TextButton(
+                onPressed: () {},
+                child: Text("저장하기", style: buttonWhiteTextStyle),
+                style: TextButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: size.width / 2 - 48, vertical: 8),
+                    backgroundColor: primary)),
+            SizedBox(
+              height: 10,
+            )
+          ],
+        ));
+  }
+}
+
 class ContractContentElement extends StatefulWidget {
   List<bool> checkState = [false, false, false, false];
 
@@ -984,10 +1086,11 @@ class _ContractContentElementState extends State<ContractContentElement> {
   }
 }
 
-containerApplys(int index, BuildContext context, User data) {
+containerApplys(int index, BuildContext context, User data, Article article) {
   // provider
   final routerReader = context.read<CustomRouter>();
   final routerWatcher = context.watch<CustomRouter>();
+  Article articleData = routerReader.data;
   return Container(
       margin: EdgeInsets.symmetric(
         // horizontal: 10,
@@ -1075,10 +1178,11 @@ containerApplys(int index, BuildContext context, User data) {
                                 Container(
                                   // color: Colors.black,
                                   alignment: Alignment.centerRight,
-                                  width:
-                                      data.profileInfo.roles.length * 50.0 + 8,
+                                  width: data.getApplyRoles(article).length *
+                                          50.0 +
+                                      8,
                                   child: PositionSmallLinear(
-                                      data: data.profileInfo.roles),
+                                      data: data.getApplyRoles(article)),
                                 ),
                               ],
                             ),
@@ -1149,30 +1253,54 @@ containerApplys(int index, BuildContext context, User data) {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Expanded(
-                        flex: 1,
-                        child: Container(
-                            alignment: Alignment.center,
-                            height: 210 / 5,
-                            width: MediaQuery.of(context).size.width * 0.5,
-                            decoration: BoxDecoration(
-                                border: Border(
-                                    right: BorderSide(
-                              width: 1.5,
-                              color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 1),
-                            ))),
-                            child: boldText(
-                              '승인 수락',
-                            )),
-                      ),
+                          flex: 1,
+                          child: InkWell(
+                            child: Container(
+                                alignment: Alignment.center,
+                                height: 210 / 5,
+                                width: MediaQuery.of(context).size.width * 0.5,
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                        right: BorderSide(
+                                  width: 1.5,
+                                  color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 1),
+                                ))),
+                                child: boldText(
+                                  '승인 수락',
+                                )),
+                            onTap: () {
+                              ArticleAPI()
+                                  .applyStateUpdate(
+                                      articleData.id,
+                                      data.getApplyRoles(article),
+                                      data.uid,
+                                      'confirm')
+                                  .then((value) => showMyDialog(
+                                      context, "승인이 수락되었습니다. ", ""));
+                            },
+                          )),
                       Expanded(
                         flex: 1,
-                        child: Container(
+                        child: InkWell(
+                          child: Container(
                             alignment: Alignment.center,
                             height: 210 / 5,
                             width: MediaQuery.of(context).size.width * 0.5,
                             child: boldText(
                               '승인 거절',
-                            )),
+                            ),
+                          ),
+                          onTap: () {
+                            ArticleAPI()
+                                .applyStateUpdate(
+                                    articleData.id,
+                                    data.getApplyRoles(article),
+                                    data.uid,
+                                    'delete')
+                                .then((value) =>
+                                    showMyDialog(context, "승인이 거절되었습니다. ", ""));
+                          },
+                        ),
                       )
                     ],
                   ))),
@@ -1197,4 +1325,135 @@ List<Widget> rolesLinearTag(List<String> roles) {
     // element =
     // PositionSmallLinear()
   }
+}
+
+List<String> getUidList(Article article) {
+  List<String> uidList = [];
+
+  if (article.detail.applicant.drawAfters?.isEmpty == false) {
+    for (int i = 0; i < article.detail.applicant.drawAfters.length; i++) {
+      bool isExist = false;
+      for (int j = 0; j < uidList.length; j++) {
+        if (uidList[j] == article.detail.applicant.drawAfters[i].uid) {
+          isExist = true;
+          break;
+        }
+      }
+      if (isExist == false)
+        uidList.add(article.detail.applicant.drawAfters[i].uid);
+    }
+  }
+
+  if (article.detail.applicant.drawColors?.isEmpty == false) {
+    for (int i = 0; i < article.detail.applicant.drawColors.length; i++) {
+      bool isExist = false;
+      for (int j = 0; j < uidList.length; j++) {
+        if (uidList[j] == article.detail.applicant.drawColors[i].uid) {
+          isExist = true;
+          break;
+        }
+      }
+      if (isExist == false)
+        uidList.add(article.detail.applicant.drawColors[i].uid);
+    }
+  }
+
+  if (article.detail.applicant.drawChars?.isEmpty == false) {
+    for (int i = 0; i < article.detail.applicant.drawChars.length; i++) {
+      bool isExist = false;
+      for (int j = 0; j < uidList.length; j++) {
+        if (uidList[j] == article.detail.applicant.drawChars[i].uid) {
+          isExist = true;
+          break;
+        }
+      }
+      if (isExist == false)
+        uidList.add(article.detail.applicant.drawChars[i].uid);
+    }
+  }
+
+  if (article.detail.applicant.drawLines?.isEmpty == false) {
+    for (int i = 0; i < article.detail.applicant.drawLines.length; i++) {
+      bool isExist = false;
+      for (int j = 0; j < uidList.length; j++) {
+        if (uidList[j] == article.detail.applicant.drawLines[i].uid) {
+          isExist = true;
+          break;
+        }
+      }
+      if (isExist == false)
+        uidList.add(article.detail.applicant.drawLines[i].uid);
+    }
+  }
+
+  if (article.detail.applicant.drawDessins?.isEmpty == false) {
+    for (int i = 0; i < article.detail.applicant.drawDessins.length; i++) {
+      bool isExist = false;
+      for (int j = 0; j < uidList.length; j++) {
+        if (uidList[j] == article.detail.applicant.drawDessins[i].uid) {
+          isExist = true;
+          break;
+        }
+      }
+      if (isExist == false)
+        uidList.add(article.detail.applicant.drawDessins[i].uid);
+    }
+  }
+
+  if (article.detail.applicant.drawContis?.isEmpty == false) {
+    for (int i = 0; i < article.detail.applicant.drawContis.length; i++) {
+      bool isExist = false;
+      for (int j = 0; j < uidList.length; j++) {
+        if (uidList[j] == article.detail.applicant.drawContis[i].uid) {
+          isExist = true;
+          break;
+        }
+      }
+      if (isExist == false)
+        uidList.add(article.detail.applicant.drawContis[i].uid);
+    }
+  }
+
+  if (article.detail.applicant.drawMains?.isEmpty == false) {
+    for (int i = 0; i < article.detail.applicant.drawMains.length; i++) {
+      bool isExist = false;
+      for (int j = 0; j < uidList.length; j++) {
+        if (uidList[j] == article.detail.applicant.drawMains[i].uid) {
+          isExist = true;
+          break;
+        }
+      }
+      if (isExist == false)
+        uidList.add(article.detail.applicant.drawMains[i].uid);
+    }
+  }
+
+  if (article.detail.applicant.writeMains?.isEmpty == false) {
+    for (int i = 0; i < article.detail.applicant.writeMains.length; i++) {
+      bool isExist = false;
+      for (int j = 0; j < uidList.length; j++) {
+        if (uidList[j] == article.detail.applicant.writeMains[i].uid) {
+          isExist = true;
+          break;
+        }
+      }
+      if (isExist == false)
+        uidList.add(article.detail.applicant.writeMains[i].uid);
+    }
+  }
+
+  if (article.detail.applicant.writeContis?.isEmpty == false) {
+    for (int i = 0; i < article.detail.applicant.writeContis.length; i++) {
+      bool isExist = false;
+      for (int j = 0; j < uidList.length; j++) {
+        if (uidList[j] == article.detail.applicant.writeContis[i].uid) {
+          isExist = true;
+          break;
+        }
+      }
+      if (isExist == false)
+        uidList.add(article.detail.applicant.writeContis[i].uid);
+    }
+  }
+  return uidList;
 }

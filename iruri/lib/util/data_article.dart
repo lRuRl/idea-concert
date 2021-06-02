@@ -136,6 +136,7 @@ class ArticleAPI {
     if (query.length > 0) {
       query += '&uid=' + uid;
     }
+
     /// add [job] to query
     if (query.length > 0) {
       query += '&job=' + job;
@@ -149,6 +150,46 @@ class ArticleAPI {
       print('apply successed');
     } else {
       throw Exception('apply error\n> ' + res.body.toString());
+    }
+  }
+
+  // applyStateUpdate
+  // Example End Point : apply/321?position=drawMains&uid=123&job=confirm
+  Future<void> applyStateUpdate(
+      String articleId, List<String> position, String uid, String job) async {
+    //FIXME: 지금 로컬 계정마다 testUid 의 값이 다른 것 같아서 이부분 유의 !
+    // test uid
+    String testUid = "60b3dc5b154568805eea68e3";
+    // for test
+    if (uid == 'test') uid = testUid;
+    // make query
+    String query = '';
+    for (int i = 0; i < position.length; i++) {
+      query = '';
+      print(position[i]);
+      query += '?position=' + convertPosition(position[i]);
+
+      /// add [uid] to query
+      if (query.length > 0) {
+        query += '&uid=' + uid;
+      }
+
+      /// add [job] to query
+      if (query.length > 0) {
+        query += '&job=' + job;
+      }
+
+      // http.patch
+      String uri = baseURL + 'apply/' + articleId + query;
+      print(uri);
+
+      final res = await http.patch(Uri.parse(uri));
+      // result
+      if (res.statusCode == 200) {
+        print('<$job>State Update successed');
+      } else {
+        throw Exception('apply error\n> ' + res.body.toString());
+      }
     }
   }
 }
