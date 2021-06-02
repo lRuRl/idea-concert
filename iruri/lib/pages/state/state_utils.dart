@@ -115,9 +115,7 @@ boxItem(int index, List<Container> items, BuildContext context, Article data) {
             child: Align(
                 alignment: Alignment.centerRight,
                 child: Text(
-                    "승인대기중 : " +
-                        data.detail.applicant.getAppllicantCount().toString() +
-                        '명',
+                    "승인대기중 : " + getUidList(data).length.toString() + '명',
                     style: articleWriterTextStyle)),
           ),
           // SizedBox(
@@ -1185,10 +1183,11 @@ containerApplys(int index, BuildContext context, User data, Article article) {
                                 Container(
                                   // color: Colors.black,
                                   alignment: Alignment.centerRight,
-                                  width:
-                                      data.profileInfo.roles.length * 50.0 + 8,
+                                  width: data.getApplyRoles(article).length *
+                                          50.0 +
+                                      8,
                                   child: PositionSmallLinear(
-                                      data: data.profileInfo.roles),
+                                      data: data.getApplyRoles(article)),
                                 ),
                               ],
                             ),
@@ -1278,7 +1277,7 @@ containerApplys(int index, BuildContext context, User data, Article article) {
                               ArticleAPI()
                                   .applyStateUpdate(
                                       articleData.id,
-                                      data.profileInfo.roles,
+                                      data.getApplyRoles(article),
                                       data.uid,
                                       'confirm')
                                   .then((value) => showMyDialog(
@@ -1298,8 +1297,11 @@ containerApplys(int index, BuildContext context, User data, Article article) {
                           ),
                           onTap: () {
                             ArticleAPI()
-                                .applyStateUpdate(articleData.id,
-                                    data.profileInfo.roles, data.uid, 'delete')
+                                .applyStateUpdate(
+                                    articleData.id,
+                                    data.getApplyRoles(article),
+                                    data.uid,
+                                    'delete')
                                 .then((value) =>
                                     showMyDialog(context, "승인이 거절되었습니다. ", ""));
                           },
@@ -1328,4 +1330,135 @@ List<Widget> rolesLinearTag(List<String> roles) {
     // element =
     // PositionSmallLinear()
   }
+}
+
+List<String> getUidList(Article article) {
+  List<String> uidList = [];
+
+  if (article.detail.applicant.drawAfters?.isEmpty == false) {
+    for (int i = 0; i < article.detail.applicant.drawAfters.length; i++) {
+      bool isExist = false;
+      for (int j = 0; j < uidList.length; j++) {
+        if (uidList[j] == article.detail.applicant.drawAfters[i].uid) {
+          isExist = true;
+          break;
+        }
+      }
+      if (isExist == false)
+        uidList.add(article.detail.applicant.drawAfters[i].uid);
+    }
+  }
+
+  if (article.detail.applicant.drawColors?.isEmpty == false) {
+    for (int i = 0; i < article.detail.applicant.drawColors.length; i++) {
+      bool isExist = false;
+      for (int j = 0; j < uidList.length; j++) {
+        if (uidList[j] == article.detail.applicant.drawColors[i].uid) {
+          isExist = true;
+          break;
+        }
+      }
+      if (isExist == false)
+        uidList.add(article.detail.applicant.drawColors[i].uid);
+    }
+  }
+
+  if (article.detail.applicant.drawChars?.isEmpty == false) {
+    for (int i = 0; i < article.detail.applicant.drawChars.length; i++) {
+      bool isExist = false;
+      for (int j = 0; j < uidList.length; j++) {
+        if (uidList[j] == article.detail.applicant.drawChars[i].uid) {
+          isExist = true;
+          break;
+        }
+      }
+      if (isExist == false)
+        uidList.add(article.detail.applicant.drawChars[i].uid);
+    }
+  }
+
+  if (article.detail.applicant.drawLines?.isEmpty == false) {
+    for (int i = 0; i < article.detail.applicant.drawLines.length; i++) {
+      bool isExist = false;
+      for (int j = 0; j < uidList.length; j++) {
+        if (uidList[j] == article.detail.applicant.drawLines[i].uid) {
+          isExist = true;
+          break;
+        }
+      }
+      if (isExist == false)
+        uidList.add(article.detail.applicant.drawLines[i].uid);
+    }
+  }
+
+  if (article.detail.applicant.drawDessins?.isEmpty == false) {
+    for (int i = 0; i < article.detail.applicant.drawDessins.length; i++) {
+      bool isExist = false;
+      for (int j = 0; j < uidList.length; j++) {
+        if (uidList[j] == article.detail.applicant.drawDessins[i].uid) {
+          isExist = true;
+          break;
+        }
+      }
+      if (isExist == false)
+        uidList.add(article.detail.applicant.drawDessins[i].uid);
+    }
+  }
+
+  if (article.detail.applicant.drawContis?.isEmpty == false) {
+    for (int i = 0; i < article.detail.applicant.drawContis.length; i++) {
+      bool isExist = false;
+      for (int j = 0; j < uidList.length; j++) {
+        if (uidList[j] == article.detail.applicant.drawContis[i].uid) {
+          isExist = true;
+          break;
+        }
+      }
+      if (isExist == false)
+        uidList.add(article.detail.applicant.drawContis[i].uid);
+    }
+  }
+
+  if (article.detail.applicant.drawMains?.isEmpty == false) {
+    for (int i = 0; i < article.detail.applicant.drawMains.length; i++) {
+      bool isExist = false;
+      for (int j = 0; j < uidList.length; j++) {
+        if (uidList[j] == article.detail.applicant.drawMains[i].uid) {
+          isExist = true;
+          break;
+        }
+      }
+      if (isExist == false)
+        uidList.add(article.detail.applicant.drawMains[i].uid);
+    }
+  }
+
+  if (article.detail.applicant.writeMains?.isEmpty == false) {
+    for (int i = 0; i < article.detail.applicant.writeMains.length; i++) {
+      bool isExist = false;
+      for (int j = 0; j < uidList.length; j++) {
+        if (uidList[j] == article.detail.applicant.writeMains[i].uid) {
+          isExist = true;
+          break;
+        }
+      }
+      if (isExist == false)
+        uidList.add(article.detail.applicant.writeMains[i].uid);
+    }
+  }
+
+  if (article.detail.applicant.writeContis?.isEmpty == false) {
+    for (int i = 0; i < article.detail.applicant.writeContis.length; i++) {
+      bool isExist = false;
+      for (int j = 0; j < uidList.length; j++) {
+        if (uidList[j] == article.detail.applicant.writeContis[i].uid) {
+          isExist = true;
+          break;
+        }
+      }
+      if (isExist == false)
+        uidList.add(article.detail.applicant.writeContis[i].uid);
+    }
+  }
+  return uidList;
 }

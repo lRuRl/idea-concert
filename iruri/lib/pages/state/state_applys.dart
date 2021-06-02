@@ -8,6 +8,7 @@ import 'package:iruri/provider.dart';
 
 // UserAPI
 import 'package:iruri/util/data_user.dart';
+import 'package:iruri/model/profile_info.dart';
 
 // article
 import 'package:iruri/model/article.dart';
@@ -22,8 +23,10 @@ class StateApplys extends StatefulWidget {
 class _StateApplysState extends State<StateApplys> {
   ScrollController scrollController = ScrollController();
   UserAPI userAPI = UserAPI();
+
   var fetchedData;
 
+  List<String> applicantUidList;
   @override
   void initState() {
     fetchedData = userAPI.findAll();
@@ -31,6 +34,7 @@ class _StateApplysState extends State<StateApplys> {
 
   @override
   Widget build(BuildContext context) {
+    final routerWatcher = context.watch<CustomRouter>();
     return Scaffold(
         // APP BAR : Top of application
         //appBar: appBar(4),
@@ -57,31 +61,38 @@ class _StateApplysState extends State<StateApplys> {
                       } else if (snapshot.hasError) {
                         return Center(child: Text('500 - server'));
                       } else {
-                        print(snapshot.data.length.toString());
+                        List<User> userList = snapshot.data;
+                        List<User> filterdList = [];
+                        List<String> applicantUidList =
+                            getUidList(routerWatcher.data);
+
+                        if (userList?.isEmpty == false) {
+                          for (int i = 0; i < userList.length; i++) {
+                            bool isExist = false;
+                            for (int j = 0; j < applicantUidList.length; j++) {
+                              if (userList[i].uid == applicantUidList[j]) {
+                                isExist = true;
+                                filterdList.add(userList[i]);
+                                break;
+                              }
+                            }
+                          }
+                        }
+
                         return Container(
                           width: MediaQuery.of(context).size.width * 1,
                           height: MediaQuery.of(context).size.height * 0.98,
                           child: applicant_vertical(
                               context,
-                              List<Container>.generate(snapshot.data.length,
+                              List<Container>.generate(filterdList.length,
                                   (index) {
                                 return containerApplys(index, context,
-                                    snapshot.data[index], widget.article);
+                                    filterdList[index], routerWatcher.data);
                               })),
                         );
                       }
                     },
                   ),
-
-                  // Container(
-                  //   width: MediaQuery.of(context).size.width * 1,
-                  //   height: MediaQuery.of(context).size.height * 1.0,
-                  //   child: applyProject_vertical(
-                  //       context,
-                  //       List<Container>.generate(5, (index) {
-                  //         return boxItem_apply(index, applyListitems, context);
-                  //       })),
-                  // ),
                 ],
               ),
             )));

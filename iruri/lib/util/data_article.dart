@@ -157,6 +157,7 @@ class ArticleAPI {
   // Example End Point : apply/321?position=drawMains&uid=123&job=confirm
   Future<void> applyStateUpdate(
       String articleId, List<String> position, String uid, String job) async {
+    //FIXME: 지금 로컬 계정마다 testUid 의 값이 다른 것 같아서 이부분 유의 !
     // test uid
     String testUid = "60b3dc5b154568805eea68e3";
     // for test
