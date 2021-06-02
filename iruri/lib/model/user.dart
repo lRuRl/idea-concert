@@ -42,7 +42,7 @@ class User {
         "_id": uid,
         "image": image,
         "portfolio": portfolio,
-        "hasSigned": hasSigned,
+        "hasSigned": hasSigned.toString(),
         "info": profileInfo.toJson()
       };
 
@@ -147,7 +147,7 @@ class ProfileInfo {
       this.roles});
 
   factory ProfileInfo.fromJson(Map<String, dynamic> json) => ProfileInfo(
-      name: json['name'],
+      name: json["name"],
       phoneNumber: json['phoneNumber'],
       roles: List.from(json['roles']),
       nickname: json['nickname'],
@@ -160,12 +160,12 @@ class ProfileInfo {
   Map<String, dynamic> toJson() => {
         "name": name,
         "phoneNumber": phoneNumber,
-        "roles": jsonEncode(roles),
+        "roles": (roles),
         "nickname": nickname,
         "location": location,
-        "programs": jsonEncode(programs),
+        "programs": (programs),
         "desc": desc,
-        "genres": jsonEncode(genres),
+        "genres": (genres),
         "career": career
       };
 }

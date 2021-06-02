@@ -48,7 +48,8 @@ class UserAPI {
   Future<User> findUserById(String id) async {
     final res = await http.get(Uri.parse(baseURL + "/" + id));
     if (res.statusCode == 200) {
-      return User.fromJson(jsonDecode(res.body));
+      print(res.body);
+      return User.fromJson(jsonDecode(res.body)["result"]);
     } else {
       throw Exception(res.body.toString());
     }
@@ -74,11 +75,11 @@ class UserAPI {
   Future<void> updateUserProfile(
       User user, File profileImage, PlatformFile portfolio) async {
     final uid = user.uid;
-    var fileRequest, imageRequest;
+
     if (portfolio != null) {
       /// #1 Portfolio Upload
       /// first step upload portfolio using [MultipartRequest]
-      fileRequest = http.MultipartRequest(
+      var fileRequest = http.MultipartRequest(
           "PATCH", Uri.parse(baseURL + 'upload-user-portfolio/' + uid));
       // multipart
       var fileMultipart = await http.MultipartFile.fromPath(
@@ -86,42 +87,44 @@ class UserAPI {
           contentType: MediaType('multipart', 'formed-data'));
       // add file to multipart
       fileRequest.files.add(fileMultipart);
+      // send request
+      await fileRequest.send();
     }
+    if (profileImage != null) {
+      /// #2 Profile Image and other texts upload
+      /// second step upload Image using [MultipartReqeust]
+      /// File from path and fields needs to be added
+      var imageRequest =
+          http.MultipartRequest("PATCH", Uri.parse(baseURL + uid));
+      var imageMultipart = await http.MultipartFile.fromPath(
+          'file', profileImage.path,
+          contentType: MediaType('image', 'png'));
+      // add file to multipart
+      imageRequest.files.add(imageMultipart);
 
-    /// #2 Profile Image and other texts upload
-    /// second step upload Image using [MultipartReqeust]
-    /// File from path and fields needs to be added
-    imageRequest = http.MultipartRequest("PATCH", Uri.parse(baseURL + uid));
-    var imageMultipart = await http.MultipartFile.fromPath(
-        'file', profileImage.path,
-        contentType: MediaType('image', 'png'));
-    // add file to multipart
-    imageRequest.files.add(imageMultipart);
-
-    /// [User] fill the fields
-    /// we only update [nickname, phoneNumber, career, desc, roles, genres] for text
-    /// List<String> objects needs to be wrapped up by [jsonEncode]
-    imageRequest.fields['info[roles]'] = jsonEncode(user.profileInfo.roles);
-    imageRequest.fields['info[genres]'] = jsonEncode(user.profileInfo.genres);
-    imageRequest.fields['info[nickname]'] = user.profileInfo.nickname;
-    imageRequest.fields['info[phoneNumber]'] = user.profileInfo.phoneNumber;
-    imageRequest.fields['info[desc]'] = user.profileInfo.desc;
-    imageRequest.fields['info[career]'] = user.profileInfo.career;
-    // add content-type about fields
-    imageRequest.headers['Content-Type'] = 'application/json';
-
-    /// #3 Send request to server one-by-one
-    /// use callback [then()] to process the task
-    /// check portfolio is null
-    var response;
-    if (portfolio != null) {
-      response = await fileRequest.send().then((value) => imageRequest.send());
+      /// [User] fill the fields
+      /// we only update [nickname, phoneNumber, career, desc, roles, genres] for text
+      /// List<String> objects needs to be wrapped up by [jsonEncode]
+      imageRequest.fields['info[roles]'] = jsonEncode(user.profileInfo.roles);
+      imageRequest.fields['info[genres]'] = jsonEncode(user.profileInfo.genres);
+      imageRequest.fields['info[nickname]'] = user.profileInfo.nickname;
+      imageRequest.fields['info[phoneNumber]'] = user.profileInfo.phoneNumber;
+      imageRequest.fields['info[desc]'] = user.profileInfo.desc;
+      imageRequest.fields['info[career]'] = user.profileInfo.career;
+      // add content-type about fields
+      imageRequest.headers['Content-Type'] = 'application/json';
+      // send request
+      await imageRequest.send();
     } else {
-      response = await imageRequest.send();
+      /// no profile-image was uploaded
+      /// only update [User] object
+      await http.patch(
+        Uri.parse(baseURL + uid),
+        body: jsonEncode(user.toJson()),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8'
+        },
+      );
     }
-    // listen for response
-    response.stream.transform(utf8.decoder).listen((event) {
-      print(event);
-    });
   }
 }

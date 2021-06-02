@@ -331,6 +331,11 @@ class _ProfileEditState extends State<ProfileEdit> {
         /// properties updated
         /// [nickname, phoneNumber,career,roles, genres, desc]
         profileInfo: ProfileInfo(
+            /// not updated [name, programs, location]
+            name: widget.prevData.profileInfo.name,
+            programs: widget.prevData.profileInfo.programs,
+            location: widget.prevData.profileInfo.location,
+            /// updated property below
             nickname: formKey.currentState.value['nickname'],
             phoneNumber: formKey.currentState.value['phoneNumber'],
             career: formKey.currentState.value['career'],

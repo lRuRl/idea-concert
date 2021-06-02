@@ -12,14 +12,14 @@ module.exports = class UserService {
      * @param {Object} res 
      * @param {Object} updatedRes 
      */
-     updateBinaryProperty = async(res) => {
+    updateBinaryProperty = async (res) => {
         // find imageChunk and portfolio chunk
         const { image, portfolio } = res;
         // #1 find image binary
         if (image != null) {
             // search in files collection
             const searchImage = await UserImage.findOne({ filename: image });
-            if(searchImage != null) {
+            if (searchImage != null) {
                 // search in chunks collection
                 const searchImageChunk = await UserImageChunk.find({ files_id: searchImage._id });
                 var buffer = '';
@@ -31,9 +31,9 @@ module.exports = class UserService {
         if (portfolio != null) {
             // search in files collection
             const searchFile = await File.findOne({ filename: portfolio });
-            if(searchFile != null) {
+            if (searchFile != null) {
                 // search in chunks collection
-                const searchFileChunk = await FileChunk.find({ files_id: searchFile._id});
+                const searchFileChunk = await FileChunk.find({ files_id: searchFile._id });
                 var buffer = '';
                 searchFileChunk.map((doc) => buffer += Buffer.from(doc.data, 'binary').toString('base64'));
                 res['portfolioChunk'] = buffer;
@@ -101,13 +101,12 @@ module.exports = class UserService {
     // 2-1) GET : read by id
     readOne = async (id) => {
         try {
-            const res = await User.findById(id);
-            // get files 
-            console.log(res)
-
-
+            let res = await User.findById(id);
             if (!res) return onGetNotFound;
-            else return onGetSuccess(res);
+            else {
+                res = await this.updateBinaryProperty(res);
+                return onGetSuccess(res);
+            }
         } catch (error) {
             console.error(error);
             return onGetFailure(error);
@@ -166,22 +165,23 @@ module.exports = class UserService {
     // 3-1) PATCH : update only texture
     updateText = async (id, body, img) => {
         try {
-            console.log(JSON.stringify(body));
+            console.log('received data \n>>' + JSON.stringify(body));
             // retrieve data
             const { info } = body;
             // updates are in info
-            const { roles, genres, nickname, phoneNumber, desc, career } = info;
+            const { roles, genres, nickname, phoneNumber, desc, career, name } = info;
             // update data
             var updateData;
             if (img === undefined || !img) {
                 updateData = {
                     info: {
-                        roles: JSON.parse(roles),
-                        genres: JSON.parse(genres),
+                        roles: roles,
+                        genres: genres,
                         nickname: nickname,
                         phoneNumber: phoneNumber,
                         desc: desc,
-                        career: career
+                        career: career,
+                        name: name
                     },
                 };
             }
@@ -189,18 +189,19 @@ module.exports = class UserService {
                 updateData = {
                     image: img,
                     info: {
-                        roles: JSON.parse(roles),
-                        genres: JSON.parse(genres),
+                        roles: roles,
+                        genres: genres,
                         nickname: nickname,
                         phoneNumber: phoneNumber,
                         desc: desc,
-                        career: career
+                        career: career,
+                        name: name
                     },
                 };
             }
             // db query
             const res = await User.findByIdAndUpdate(id, updateData, {
-                returnOriginal: true
+                new: true
             });
             if (!res) return onUpdateNotFound;
             return onUpdateSuccess(body);
@@ -210,6 +211,28 @@ module.exports = class UserService {
         }
     }
     // 3-2) PATCH : update only portfolio file
+    /**
+     * @function updateFile 
+     * @param {ObjectId} id 
+     * @param {String} filepath 
+     * @returns res
+     * 
+     * @todo remove previous data then update the files and files-chunks
+     * #1 @function findById
+     * find the right user document then retrieve portfolio name
+     * #2 @function findOne
+     * find the same filename with retrieved portfolio name
+     * then find the ObjectId of chunk's file_id
+     * #3 @function find
+     * find the same file_id with result._id
+     * #4 remove the items which are stored already
+     * - remove from files.collection
+     * - remove from files-chunks.collction
+     * #4 @function findByIdAndUpdate
+     * use 'id' and 'filepath' to update
+     * cause previous data has removed, now it's available to update with our new data
+     * @author seunghwanly -06-02-2021
+     */
     updateFile = async (id, filepath) => {
         try {
             const res = await User.findByIdAndUpdate(id,
