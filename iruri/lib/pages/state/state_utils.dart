@@ -332,7 +332,7 @@ Widget boldText(String txt) {
 
 Widget boldText2(String txt) {
   return Text(txt,
-      style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold));
+      style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.bold));
 }
 
 Widget selectButton() {
@@ -469,7 +469,7 @@ Widget listItemButton_my(BuildContext context, Article article) {
       ElevatedButton(
           onPressed: () => routerReader.navigateTo(
               routerWatcher.currentPage, '/state/stateapplys',
-              data: article),
+              article: article),
           child: Row(
             children: [
               Icon(
@@ -1090,7 +1090,7 @@ containerApplys(int index, BuildContext context, User data, Article article) {
   // provider
   final routerReader = context.read<CustomRouter>();
   final routerWatcher = context.watch<CustomRouter>();
-  Article articleData = routerReader.data;
+  Article articleData = routerReader.article;
   return Container(
       margin: EdgeInsets.symmetric(
         // horizontal: 10,
@@ -1116,8 +1116,10 @@ containerApplys(int index, BuildContext context, User data, Article article) {
                 children: [
                   GestureDetector(
                     onTap: () => routerReader.navigateTo(
-                        routerWatcher.currentPage, '/personal',
-                        data: data),
+                        routerWatcher.currentPage,
+                        '/state/stateapplys/personal',
+                        data: data,
+                        article: routerWatcher.article),
                     child: Container(
                       width: 120,
                       height: 120,
@@ -1140,8 +1142,10 @@ containerApplys(int index, BuildContext context, User data, Article article) {
                   ),
                   GestureDetector(
                       onTap: () => routerReader.navigateTo(
-                          routerWatcher.currentPage, '/personal',
-                          data: data),
+                          routerWatcher.currentPage,
+                          '/state/stateapplys/personal',
+                          data: data,
+                          article: routerWatcher.article),
                       child: Container(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         width: 210,
@@ -1159,8 +1163,10 @@ containerApplys(int index, BuildContext context, User data, Article article) {
                                 ),
                                 InkWell(
                                   onTap: () => routerReader.navigateTo(
-                                      routerWatcher.currentPage, '/personal',
-                                      data: data),
+                                      routerWatcher.currentPage,
+                                      '/state/stateapplys/personal',
+                                      data: data,
+                                      article: routerWatcher.article),
                                   child:
                                       Icon(FeatherIcons.chevronRight, size: 15),
                                 ),

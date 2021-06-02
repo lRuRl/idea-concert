@@ -56,6 +56,7 @@ class _RoutesState extends State<Routes> {
     '/state/projectdetail': StateProjectDetailPage(),
     '/state/fillcontract': FillContractPage(),
     '/state/stateapplys': StateApplys(),
+    '/state/stateapplys/personal': PersonalPage(),
   };
 
   @override
@@ -115,8 +116,19 @@ class _RoutesState extends State<Routes> {
           ? IconButton(
               icon: Icon(Icons.keyboard_arrow_left_rounded, color: primaryLine),
               onPressed: () => routerReader.navigateTo(
-                  routerWatcher.currentPage, routerWatcher.prevPage),
-            )
+                    routerWatcher.currentPage ==
+                                '/state/stateapplys/personal' &&
+                            routerWatcher.prevPage == '/state/stateapplys'
+                        ? '/state'
+                        : routerWatcher.currentPage,
+                    routerWatcher.currentPage ==
+                                '/state/stateapplys/personal' &&
+                            routerWatcher.prevPage == '/state/stateapplys'
+                        ? '/state/stateapplys'
+                        : routerWatcher.prevPage,
+                    data: routerWatcher.data,
+                    article: routerWatcher.article,
+                  ))
           : SizedBox(),
     );
   }

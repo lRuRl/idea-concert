@@ -35,6 +35,9 @@ class _StateApplysState extends State<StateApplys> {
   @override
   Widget build(BuildContext context) {
     final routerWatcher = context.watch<CustomRouter>();
+
+    //
+
     return Scaffold(
         // APP BAR : Top of application
         //appBar: appBar(4),
@@ -61,10 +64,12 @@ class _StateApplysState extends State<StateApplys> {
                       } else if (snapshot.hasError) {
                         return Center(child: Text('500 - server'));
                       } else {
+                        // print(routerWatcher.article.id);
                         List<User> userList = snapshot.data;
                         List<User> filterdList = [];
+
                         List<String> applicantUidList =
-                            getUidList(routerWatcher.data);
+                            getUidList(routerWatcher.article);
 
                         if (userList?.isEmpty == false) {
                           for (int i = 0; i < userList.length; i++) {
@@ -87,7 +92,7 @@ class _StateApplysState extends State<StateApplys> {
                               List<Container>.generate(filterdList.length,
                                   (index) {
                                 return containerApplys(index, context,
-                                    filterdList[index], routerWatcher.data);
+                                    filterdList[index], routerWatcher.article);
                               })),
                         );
                       }

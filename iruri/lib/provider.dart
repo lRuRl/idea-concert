@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iruri/model/article.dart';
 import 'package:iruri/model/user.dart';
 
 class CustomRouter with ChangeNotifier {
@@ -7,11 +8,15 @@ class CustomRouter with ChangeNotifier {
   String _prevPage = '/';
   dynamic _data;
   bool isLoggedin = false;
+  User _user;
+  Article _article;
 
   int get index => _tapIndex;
   String get currentPage => _currPage;
   String get prevPage => _prevPage;
   dynamic get data => _data != null ? _data : 'undefined';
+  User get user => _user != null ? _user : new User();
+  Article get article => _article != null ? _article : new Article();
 
   CustomRouter(this.isLoggedin);
 
@@ -26,12 +31,14 @@ class CustomRouter with ChangeNotifier {
     notifyListeners();
   }
 
-  void navigateTo(String from, String dest, {dynamic data}) {
+  void navigateTo(String from, String dest,
+      {dynamic data, User user, Article article}) {
     _prevPage = from;
     _currPage = dest;
 
     // data
     _data = data;
+    _article = article;
     notifyListeners();
   }
 }
