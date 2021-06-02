@@ -71,7 +71,7 @@ module.exports = (app) => {
         if (!file) {
             console.log("no profile image");
         }
-        const { status, result } = await userService.updateText(req.params.id, req.body, !file ? null : file);
+        const { status, result } = await userService.updateText(req.params.id, req.body, !file ? null : file.filename);
         return res.status(status).send(result);
     })
     router.patch('/upload-user-portfolio/:id', uploadFilesMiddleware, async (req, res) => {

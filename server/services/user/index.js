@@ -6,7 +6,41 @@ const { File, UserImage, UserImageChunk, FileChunk } = require('../../models/fil
 module.exports = class UserService {
     // constructor
     constructor() { }
-
+    /**
+     * @function updateBinaryProperty
+     * update binary files to object 
+     * @param {Object} res 
+     * @param {Object} updatedRes 
+     */
+     updateBinaryProperty = async(res) => {
+        // find imageChunk and portfolio chunk
+        const { image, portfolio } = res;
+        // #1 find image binary
+        if (image != null) {
+            // search in files collection
+            const searchImage = await UserImage.findOne({ filename: image });
+            if(searchImage != null) {
+                // search in chunks collection
+                const searchImageChunk = await UserImageChunk.find({ files_id: searchImage._id });
+                var buffer = '';
+                searchImageChunk.map((doc) => buffer += Buffer.from(doc.data, 'binary').toString('base64'));
+                res['imageChunk'] = buffer;
+            }
+        }
+        // #2 find file binary
+        if (portfolio != null) {
+            // search in files collection
+            const searchFile = await File.findOne({ filename: portfolio });
+            if(searchFile != null) {
+                // search in chunks collection
+                const searchFileChunk = await FileChunk.find({ files_id: searchFile._id});
+                var buffer = '';
+                searchFileChunk.map((doc) => buffer += Buffer.from(doc.data, 'binary').toString('base64'));
+                res['portfolioChunk'] = buffer;
+            }
+        }
+        return res;
+    }
     /**
      *  functions
      *  1) user profile upload  -> POST
@@ -68,6 +102,10 @@ module.exports = class UserService {
     readOne = async (id) => {
         try {
             const res = await User.findById(id);
+            // get files 
+            console.log(res)
+
+
             if (!res) return onGetNotFound;
             else return onGetSuccess(res);
         } catch (error) {
@@ -128,26 +166,41 @@ module.exports = class UserService {
     // 3-1) PATCH : update only texture
     updateText = async (id, body, img) => {
         try {
+            console.log(JSON.stringify(body));
             // retrieve data
-            const { roles, info } = body;
+            const { info } = body;
+            // updates are in info
+            const { roles, genres, nickname, phoneNumber, desc, career } = info;
             // update data
             var updateData;
             if (img === undefined || !img) {
                 updateData = {
-                    roles: roles,
-                    info: info,
+                    info: {
+                        roles: JSON.parse(roles),
+                        genres: JSON.parse(genres),
+                        nickname: nickname,
+                        phoneNumber: phoneNumber,
+                        desc: desc,
+                        career: career
+                    },
                 };
             }
             else {
                 updateData = {
-                    roles: roles,
-                    info: info,
-                    image: img
+                    image: img,
+                    info: {
+                        roles: JSON.parse(roles),
+                        genres: JSON.parse(genres),
+                        nickname: nickname,
+                        phoneNumber: phoneNumber,
+                        desc: desc,
+                        career: career
+                    },
                 };
             }
             // db query
             const res = await User.findByIdAndUpdate(id, updateData, {
-                new: true
+                returnOriginal: true
             });
             if (!res) return onUpdateNotFound;
             return onUpdateSuccess(body);
@@ -210,10 +263,13 @@ module.exports = class UserService {
     }
     /** @function signIn check id and pw */
     signIn = async (id, pw) => {
-        const res = await User.findOne({ id: id });
+        let res = await User.findOne({ id: id });
         if (!res) return onGetNotFound;
         else {
-            if (res.pw === pw) return onGetSuccess(res);
+            if (res.pw === pw) {
+                res = await this.updateBinaryProperty(res);
+                return onGetSuccess(res);
+            }
             else return {
                 status: 400,
                 result: 'wrong password'

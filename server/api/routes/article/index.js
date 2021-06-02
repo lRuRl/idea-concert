@@ -37,17 +37,20 @@ module.exports = (app) => {
         const { status, result } = await articleService.post(req.body, file);
         return res.status(status).send(result);
     });
+
     /** @function articleReadAll */
     router.get('/', async (req, res) => {
         console.log('msg received : GET ALL')
         const { status, result } = await articleService.readAll();
         return res.status(status).send(result);
     })
+
     /** @function articleFindById */
     router.get('/:id', async (req, res) => {
         const { status, result } = await articleService.readOne(req.params.id);
         return res.status(status).send(result);
     })
+
     /** @function articleUpdate */
     router.patch('/:id', uploadFilesMiddleware, async (req, res) => {
         var file = req.file;
@@ -55,11 +58,13 @@ module.exports = (app) => {
         const { status, result } = await articleService.update(req.params.id, req.body, file.filename);
         return res.status(status).send(result);
     })
+
     /** @function deleteAritcle */
     router.delete('/:id', async (req, res) => {
         const { status, result } = await articleService.delete(req.params.id);
         return res.status(status).send(result);
     })
+    
     /**
      *  extra function except basic CRUD - nested pages
      *  @param {string} req.params.id - Article _id
