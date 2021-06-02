@@ -27,6 +27,8 @@ dependencies:
   google_fonts: ^2.1.0
   # image upload
   image_picker: ^0.7.5
+  # file
+  file_picker: ^3.0.2+2
   # icon
   flutter_feather_icons: ^2.0.0+1
   # form builder
