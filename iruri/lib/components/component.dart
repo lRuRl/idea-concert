@@ -244,8 +244,7 @@ class _ImageWrapperState extends State<ImageWrapper> {
 }
 
 class Position_Small extends StatelessWidget {
-  List<String> data;
-  Position_Small({this.data});
+  final List<String> data = ["채색", "콘티", "선화", "캐릭터"];
 
   @override
   Widget build(BuildContext context) {
