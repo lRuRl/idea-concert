@@ -122,7 +122,7 @@ class _MyProfileState extends State<MyProfile> {
                                   data.profileInfo.roles.length != 0
                                       ? data.profileInfo.roles
                                           .toString()
-                                          .replaceAll(RegExp(r"(\[)|(\])"), '')
+                                          .replaceAll(RegExp(r'(\[)|(")|(\])'), '')
                                       : "정보가 없습니다.",
                                   overflow: TextOverflow.visible,
                                 )),
@@ -140,7 +140,7 @@ class _MyProfileState extends State<MyProfile> {
                                         ? data.profileInfo.genres
                                             .toString()
                                             .replaceAll(
-                                                RegExp(r"(\[)|(\])"), '')
+                                                RegExp(r'(\[)|(")|(\])'), '')
                                         : "정보가 없습니다.",
                                     overflow: TextOverflow.visible)),
                             subProfileItem(
