@@ -11,7 +11,11 @@ import 'package:iruri/components/spacing.dart';
 import 'package:iruri/components/typhography.dart';
 import 'package:iruri/model/article.dart';
 import 'package:iruri/pages/home/muliple_choice_chip.dart';
+import 'package:iruri/provider.dart';
 import 'package:iruri/util/data_article.dart';
+
+// provider
+import 'package:provider/provider.dart';
 
 class PostArticle extends StatefulWidget {
   /*
@@ -138,6 +142,7 @@ class _PostArticleState extends State<PostArticle> {
   Widget build(BuildContext context) {
     // size
     final size = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -453,7 +458,7 @@ class _PostArticleState extends State<PostArticle> {
                               .showSnackBar(SnackBar(
                                   content: Text('새로운 게시글이 등록되었습니다 !')))),
                       child: Text(
-                        "지원하기",
+                        "작성하기",
                         style: notoSansTextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -519,6 +524,8 @@ class _PostArticleState extends State<PostArticle> {
   void setItemFromDropDown(String item) => location = item;
 
   void setUploadData() {
+    // provider
+    final user = Provider.of<UserState>(context, listen: false);
     // save current state
     if (this.thumbnail != null) {
       setState(() {
@@ -529,7 +536,8 @@ class _PostArticleState extends State<PostArticle> {
             image: null,
             detail: new Detail(
                 location: location,
-                writer: 'tester',
+                // user-id
+                writer: user.currentUser.uid,
                 status: '모집중',
                 reportedDate: DateFormat('yyyy-MM-ddTHH:mm:ss.mmm')
                     .format(new DateTime.now())
