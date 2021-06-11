@@ -6,8 +6,10 @@ import 'package:iruri/components/spacing.dart';
 import 'package:iruri/components/text_form_field.dart';
 import 'package:iruri/components/typhography.dart';
 import 'package:iruri/model/article.dart';
+import 'package:iruri/model/user.dart';
 import 'package:iruri/pages/home/muliple_choice_chip.dart';
 import 'package:iruri/util/data_article.dart';
+import 'package:iruri/util/data_user.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -41,7 +43,9 @@ class _HomePageState extends State<HomePage> {
   TextEditingController textEditingController;
   // var tags;
   var fetchedData;
+  var fetchedUserData;
   ArticleAPI api = new ArticleAPI();
+  UserAPI apiUser = new UserAPI();
 
   // data
   // save data
@@ -92,6 +96,7 @@ class _HomePageState extends State<HomePage> {
     textEditingController = new TextEditingController();
     // fetchedData added : 2021/05/18 @seunghwanly
     fetchedData = api.findAll();
+    fetchedUserData = apiUser.findAll();
   }
 
   @override
@@ -107,8 +112,8 @@ class _HomePageState extends State<HomePage> {
             searchContainer(),
             SizedBox(height: 20),
             // RECRUIT CONTAINER
-            FutureBuilder(
-              future: fetchedData,
+            FutureBuilder<List<dynamic>>(
+              future: Future.wait([fetchedData, fetchedUserData]),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Container(
@@ -119,7 +124,7 @@ class _HomePageState extends State<HomePage> {
                 } else if (snapshot.hasError) {
                   return Center(child: Text('500 - server'));
                 } else {
-                  return recruitContainer(snapshot.data);
+                  return recruitContainer(snapshot.data[0], snapshot.data[1]);
                 }
               },
             )
@@ -197,7 +202,7 @@ class _HomePageState extends State<HomePage> {
         ),
       );
 
-  Widget recruitContainer(List<Article> data) {
+  Widget recruitContainer(List<Article> data, List<User> users) {
     return Column(
       children: <Widget>[
         Align(
@@ -247,9 +252,7 @@ class _HomePageState extends State<HomePage> {
               itemCount: data.length, // 리스트 뷰안에 있는 자식 객체 수
               itemBuilder: (context, index) {
                 /// TODO [ filtering ] for states that are set
-                return HomeArticle(
-                  data: data[index],
-                );
+                return HomeArticle(data: data[index], users: users);
               },
             ))
       ],

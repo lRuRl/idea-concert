@@ -27,12 +27,25 @@ const Widget divider = Divider(color: Color(0xFFEEEEEE), thickness: 1);
 class HomeArticle extends StatelessWidget {
   // data input
   final Article data;
-  const HomeArticle({this.data});
+  final List<User> users;
+  const HomeArticle({this.data, this.users});
+
+  String getUidtoID() {
+    String uid = data.detail.writer;
+    List<User> users = this.users;
+    String result = '';
+    for (int i = 0; i < users.length; i++) {
+      if (users[i].uid == uid) {
+        result = users[i].id;
+      }
+    }
+    return result;
+  }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-
+    final writerID = getUidtoID();
     // provider
     final routerReader = context.read<CustomRouter>();
     final routerWatcher = context.watch<CustomRouter>();
@@ -132,9 +145,9 @@ class HomeArticle extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Text(
-                                  data.detail.writer.length > 10
-                                      ? data.detail.writer.substring(0, 10)
-                                      : data.detail.writer,
+                                  writerID.length > 10
+                                      ? writerID.substring(0, 10)
+                                      : writerID,
                                   style: articleWriterTextStyle),
                               Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
