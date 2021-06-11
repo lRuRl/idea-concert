@@ -120,12 +120,11 @@ class _ProjectListPageState extends State<ProjectListPage> {
                       List<Article> filteredMyList = [];
                       UserState userState = context.watch<UserState>();
                       String username = userState.currentUser.uid;
-                      print('username : '+username);
+
                       for (int i = 0; i < filteredList.length; i++) {
                         List<String> uidList = getUidList(filteredList[i]);
                         bool isExist = false;
                         for (int j = 0; j < uidList.length; j++) {
-                          print(uidList[j]);
                           if (uidList[j] == username) {
                             isExist = true;
                             break;
