@@ -1128,15 +1128,9 @@ containerApplys(int index, BuildContext context, User data, Article article) {
                         borderRadius: BorderRadius.all(Radius.circular(12)),
                       ),
                       child: Center(
-                        child: SizedBox(
-                          height: 90,
-                          width: 90,
-                          child: data.image != null
+                        child: data.image != null
                               ? ImageWrapper(image: data.imageChunk)
                               : Image.asset('assets/default.png'),
-
-                          // child: Image.asset('assets/default.png'),
-                        ),
                       ),
                     ),
                   ),
