@@ -249,35 +249,72 @@ Widget applyProject(BuildContext context, List<Container> items) {
   // provider
   final routerReader = context.read<CustomRouter>();
   final routerWatcher = context.watch<CustomRouter>();
-
-  return Column(children: [
-    Expanded(
-        flex: 1,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            boldText("내가 지원한 프로젝트 "),
-            IconButton(
-              onPressed: () {
-                // Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //       builder: (BuildContext context) => ApplyListPage(),
-                //     ));
-                // use Provider - updated 04.12.21 by seunghwanly
-                routerReader.navigateTo(
-                    routerWatcher.currentPage, '/state/applylist');
-              },
-              icon: Icon(Icons.chevron_right, size: 30),
-            )
-          ],
-        )),
-    Expanded(
-      flex: 4,
-      child: myList(items),
-    ),
-    Expanded(flex: 1, child: Text('')),
-  ]);
+  if (items.length != 0) {
+    return Column(children: [
+      Expanded(
+          flex: 1,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              boldText("내가 지원한 프로젝트 "),
+              IconButton(
+                onPressed: () {
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //       builder: (BuildContext context) => ApplyListPage(),
+                  //     ));
+                  // use Provider - updated 04.12.21 by seunghwanly
+                  routerReader.navigateTo(
+                      routerWatcher.currentPage, '/state/applylist');
+                },
+                icon: Icon(Icons.chevron_right, size: 30),
+              )
+            ],
+          )),
+      Expanded(
+        flex: 4,
+        child: myList(items),
+      ),
+      Expanded(flex: 1, child: Text('')),
+    ]);
+  } else {
+    return Column(children: [
+      Expanded(
+          flex: 1,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              boldText("내가 지원한 프로젝트 "),
+              IconButton(
+                onPressed: () {
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //       builder: (BuildContext context) => ApplyListPage(),
+                  //     ));
+                  // use Provider - updated 04.12.21 by seunghwanly
+                  routerReader.navigateTo(
+                      routerWatcher.currentPage, '/state/applylist');
+                },
+                icon: Icon(Icons.chevron_right, size: 30),
+              )
+            ],
+          )),
+      Expanded(
+          flex: 4,
+          child: Column(
+            children: [
+              SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.2,
+                  height: MediaQuery.of(context).size.height * 0.2,
+                  child: Image.asset('assets/default.png')),
+              Text("지원한 게시글이 없네요")
+            ],
+          )),
+      Expanded(flex: 1, child: Text('')),
+    ]);
+  }
 }
 
 Widget applicant_vertical(BuildContext context, List<Container> items) {
@@ -516,24 +553,55 @@ Widget myProject(BuildContext context, List<Container> items) {
   // provider
   final routerReader = context.read<CustomRouter>();
   final routerWatcher = context.watch<CustomRouter>();
-
-  return Column(children: [
-    Expanded(
-        flex: 1,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            boldText("내가 올린 프로젝트 "),
-            IconButton(
-              onPressed: () => routerReader.navigateTo(
-                  routerWatcher.currentPage, '/state/myproject'),
-              icon: Icon(Icons.chevron_right, size: 30),
-            )
-          ],
-        )),
-    Expanded(flex: 8, child: myList(items)),
-    Expanded(flex: 1, child: SizedBox()),
-  ]);
+  print(items?.isEmpty);
+  if (items.length != 0) {
+    return Column(children: [
+      Expanded(
+          flex: 1,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              boldText("내가 올린 프로젝트 "),
+              IconButton(
+                onPressed: () => routerReader.navigateTo(
+                    routerWatcher.currentPage, '/state/myproject'),
+                icon: Icon(Icons.chevron_right, size: 30),
+              )
+            ],
+          )),
+      Expanded(flex: 8, child: myList(items)),
+      Expanded(flex: 1, child: SizedBox()),
+    ]);
+  } else {
+    return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+      Expanded(
+          flex: 1,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              boldText("내가 올린 프로젝트 "),
+              IconButton(
+                onPressed: () => routerReader.navigateTo(
+                    routerWatcher.currentPage, '/state/myproject'),
+                icon: Icon(Icons.chevron_right, size: 30),
+              )
+            ],
+          )),
+      Expanded(flex: 1, child: SizedBox()),
+      Expanded(
+          flex: 6,
+          child: Column(
+            children: [
+              SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.2,
+                  height: MediaQuery.of(context).size.height * 0.2,
+                  child: Image.asset('assets/default.png')),
+              Text("작성한 게시글이 없네요")
+            ],
+          )),
+      Expanded(flex: 1, child: SizedBox()),
+    ]);
+  }
 }
 
 Widget myProject_vertical(BuildContext context, List<Container> items) {
