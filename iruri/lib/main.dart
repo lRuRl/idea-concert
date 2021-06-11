@@ -24,9 +24,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       // 우측 상단에 DEBUG 표시 제거
-
       debugShowCheckedModeBanner: false,
-      home: Provider.of<UserState>(context).currentUser != null
+      home: Provider.of<UserState>(context).currentUser != null && Provider.of<CustomRouter>(context).isLoggedin
           ? Routes()
           : LoginPage(),
       // home: Routes(),
