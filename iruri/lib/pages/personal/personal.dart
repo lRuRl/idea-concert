@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iruri/model/user.dart';
 import 'dart:io'; // for image
 
 /// [todo] change to objectid
@@ -25,6 +26,43 @@ class _PersonalPageState extends State<PersonalPage> {
   @override
   Widget build(BuildContext context) {
     final user = context.watch<UserState>();
+    final router = context.watch<CustomRouter>();
+    if (router.data.runtimeType == User) {
+      return Container(
+        child: SingleChildScrollView(
+          controller: scrollController,
+          child: Column(
+            children: <Widget>[
+              MyProfile(userData: router.data),
+              subContainerWithTopBorder(subComponentDetail(
+                  context: context,
+                  onPressed: () => Clipboard.setData(
+                          new ClipboardData(text: router.data.uid))
+                      .then((value) =>
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('클립보드로 복사되었습니다.'),
+                          ))),
+                  child:
+                      Text(router.data.uid, style: articleWriterTextStyle),
+                  name: '고유코드 정보',
+                  btnName: '복사')),
+              subContainerWithTopBorder(subComponentDetail(
+                  context: context,
+                  onPressed: () => print('portfolio'),
+                  child: Text(
+                    router.data.portfolio != null
+                      ? router.data.portfolio.substring(
+                          router.data.portfolio.indexOf('-') + 1)
+                          : '정보가 없습니다.',
+                      style: articleWriterTextStyle),
+                  name: '포트폴리오 관리',
+                  btnName: '조회')),
+              logout()
+            ],
+          ),
+        ),
+      );
+    }
     if (user.currentUser != null) {
       return Container(
         child: SingleChildScrollView(
@@ -48,8 +86,10 @@ class _PersonalPageState extends State<PersonalPage> {
                   context: context,
                   onPressed: () => print('portfolio'),
                   child: Text(
-                      user.currentUser.portfolio.substring(
-                          user.currentUser.portfolio.indexOf('-') + 1),
+                    user.currentUser.portfolio != null
+                      ? user.currentUser.portfolio.substring(
+                          user.currentUser.portfolio.indexOf('-') + 1)
+                          : '정보가 없습니다.',
                       style: articleWriterTextStyle),
                   name: '포트폴리오 관리',
                   btnName: '조회')),

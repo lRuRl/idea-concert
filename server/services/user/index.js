@@ -115,7 +115,37 @@ module.exports = class UserService {
     // 2-2) GET : read all users
     readAll = async () => {
         try {
-            const res = await User.find();
+            // need to send chunks to client
+            let res = await User.find();
+            const updateRes = async () => {
+
+                for (let document of res) {
+                    const { image, portfolio } = document;
+                    // imageChunk update
+                    if (image != null) {
+                        const searchImage = await UserImage.findOne({ filename: image });
+                        if (searchImage != null) {
+                            // get chunks
+                            const searchImageChunk = await UserImageChunk.find({ files_id: searchImage._id });
+                            var buffer = '';
+                            searchImageChunk.map((doc) => buffer += Buffer.from(doc.data, 'binary').toString('base64'));
+                            document['imageChunk'] = buffer;
+                        }
+                    }
+                    if (portfolio != null) {
+                        const searchFile = await File.findOne({ filename: portfolio });
+                        if (searchFile != null) {
+                            // get chunks
+                            const searchFileChunk = await FileChunk.find({ files_id: searchFile._id });
+                            var buffer = '';
+                            searchFileChunk.map((doc) => buffer += Buffer.from(doc.data, 'binary').toString('base64'));
+                            document['portfolioChunk'] = buffer;
+                        }
+                    }
+                }
+            }
+            await updateRes();
+
             if (!res) return onGetNotFound;
             return onGetSuccess(res);
         } catch (error) {

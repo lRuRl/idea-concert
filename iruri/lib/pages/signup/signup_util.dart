@@ -70,7 +70,7 @@ class _UserInfoState extends State<UserInfo> {
 
   Widget emailForm() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 25),
+      padding: EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         children: [
           Expanded(flex: 1, child: Text("아이디")),
@@ -99,7 +99,7 @@ class _UserInfoState extends State<UserInfo> {
 
   Widget passwordForm() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 25),
+      padding: EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         children: [
           Expanded(flex: 1, child: Text("비밀번호")),
@@ -129,7 +129,7 @@ class _UserInfoState extends State<UserInfo> {
 
   Widget nameForm() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 25),
+      padding: EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         children: [
           Expanded(flex: 1, child: Text("이름")),
@@ -158,7 +158,7 @@ class _UserInfoState extends State<UserInfo> {
 
   Widget phoneNumberForm() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 25),
+      padding: EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         children: [
           Expanded(flex: 1, child: Text("전화번호")),

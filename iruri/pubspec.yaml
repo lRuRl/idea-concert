@@ -79,6 +79,8 @@ flutter:
     - assets/네이버.png
     - assets/default.png
     - assets/loading.gif
+    - assets/contract1.pdf
+    - assets/contract2.pdf
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

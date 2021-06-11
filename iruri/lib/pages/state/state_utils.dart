@@ -1196,15 +1196,9 @@ containerApplys(int index, BuildContext context, User data, Article article) {
                         borderRadius: BorderRadius.all(Radius.circular(12)),
                       ),
                       child: Center(
-                        child: SizedBox(
-                          height: 90,
-                          width: 90,
-                          // child: data.image. != null
-                          //     ? ImageWrapper(image: data.image)
-                          //     : Image.asset('assets/default.png'),
-
-                          child: Image.asset('assets/default.png'),
-                        ),
+                        child: data.image != null
+                              ? ImageWrapper(image: data.imageChunk)
+                              : Image.asset('assets/default.png'),
                       ),
                     ),
                   ),
@@ -1217,7 +1211,7 @@ containerApplys(int index, BuildContext context, User data, Article article) {
                       child: Container(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         width: 210,
-                        height: 120,
+                        height: 140,
                         color: Colors.white,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1280,6 +1274,8 @@ containerApplys(int index, BuildContext context, User data, Article article) {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
+                                Flexible(
+                                  child:
                                 Text(
                                     data.profileInfo.genres?.isEmpty ?? true
                                         ? '선호 장르 : 미작성'
@@ -1290,7 +1286,8 @@ containerApplys(int index, BuildContext context, User data, Article article) {
                                         fontSize: 10,
                                         fontFamily: "Roboto",
                                         color: Color.fromRGBO(
-                                            0x77, 0x77, 0x77, 1))),
+                                            0x77, 0x77, 0x77, 1)),
+                                            overflow: TextOverflow.visible)),
                               ],
                             ),
                             Row(

@@ -242,6 +242,7 @@ class _HomePageState extends State<HomePage> {
             alignment: Alignment.center,
             child: ListView.builder(
               controller: scrollController,
+              reverse: true,
               shrinkWrap: true, // 자동으로 길이를 조정해주는 느낌
               itemCount: data.length, // 리스트 뷰안에 있는 자식 객체 수
               itemBuilder: (context, index) {
