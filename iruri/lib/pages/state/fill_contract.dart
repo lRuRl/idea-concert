@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iruri/components/component.dart';
 import 'package:iruri/model/article.dart';
-import 'package:iruri/model/article_sample.dart';
 import 'package:iruri/pages/home/project_detail_components.dart';
 import 'package:iruri/pages/state/state_utils.dart';
 
@@ -16,26 +15,11 @@ class FillContractPage extends StatefulWidget {
 
 class _FillContractPageState extends State<FillContractPage> {
   ScrollController scrollController = new ScrollController();
-  bool _isLoading = true;
-  String pathPDF = "";
   int pages = 0;
 
   @override
   void initState() {
     super.initState();
-
-    createFileOfPdfUrl().then((f) {
-      setState(() {
-        pathPDF = f.path;
-        _isLoading = false;
-      });
-    });
-
-    // fromAsset('assets/example.pdf', 'example.pdf').then((f) {
-    //   setState(() {
-    //     pathPDF = f.path;
-    //   });
-    // });
   }
 
   @override
@@ -80,8 +64,8 @@ class _FillContractPageState extends State<FillContractPage> {
                       child: projectCalendar(context, data),
                     ),
                     contractTitle(context),
-                    AgreeContract(pdfPath: pathPDF, index: 1),
-                    AgreeContract(pdfPath: pathPDF, index: 2),
+                    AgreeContract(pdfPath: "contract1", index: 1),
+                    AgreeContract(pdfPath: "contract2", index: 2),
                     Container(
                         width: MediaQuery.of(context).size.width * 1,
                         padding:

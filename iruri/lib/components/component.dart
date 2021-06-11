@@ -452,19 +452,27 @@ class _AgreeContractState extends State<AgreeContract> {
   int index;
   bool _isLoading = true;
 
-  String pdfPath;
+  String contract;
   @override
   void initState() {
     super.initState();
     index = widget.index;
-    pdfPath = widget.pdfPath;
+    contract = widget.pdfPath;
 
-    createFileOfPdfUrl().then((f) {
+    // createFileOfPdfUrl().then((f) {
+    //   setState(() {
+    //     pdfPath = f.path;
+    //     _isLoading = false;
+    //   });
+    // });
+
+    fromAsset('assets/$contract.pdf', '$contract.pdf').then((f) async{
       setState(() {
-        pdfPath = f.path;
-        _isLoading = false;
+        contract = f.path;
+         _isLoading = false;
       });
     });
+
   }
 
   @override
@@ -517,7 +525,7 @@ class _AgreeContractState extends State<AgreeContract> {
           child: _isLoading
               ? Center(child: CircularProgressIndicator())
               : PDFView(
-                  filePath: pdfPath,
+                  filePath: contract,
                   enableSwipe: true,
                   swipeHorizontal: true,
                   autoSpacing: false,
