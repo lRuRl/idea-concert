@@ -63,6 +63,7 @@ class _ProjectListPageState extends State<ProjectListPage> {
                       return Center(child: Text('500 - server'));
                     } else {
                       List<Article> filteredList = snapshot.data;
+
                       List<Article> filteredMyList = [];
                       UserState userState = context.watch<UserState>();
                       String username = userState.currentUser.uid;
@@ -129,8 +130,8 @@ class _ProjectListPageState extends State<ProjectListPage> {
                             break;
                           }
                         }
-                        if (isExist == false) {
-                          filteredList.removeAt(i);
+                        if (isExist == true) {
+                          filteredMyList.add(filteredList[i]);
                         }
                       }
 
@@ -139,10 +140,10 @@ class _ProjectListPageState extends State<ProjectListPage> {
                         height: MediaQuery.of(context).size.height * 0.98,
                         child: applyProject(
                             context,
-                            List<Container>.generate(filteredList.length,
+                            List<Container>.generate(filteredMyList.length,
                                 (index) {
                               return boxItem_apply(
-                                  index, items, context, filteredList[index]);
+                                  index, items, context, filteredMyList[index]);
                             })),
                       );
                     }
