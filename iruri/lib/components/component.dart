@@ -131,9 +131,10 @@ class HomeArticle extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text(data.detail.writer.length > 10 
-                              ? data.detail.writer.substring(0, 10)
-                              : data.detail.writer,
+                              Text(
+                                  data.detail.writer.length > 10
+                                      ? data.detail.writer.substring(0, 10)
+                                      : data.detail.writer,
                                   style: articleWriterTextStyle),
                               Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
@@ -452,13 +453,12 @@ class _AgreeContractState extends State<AgreeContract> {
     //   });
     // });
 
-    fromAsset('assets/$contract.pdf', '$contract.pdf').then((f) async{
+    fromAsset('assets/$contract.pdf', '$contract.pdf').then((f) async {
       setState(() {
         contract = f.path;
-         _isLoading = false;
+        _isLoading = false;
       });
     });
-
   }
 
   @override

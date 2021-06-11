@@ -1,6 +1,11 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:iruri/model/user.dart';
 import 'dart:io'; // for image
+import 'dart:async';
+import 'dart:convert';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
 
 /// [todo] change to objectid
 import 'package:provider/provider.dart';
@@ -27,7 +32,9 @@ class _PersonalPageState extends State<PersonalPage> {
   Widget build(BuildContext context) {
     final user = context.watch<UserState>();
     final router = context.watch<CustomRouter>();
+
     if (router.data.runtimeType == User) {
+      User others = router.data;
       return Container(
         child: SingleChildScrollView(
           controller: scrollController,
@@ -42,17 +49,17 @@ class _PersonalPageState extends State<PersonalPage> {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text('클립보드로 복사되었습니다.'),
                           ))),
-                  child:
-                      Text(router.data.uid, style: articleWriterTextStyle),
+                  child: Text(router.data.uid, style: articleWriterTextStyle),
                   name: '고유코드 정보',
                   btnName: '복사')),
               subContainerWithTopBorder(subComponentDetail(
                   context: context,
-                  onPressed: () => print('portfolio'),
+                  onPressed: () =>
+                      showPDFDialog(context, others.portfolioChunk),
                   child: Text(
-                    router.data.portfolio != null
-                      ? router.data.portfolio.substring(
-                          router.data.portfolio.indexOf('-') + 1)
+                      router.data.portfolio != null
+                          ? router.data.portfolio
+                              .substring(router.data.portfolio.indexOf('-') + 1)
                           : '정보가 없습니다.',
                       style: articleWriterTextStyle),
                   name: '포트폴리오 관리',
@@ -64,6 +71,8 @@ class _PersonalPageState extends State<PersonalPage> {
       );
     }
     if (user.currentUser != null) {
+      UserState userState = context.watch<UserState>();
+      String portfolio = userState.currentUser.portfolioChunk;
       return Container(
         child: SingleChildScrollView(
           controller: scrollController,
@@ -84,11 +93,11 @@ class _PersonalPageState extends State<PersonalPage> {
                   btnName: '복사')),
               subContainerWithTopBorder(subComponentDetail(
                   context: context,
-                  onPressed: () => print('portfolio'),
+                  onPressed: () => showPDFDialog(context, portfolio),
                   child: Text(
-                    user.currentUser.portfolio != null
-                      ? user.currentUser.portfolio.substring(
-                          user.currentUser.portfolio.indexOf('-') + 1)
+                      user.currentUser.portfolio != null
+                          ? user.currentUser.portfolio.substring(
+                              user.currentUser.portfolio.indexOf('-') + 1)
                           : '정보가 없습니다.',
                       style: articleWriterTextStyle),
                   name: '포트폴리오 관리',
@@ -101,6 +110,45 @@ class _PersonalPageState extends State<PersonalPage> {
     } else {
       return Center(child: Text('사용자정보가 없습니다.'));
     }
+  }
+
+  showPDFDialog(BuildContext context, String base64) {
+    print(base64);
+    Uint8List bytes = base64Decode(base64);
+
+    ScrollController scrollController = new ScrollController();
+
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.0)),
+            backgroundColor: Colors.white,
+            elevation: 2.0,
+            child: Container(
+                width: MediaQuery.of(context).size.width * 1.0,
+                height: MediaQuery.of(context).size.height * 0.7,
+                // padding: EdgeInsets.all(8.0),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        flex: 5,
+                        child: PDFView(
+                          pdfData: bytes,
+                          enableSwipe: true,
+                          swipeHorizontal: true,
+                          autoSpacing: false,
+                          pageFling: true,
+                          pageSnap: true,
+                          fitPolicy: FitPolicy.BOTH,
+                        ),
+                      )
+                    ])));
+      },
+    );
   }
 
   Container subContainerWithTopBorder(Widget child) => Container(
