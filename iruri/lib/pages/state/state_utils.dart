@@ -110,7 +110,7 @@ boxItem(int index, List<Container> items, BuildContext context, Article data) {
             child: Align(
                 alignment: Alignment.centerRight,
                 child: Text(
-                    "승인대기중 : " + getUidList(data).length.toString() + '명',
+                    "승인대기중 : " + getUidList(data)[0].length.toString() + '명',
                     style: articleWriterTextStyle)),
           ),
           // SizedBox(
@@ -126,6 +126,16 @@ boxItem_apply(
   // provider
   final routerReader = context.read<CustomRouter>();
   final routerWatcher = context.watch<CustomRouter>();
+  List<String> uidlist = getUidList(data)[0];
+  List<int> statusList = getUidList(data)[1];
+  List<String> roleList = getUidList(data)[2];
+
+  print('uid : ' + uidlist.length.toString());
+  print('stat : ' + statusList.length.toString());
+  print(statusList[0]);
+  print(statusList[1]);
+  print(roleList[index]);
+
   return Container(
       margin: EdgeInsets.symmetric(
         horizontal: 10,
@@ -186,7 +196,7 @@ boxItem_apply(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 ApprovalState(
-                                  stateIndex: index % 3,
+                                  stateIndex: statusList[index],
                                 ),
                               ],
                             ),
@@ -196,7 +206,7 @@ boxItem_apply(
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text("지원한 부분",
+                                Text("모집 부분",
                                     style: TextStyle(
                                         fontSize: 10,
                                         fontFamily: "Roboto",
@@ -213,7 +223,7 @@ boxItem_apply(
                               ],
                             ),
                             Row(
-                              children: [Position_Small()],
+                              children: [Position_Small(data: roleList)],
                             )
                           ],
                         ),
@@ -928,7 +938,8 @@ class _SelectBoxApplyState extends State<SelectBoxApply> {
             TextButton(
                 onPressed: () {
                   ArticleAPI()
-                      .apply(widget.data.id, selectedList, user.currentUser.uid, 'new')
+                      .apply(widget.data.id, selectedList, user.currentUser.uid,
+                          'new')
                       .then((value) => showMyDialog(context, "신청이 완료 되었습니다.",
                           "자세한 지원 사항은 나의 페이지에서 확인 할 수 있습니다."))
                       .then((value) => Navigator.pop(context));
@@ -1198,8 +1209,8 @@ containerApplys(int index, BuildContext context, User data, Article article) {
                       ),
                       child: Center(
                         child: data.image != null
-                              ? ImageWrapper(image: data.imageChunk)
-                              : Image.asset('assets/default.png'),
+                            ? ImageWrapper(image: data.imageChunk)
+                            : Image.asset('assets/default.png'),
                       ),
                     ),
                   ),
@@ -1276,19 +1287,18 @@ containerApplys(int index, BuildContext context, User data, Article article) {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Flexible(
-                                  child:
-                                Text(
-                                    data.profileInfo.genres?.isEmpty ?? true
-                                        ? '선호 장르 : 미작성'
-                                        : '선호 장르 : ' +
-                                            getGenreList(
-                                                data.profileInfo.genres),
-                                    style: TextStyle(
-                                        fontSize: 10,
-                                        fontFamily: "Roboto",
-                                        color: Color.fromRGBO(
-                                            0x77, 0x77, 0x77, 1)),
-                                            overflow: TextOverflow.visible)),
+                                    child: Text(
+                                        data.profileInfo.genres?.isEmpty ?? true
+                                            ? '선호 장르 : 미작성'
+                                            : '선호 장르 : ' +
+                                                getGenreList(
+                                                    data.profileInfo.genres),
+                                        style: TextStyle(
+                                            fontSize: 10,
+                                            fontFamily: "Roboto",
+                                            color: Color.fromRGBO(
+                                                0x77, 0x77, 0x77, 1)),
+                                        overflow: TextOverflow.visible)),
                               ],
                             ),
                             Row(
@@ -1399,8 +1409,10 @@ List<Widget> rolesLinearTag(List<String> roles) {
   }
 }
 
-List<String> getUidList(Article article) {
+List<dynamic> getUidList(Article article) {
   List<String> uidList = [];
+  List<String> roleList = [];
+  List<int> statusList = [];
 
   if (article.detail.applicant.drawAfters?.isEmpty == false) {
     for (int i = 0; i < article.detail.applicant.drawAfters.length; i++) {
@@ -1411,8 +1423,11 @@ List<String> getUidList(Article article) {
           break;
         }
       }
-      if (isExist == false)
+      if (isExist == false) {
         uidList.add(article.detail.applicant.drawAfters[i].uid);
+        statusList.add(article.detail.applicant.drawAfters[i].status);
+        roleList.add('후보정');
+      }
     }
   }
 
@@ -1425,8 +1440,11 @@ List<String> getUidList(Article article) {
           break;
         }
       }
-      if (isExist == false)
+      if (isExist == false) {
         uidList.add(article.detail.applicant.drawColors[i].uid);
+        statusList.add(article.detail.applicant.drawColors[i].status);
+        roleList.add('채색');
+      }
     }
   }
 
@@ -1439,8 +1457,11 @@ List<String> getUidList(Article article) {
           break;
         }
       }
-      if (isExist == false)
+      if (isExist == false) {
         uidList.add(article.detail.applicant.drawChars[i].uid);
+        statusList.add(article.detail.applicant.drawChars[i].status);
+        roleList.add('캐릭터');
+      }
     }
   }
 
@@ -1453,8 +1474,11 @@ List<String> getUidList(Article article) {
           break;
         }
       }
-      if (isExist == false)
+      if (isExist == false) {
         uidList.add(article.detail.applicant.drawLines[i].uid);
+        roleList.add('선화');
+        statusList.add(article.detail.applicant.drawLines[i].status);
+      }
     }
   }
 
@@ -1467,8 +1491,11 @@ List<String> getUidList(Article article) {
           break;
         }
       }
-      if (isExist == false)
+      if (isExist == false) {
+        roleList.add('뎃생');
         uidList.add(article.detail.applicant.drawDessins[i].uid);
+        statusList.add(article.detail.applicant.drawDessins[i].status);
+      }
     }
   }
 
@@ -1481,8 +1508,11 @@ List<String> getUidList(Article article) {
           break;
         }
       }
-      if (isExist == false)
+      if (isExist == false) {
+        roleList.add('그림콘티');
         uidList.add(article.detail.applicant.drawContis[i].uid);
+        statusList.add(article.detail.applicant.drawContis[i].status);
+      }
     }
   }
 
@@ -1495,8 +1525,11 @@ List<String> getUidList(Article article) {
           break;
         }
       }
-      if (isExist == false)
+      if (isExist == false) {
+        roleList.add('메인그림');
         uidList.add(article.detail.applicant.drawMains[i].uid);
+        statusList.add(article.detail.applicant.drawMains[i].status);
+      }
     }
   }
 
@@ -1509,8 +1542,11 @@ List<String> getUidList(Article article) {
           break;
         }
       }
-      if (isExist == false)
+      if (isExist == false) {
+        roleList.add('글콘티');
         uidList.add(article.detail.applicant.writeMains[i].uid);
+        statusList.add(article.detail.applicant.writeMains[i].status);
+      }
     }
   }
 
@@ -1523,9 +1559,12 @@ List<String> getUidList(Article article) {
           break;
         }
       }
-      if (isExist == false)
+      if (isExist == false) {
+        roleList.add('메인글');
         uidList.add(article.detail.applicant.writeContis[i].uid);
+        statusList.add(article.detail.applicant.writeContis[i].status);
+      }
     }
   }
-  return uidList;
+  return [uidList, statusList, roleList];
 }
