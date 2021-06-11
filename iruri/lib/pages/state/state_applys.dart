@@ -69,7 +69,7 @@ class _StateApplysState extends State<StateApplys> {
                         List<User> filterdList = [];
 
                         List<String> applicantUidList =
-                            getUidList(routerWatcher.article)[0];
+                            getUidList(routerWatcher.article);
 
                         if (userList?.isEmpty == false) {
                           for (int i = 0; i < userList.length; i++) {

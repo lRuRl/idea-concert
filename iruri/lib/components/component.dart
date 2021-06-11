@@ -53,7 +53,8 @@ class HomeArticle extends StatelessWidget {
     return InkWell(
         onTap: () => routerReader.navigateTo(
             routerWatcher.currentPage, '/home/projectdetail',
-            data: writerID, article: data),
+            data: writerID,
+            article: data),
         child: Container(
           width: size.width * 0.9,
           height: size.width * 0.4,
@@ -144,7 +145,9 @@ class HomeArticle extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text(writerID, style: articleWriterTextStyle),
+                              Text(
+                                  writerID,
+                                  style: articleWriterTextStyle),
                               Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: <Text>[
@@ -244,8 +247,7 @@ class _ImageWrapperState extends State<ImageWrapper> {
 }
 
 class Position_Small extends StatelessWidget {
-  List<String> data;
-  Position_Small({this.data});
+  final List<String> data = ["채색", "콘티", "선화", "캐릭터"];
 
   @override
   Widget build(BuildContext context) {
@@ -395,19 +397,9 @@ class _PositionChangeState extends State<PositionChange> {
 
 // ignore: must_be_immutable
 class ApprovalState extends StatelessWidget {
-  int stateIndex;
+  int stateIndex = 0;
   ApprovalState({this.stateIndex});
   final List<String> data = ["승인대기", "승인수락", "승인거절"];
-  String getData() {
-    if (stateIndex == 0)
-      return '승인대기';
-    else if (stateIndex == 1)
-      return '승인수락';
-    else if (stateIndex == -1)
-      return '승인거절';
-    else
-      return '승인대기';
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -439,7 +431,7 @@ class ApprovalState extends StatelessWidget {
                         itemCount: 1,
                         itemBuilder: (context, index) => TagWrapper(
                               onPressed: () => print('tag pressed'),
-                              tag: getData(),
+                              tag: data[this.stateIndex],
                             ))),
               )
             ]));
