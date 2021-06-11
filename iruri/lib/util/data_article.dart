@@ -116,10 +116,6 @@ class ArticleAPI {
   // apply
   Future<void> apply(
       String articleId, List<String> position, String uid, String job) async {
-    // test uid
-    String testUid = "609a84c2bc084d78594849d0";
-    // for test
-    uid = testUid;
     // make query
     String query = '';
 

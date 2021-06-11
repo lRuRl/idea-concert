@@ -20,7 +20,7 @@ Widget thumbnail(BuildContext context, Article data) {
   );
 }
 
-Widget noticeDetail(BuildContext context, Article data) {
+Widget noticeDetail(BuildContext context, Article data, String writerID) {
   return Container(
     child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -48,7 +48,7 @@ Widget noticeDetail(BuildContext context, Article data) {
           // Position_Small_Linear(),
           Row(
             children: [
-              Text(data.detail.writer + " | ",
+              Text(writerID + " | ",
                   style: TextStyle(
                       color: Color.fromRGBO(0x00, 0x00, 0x00, 1),
                       fontWeight: FontWeight.w700,

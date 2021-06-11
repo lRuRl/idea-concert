@@ -808,6 +808,7 @@ class _SelectBoxApplyState extends State<SelectBoxApply> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    final user = context.watch<UserState>();
     return Container(
         padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
         decoration: BoxDecoration(
@@ -927,7 +928,7 @@ class _SelectBoxApplyState extends State<SelectBoxApply> {
             TextButton(
                 onPressed: () {
                   ArticleAPI()
-                      .apply(widget.data.id, selectedList, 'tester', 'new')
+                      .apply(widget.data.id, selectedList, user.currentUser.uid, 'new')
                       .then((value) => showMyDialog(context, "신청이 완료 되었습니다.",
                           "자세한 지원 사항은 나의 페이지에서 확인 할 수 있습니다."))
                       .then((value) => Navigator.pop(context));

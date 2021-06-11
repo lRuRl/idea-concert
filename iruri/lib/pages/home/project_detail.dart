@@ -15,7 +15,8 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    Article data = context.watch<CustomRouter>().data;
+    Article data = context.watch<CustomRouter>().article;
+    String writerID = context.watch<CustomRouter>().data;
     String mode = 'user';
 
     return Scaffold(
@@ -37,7 +38,7 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                     width: MediaQuery.of(context).size.width * 1,
                     height: MediaQuery.of(context).size.height * 0.2,
                     padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                    child: noticeDetail(context, data),
+                    child: noticeDetail(context, data, writerID),
                   ),
                   Container(
                     decoration: BoxDecoration(

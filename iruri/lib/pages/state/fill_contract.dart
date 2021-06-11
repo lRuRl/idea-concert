@@ -47,7 +47,7 @@ class _FillContractPageState extends State<FillContractPage> {
                       height: MediaQuery.of(context).size.height * 0.2,
                       padding:
                           EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                      child: noticeDetail(context, data),
+                      child: noticeDetail(context, data, 'super@iruri.com'),
                     ),
                     Container(
                       decoration: BoxDecoration(

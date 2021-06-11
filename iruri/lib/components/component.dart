@@ -53,7 +53,8 @@ class HomeArticle extends StatelessWidget {
     return InkWell(
         onTap: () => routerReader.navigateTo(
             routerWatcher.currentPage, '/home/projectdetail',
-            data: data),
+            data: writerID,
+            article: data),
         child: Container(
           width: size.width * 0.9,
           height: size.width * 0.4,
@@ -145,9 +146,7 @@ class HomeArticle extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Text(
-                                  writerID.length > 10
-                                      ? writerID.substring(0, 10)
-                                      : writerID,
+                                  writerID,
                                   style: articleWriterTextStyle),
                               Row(
                                   mainAxisAlignment: MainAxisAlignment.end,

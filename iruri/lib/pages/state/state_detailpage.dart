@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:iruri/model/article.dart';
-import 'package:iruri/model/article_sample.dart';
 import 'package:iruri/pages/home/project_detail_components.dart';
 import 'package:iruri/pages/state/state_utils.dart';
 import 'package:iruri/components/typhography.dart';
@@ -41,7 +40,7 @@ class _StateProjectDetailPageState extends State<StateProjectDetailPage> {
                     width: MediaQuery.of(context).size.width * 1,
                     height: MediaQuery.of(context).size.height * 0.2,
                     padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                    child: noticeDetail(context, data),
+                    child: noticeDetail(context, data, 'super@iruri.com'),
                   ),
                   Container(
                     decoration: BoxDecoration(
