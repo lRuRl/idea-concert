@@ -48,8 +48,10 @@ class _PersonalPageState extends State<PersonalPage> {
                   context: context,
                   onPressed: () => print('portfolio'),
                   child: Text(
-                      user.currentUser.portfolio.substring(
-                          user.currentUser.portfolio.indexOf('-') + 1),
+                    user.currentUser.portfolio != null
+                      ? user.currentUser.portfolio.substring(
+                          user.currentUser.portfolio.indexOf('-') + 1)
+                          : '정보가 없습니다.',
                       style: articleWriterTextStyle),
                   name: '포트폴리오 관리',
                   btnName: '조회')),
