@@ -128,6 +128,13 @@ boxItem_apply(
   final routerWatcher = context.watch<CustomRouter>();
   List<String> uidlist = getUidList(data)[0];
   List<int> statusList = getUidList(data)[1];
+  List<String> roleList = getUidList(data)[2];
+
+  print('uid : ' + uidlist.length.toString());
+  print('stat : ' + statusList.length.toString());
+  print(statusList[0]);
+  print(statusList[1]);
+  print(roleList[index]);
 
   return Container(
       margin: EdgeInsets.symmetric(
@@ -216,7 +223,7 @@ boxItem_apply(
                               ],
                             ),
                             Row(
-                              children: [Position_Small()],
+                              children: [Position_Small(data: roleList)],
                             )
                           ],
                         ),
