@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/typhography.dart';
 
@@ -26,6 +25,7 @@ InputDecoration lightWhiteNoneBorderTextInputBox(
         labelStyle: notoSansTextStyle(),
         fillColor: lightWhite,
         filled: true);
+
 InputDecoration lightWhiteNoneBorderWithIconTextInputBox = InputDecoration(
     // boder
     border: noneBorder,
