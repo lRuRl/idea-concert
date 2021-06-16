@@ -8,7 +8,8 @@ import 'package:iruri/components/typhography.dart';
 import 'package:iruri/model/article.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:iruri/pages/state/state_utils.dart';
+import 'package:iruri/pages/state/state_utils/state_component.dart';
+import 'package:iruri/pages/state/state_utils/state_function.dart';
 
 Widget thumbnail(BuildContext context, Article data) {
   return Image.memory(

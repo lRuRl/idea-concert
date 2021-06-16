@@ -11,7 +11,8 @@ import 'package:iruri/components/typhography.dart';
 import 'package:iruri/model/article.dart';
 import 'package:iruri/model/user.dart';
 import 'package:iruri/pages/home/muliple_choice_chip.dart';
-import 'package:iruri/pages/state/state_utils.dart';
+import 'package:iruri/pages/state/state_utils/state_component.dart';
+import 'package:iruri/pages/state/state_utils/state_function.dart';
 import 'package:iruri/util/data_user.dart';
 // provider
 import 'package:provider/provider.dart';
@@ -53,8 +54,7 @@ class HomeArticle extends StatelessWidget {
     return InkWell(
         onTap: () => routerReader.navigateTo(
             routerWatcher.currentPage, '/home/projectdetail',
-            data: writerID,
-            article: data),
+            data: writerID, article: data),
         child: Container(
           width: size.width * 0.9,
           height: size.width * 0.4,
@@ -145,9 +145,7 @@ class HomeArticle extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text(
-                                  writerID,
-                                  style: articleWriterTextStyle),
+                              Text(writerID, style: articleWriterTextStyle),
                               Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: <Text>[

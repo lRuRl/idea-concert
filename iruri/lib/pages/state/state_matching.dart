@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
-import 'state_utils.dart';
+// State Utils
+import 'package:iruri/pages/state/state_utils/state_component.dart';
+import 'package:iruri/pages/state/state_utils/state_function.dart';
+// Model
 import 'package:iruri/util/data_article.dart';
 import 'package:iruri/model/article.dart';
 // provider
 import 'package:provider/provider.dart';
 import 'package:iruri/provider.dart';
 
-class ProjectListPage extends StatefulWidget {
+class MatchingPage extends StatefulWidget {
   @override
-  _ProjectListPageState createState() => _ProjectListPageState();
+  _MatchingPageState createState() => _MatchingPageState();
 }
 
-class _ProjectListPageState extends State<ProjectListPage> {
+class _MatchingPageState extends State<MatchingPage> {
   var fetchedData;
   ArticleAPI api = new ArticleAPI();
 
@@ -23,15 +26,8 @@ class _ProjectListPageState extends State<ProjectListPage> {
     fetchedData = api.findAll();
   }
 
-  // @override
-  // void initState() {
-  //   ListViewHorizontal();
-  //   ListViewHorizontal_apply();
-  // }
-
   @override
   Widget build(BuildContext context) {
-    final routerWatcher = context.watch<CustomRouter>();
     return SingleChildScrollView(
         controller: scrollController,
         child: Container(
@@ -67,13 +63,11 @@ class _ProjectListPageState extends State<ProjectListPage> {
                       List<Article> filteredMyList = [];
                       UserState userState = context.watch<UserState>();
                       String username = userState.currentUser.uid;
-
                       for (int i = 0; i < filteredList.length; i++) {
                         if (filteredList[i].detail.writer == username) {
                           filteredMyList.add(filteredList[i]);
                         }
                       }
-
                       return Container(
                         width: MediaQuery.of(context).size.width * 1,
                         height: MediaQuery.of(context).size.height * 0.98,
@@ -82,18 +76,12 @@ class _ProjectListPageState extends State<ProjectListPage> {
                             List<Container>.generate(filteredMyList.length,
                                 (index) {
                               return boxItem(
-                                  index, items, context, filteredMyList[index]);
+                                  index, context, filteredMyList[index]);
                             })),
                       );
                     }
                   },
                 ),
-
-                // myProject(
-                // context,
-                // List<Container>.generate(5, (index) {
-                //   return boxItem(index, items, context);
-                // })),
               ),
               Container(
                 decoration: BoxDecoration(
@@ -143,35 +131,15 @@ class _ProjectListPageState extends State<ProjectListPage> {
                             List<Container>.generate(filteredMyList.length,
                                 (index) {
                               return boxItem_apply(
-                                  index, items, context, filteredMyList[index]);
+                                  index, context, filteredMyList[index]);
                             })),
                       );
                     }
                   },
                 ),
-
-                // applyProject(
-                //   context,
-                //   List<Container>.generate(5, (index) {
-                //     return boxItem_apply(index, items, context);
-                //   })),
               ),
             ],
           ),
         ));
   }
 }
-
-List<Container> items;
-// ListViewHorizontal() {
-//   items = List<Container>.generate(5, (index) {
-//     return boxItem(index, items);
-//   });
-// }
-
-// List<Container> items_apply;
-// ListViewHorizontal_apply() {
-//   items_apply = List<Container>.generate(5, (index) {
-//     return boxItem_apply(index, items);
-//   });
-// }

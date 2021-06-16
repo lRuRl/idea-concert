@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
-import 'state_utils.dart';
-import 'package:iruri/routes.dart';
+// State Utils
+import 'package:iruri/pages/state/state_utils/state_component.dart';
+// Model
 import 'package:iruri/util/data_article.dart';
 
 class ApplyListPage extends StatefulWidget {
   @override
   _ApplyListPageState createState() => _ApplyListPageState();
 }
-
-List<Container> applyListitems;
-// ListViewVertical(BuildContext context) {
-//   applyListitems = List<Container>.generate(5, (index) {
-//     return boxItem_apply(index, applyListitems, context,);
-//   });
-// }
 
 class _ApplyListPageState extends State<ApplyListPage> {
   ScrollController scrollController = new ScrollController();
@@ -61,23 +55,13 @@ class _ApplyListPageState extends State<ApplyListPage> {
                               context,
                               List<Container>.generate(snapshot.data.length,
                                   (index) {
-                                return boxItem_apply(index, applyListitems,
-                                    context, snapshot.data[index]);
+                                return boxItem_apply(
+                                    index, context, snapshot.data[index]);
                               })),
                         );
                       }
                     },
                   ),
-
-                  // Container(
-                  //   width: MediaQuery.of(context).size.width * 1,
-                  //   height: MediaQuery.of(context).size.height * 1.0,
-                  //   child: applyProject_vertical(
-                  //       context,
-                  //       List<Container>.generate(5, (index) {
-                  //         return boxItem_apply(index, applyListitems, context);
-                  //       })),
-                  // ),
                 ],
               ),
             )));

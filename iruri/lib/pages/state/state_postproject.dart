@@ -1,21 +1,15 @@
 import 'package:flutter/material.dart';
-import 'state_utils.dart';
-import 'package:iruri/routes.dart';
+// State Utils
+import 'package:iruri/pages/state/state_utils/state_component.dart';
+// Model
 import 'package:iruri/util/data_article.dart';
 
-class MyprojectPage extends StatefulWidget {
+class PostProjectPage extends StatefulWidget {
   @override
-  _MyprojectPageState createState() => _MyprojectPageState();
+  _PostProjectPageState createState() => _PostProjectPageState();
 }
 
-List<Container> myProjectListItems;
-// ListViewVertical() {
-//   myProjectListItems = List<Container>.generate(5, (index) {
-//     return boxItem(index, myProjectListItems);
-//   });
-// }
-
-class _MyprojectPageState extends State<MyprojectPage> {
+class _PostProjectPageState extends State<PostProjectPage> {
   ScrollController scrollController = new ScrollController();
 
   var fetchedData;
@@ -63,8 +57,8 @@ class _MyprojectPageState extends State<MyprojectPage> {
                               context,
                               List<Container>.generate(snapshot.data.length,
                                   (index) {
-                                return boxItem(index, myProjectListItems,
-                                    context, snapshot.data[index]);
+                                return boxItem(
+                                    index, context, snapshot.data[index]);
                               })),
                         );
                       }
