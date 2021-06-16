@@ -64,11 +64,35 @@ dotenv를 사용해서 설정값을 내부에서 관리하고 외부로 노출�
 
 각 모델 내에서 sub 객체와 같은 경우에는 ObjectID를 생성하지 않도록 하였다.
 
+*file과 같은 경우에는 gridFS로 자동생성되는 내용을 기반으로 모델을 구현하였다.*
+
 ## services
 본 프로젝트의 작업을 가장 많이 담당하는 소스 코드 부분이다. service 내에서 중복되는 코드는 gridfs를 사용하여 분할된 데이터들을 한번에 담아서 클라이언트에게 반환해주는 작업이 사용될 때 발생한다. 이를 하나의 함수로 축약한다면 더 효율적인 코드가 탄생할 것으로 보인다. 
+
+services 내에서는 DB작업을 함께 진행하므로 기능에 맞는 함수를 사용해야하며 `Array` 파싱으로는 `JSON.parse`를 이용해 클라이언트에서 요청되어서 올때 `jsonEncode()`를 사용하였다. 
+
+중요한 기능 중에 하나는 이미지나 파일과 같이 Buffer로 값을 전달해야할 때 반환되는 result 값안에 buffer로 담아서 전송해야한다. buffer를 만들때는 collection내에 하나의 파일이 권장되는 사이즈를 넘길 경우 여러 파일로 분산되어 저장되기 때문에 이를 모두 합쳐서 전송해주어야한다.
+
+MongoDB에서는 하나의 파일에 대해서 여러 document로 분산되어 저장될 경우, driver가 자동으로 n이란 property에 순번을 매겨서 작업해주기 때문에 이를 참고해서 buffer에 붙여주면 된다. 자세한 내용은 제 블로그에 작성해두었습니다. 
+
+[블로그 바로가기 👉](https://velog.io/@seunghwanly/Flutter-Express.js-MongoDB-%ED%8C%8C%EC%9D%BC-%EC%97%85%EB%A1%9C%EB%93%9CFile-Upload-1)
 
 ## subscribers
 해당 디렉토리는 사용하지 않는다.
 
 ## types
 현재는 service에서 사용되는 return 값을 담당하고 있다. 서비스마다 return하는 status 값이 동일한 경우가 많기 때문에, not found | success | failure 이렇게 세개로 나누어서 작동하게 된다. 
+
+예를 들어서 코드를 아래와 같이 작성할 수 있다.
+```js
+var onPostSuccess = (body) => {
+    return {
+        status: 200,
+        result: {
+            message: "[POST] msg received",
+            result: body
+        }
+    };
+}
+```
+반환값은 모두 Object내에서 `status`와 `result`를 담아 반환하도록 하였다. `status` 코드는 크게 `200`, `404` 그리고 `500`을 사용하였고 api > routes에서 요청값으로 올바르지 않을 값이 도착했을 때는 `400`을 반환하도록 하였다. `result`값 안에는 클라이언트가 알아볼 수 있도록 `message`를 설정해 결과가 어떻게 되었는지 알려주고 `result`안에는 요청한 `body`를 같이 반환하였다. 
