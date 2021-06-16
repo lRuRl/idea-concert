@@ -4,8 +4,16 @@
 3 계층 구조 관련 게시글은 [**hopsprings2님의 블로그**](https://velog.io/@hopsprings2/%EA%B2%AC%EA%B3%A0%ED%95%9C-node.js-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%EC%95%84%ED%82%A4%ED%85%8D%EC%B3%90-%EC%84%A4%EA%B3%84%ED%95%98%EA%B8%B0)에서 확인할 수 있다.
 
 ## init project
-1. .env 파일 생성하기
-2. npm install
+1. `.env` 파일 생성하기
+
+``` plain
+PORT=3000
+DB_URI=mongodb://127.0.0.1:27017/ideaconcert
+```
+
+위에 처럼 포트번호와 DB URI를 써서 파일을 생성한다.
+
+2. `npm install`
 
     package.json 이 있는 파일에서 `npm install`을 해주세요. 필요한 패키지가 다운이 됩니다.
 
