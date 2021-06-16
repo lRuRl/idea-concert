@@ -32,7 +32,8 @@ class _PersonalPageState extends State<PersonalPage> {
   Widget build(BuildContext context) {
     final user = context.watch<UserState>();
     final router = context.watch<CustomRouter>();
-
+    
+    /// [view user] in list applicant -> specific user
     if (router.data.runtimeType == User) {
       User others = router.data;
       return Container(
@@ -70,6 +71,7 @@ class _PersonalPageState extends State<PersonalPage> {
         ),
       );
     }
+    /// view information of [currentUser] the user who has signed-in now
     if (user.currentUser != null) {
       UserState userState = context.watch<UserState>();
       String portfolio = userState.currentUser.portfolioChunk;
@@ -112,11 +114,12 @@ class _PersonalPageState extends State<PersonalPage> {
     }
   }
 
+  /// the viewer of [portfolio] which is uploaded in Database
+  /// [context] for using dialog
+  /// [base64] is used for buffer which is downloaded from server
   showPDFDialog(BuildContext context, String base64) {
-    print(base64);
+    // encode to Unit8List
     Uint8List bytes = base64Decode(base64);
-
-    ScrollController scrollController = new ScrollController();
 
     return showDialog(
       context: context,
@@ -150,21 +153,25 @@ class _PersonalPageState extends State<PersonalPage> {
       },
     );
   }
-
+  /// set Component with lightWhite border at the top
+  /// border color is set to [lightWhite]
   Container subContainerWithTopBorder(Widget child) => Container(
         decoration: BoxDecoration(
           border: Border(
             top: BorderSide(
-                width: 5, color: Color.fromRGBO(0xf2, 0xf2, 0xf2, 1)),
+                width: 5, color: lightWhite),
           ),
-          color: Color.fromRGBO(255, 255, 255, 1),
+          color: Colors.white,
         ),
         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
         width: MediaQuery.of(context).size.width * 1,
         height: MediaQuery.of(context).size.height * 0.12,
         child: child,
       );
-
+  
+  /// the functional component with [TextButton]
+  /// using [Provider] of CustomRouter to set current user sign-out
+  /// when using Provider outside of context, [listen] property must be set to false
   Widget logout() {
     return Container(
         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
@@ -179,7 +186,11 @@ class _PersonalPageState extends State<PersonalPage> {
           child: Text('로그아웃', style: TextStyle(color: greyText)),
         ));
   }
-
+  /// [context] for using MediaQuery 
+  /// [onPressed] for ElevatedButton
+  /// [child] for dynamic Component
+  /// [name] for Header Title
+  /// [btnName] for Elevated Button
   Widget subComponentDetail(
       {BuildContext context,
       Function onPressed,

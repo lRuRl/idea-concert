@@ -28,8 +28,13 @@ TextStyle articleDuedateTextStyle2 =
 TextStyle buttonWhiteTextStyle =
     TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold);
 
+/// naming syntax start with [color]
+/// middle part of name is Text
+/// end of the name is [FontSize]
+TextStyle whiteText14 = TextStyle(color: Colors.white, fontSize: 14);
+
 // Markdown standard
-// @param FontWeight
+// FontWeight
 // NotoSansKR
 TextStyle notoSansTextStyle(
         {double fontSize, FontWeight fontWeight, Color textColor}) =>

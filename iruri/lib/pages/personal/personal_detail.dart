@@ -221,9 +221,11 @@ class _MyProfileState extends State<MyProfile> {
         width: 80,
         height: 30,
         margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-        child: RaisedButton(
-          padding: EdgeInsets.all(3),
-          color: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            padding: EdgeInsets.all(3),
+            primary: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
+          ),
           onPressed: () => showDialog(
               context: context,
               barrierDismissible: false,
@@ -234,16 +236,7 @@ class _MyProfileState extends State<MyProfile> {
                       margin: EdgeInsets.symmetric(horizontal: 60),
                       child: Expanded(
                           child: ElevatedButton(
-                              onPressed: () {
-                                changeIndex();
-                                // updateDB(User(
-                                //     uid: this._id,
-                                //     portfolio: null,
-                                //     profileInfo: ProfileInfo(
-                                //       nickname: nicknameEditor_.text,
-                                //       phoneNumber: phoneNumberEditor_.text,
-                                //     )));
-                              },
+                              onPressed: () => changeIndex(),
                               child: Text("확인",
                                   style: TextStyle(
                                       fontSize: 14,
