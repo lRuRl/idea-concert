@@ -1,13 +1,12 @@
+// packages
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:image_picker/image_picker.dart';
+// components
 import 'package:iruri/components/component.dart';
 import 'package:iruri/components/input_decoration.dart';
 import 'package:iruri/components/palette.dart';
@@ -21,6 +20,8 @@ import '../../util/data_user.dart' as api;
 // model
 import 'package:iruri/model/user.dart';
 
+/// [userData] is for previous data
+/// needed for initial Data in edit form
 class ProfileEdit extends StatefulWidget {
   final User prevData;
   ProfileEdit({this.prevData});
@@ -72,6 +73,8 @@ class _ProfileEditState extends State<ProfileEdit> {
 
   @override
   Widget build(BuildContext context) {
+    /// [prevData] is input Data from parent Widget
+    /// [size] is for MediaQuery dynamic size
     final prevData = widget.prevData;
     final size = MediaQuery.of(context).size;
     return SingleChildScrollView(
@@ -219,6 +222,7 @@ class _ProfileEditState extends State<ProfileEdit> {
             )));
   }
 
+  /// component for ImageButton in Profile
   void onProfileImageUploadPressed() async {
     final picked = await ImagePicker().getImage(
         source: ImageSource.gallery, // downsize image
@@ -231,6 +235,12 @@ class _ProfileEditState extends State<ProfileEdit> {
     }
   }
 
+  /// the component with [FromBuilderTextField]
+  /// [nameKor] is for Text value which is viewed in application
+  /// [nameEng] is name for data, upload to server
+  /// [width] is display size,
+  /// [initialValue] is data for initial value set in TextField
+  /// [isLimit] to have maxLine:null, but not used yet
   Container subComponentwithWidth(
           {@required String nameKor,
           @required String nameEng,
@@ -249,7 +259,6 @@ class _ProfileEditState extends State<ProfileEdit> {
                   child: new FormBuilderTextField(
                     name: nameEng,
                     initialValue: initialValue,
-
                     /// [TODO] maxLine null is not showing any text inside
                     /// [maxLine : null] needs [expand : true]
                     decoration: borderTextInputBox(displaySuffixIcon: false),
@@ -257,6 +266,12 @@ class _ProfileEditState extends State<ProfileEdit> {
                   )),
             ],
           ));
+  
+  /// the component with [FormBuilderCheckboxGroup]
+  /// [nameKor] is for Text value which is viewed in application
+  /// [nameEng] is name for data, upload to server
+  /// [map] is for base data to be viewed in application
+  /// [initialValue] is for data which is uploaded in server before
   Container subComponentMultiChoice(
           {@required String nameKor,
           @required String nameEng,
@@ -278,6 +293,12 @@ class _ProfileEditState extends State<ProfileEdit> {
           ],
         ),
       );
+
+  /// the component with [TextButton.icon]
+  /// [nameKor] is for Text value which is viewed in application
+  /// component for file upload
+  /// uploaded file is saved at [portfolio] with file path
+  /// only single file can be uploaded
   Container subComponentFileUpload({@required String nameKor}) => Container(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,13 +1,10 @@
-import 'dart:typed_data';
-
+// packages
 import 'package:flutter/material.dart';
+import 'dart:typed_data';
 import 'package:iruri/model/user.dart';
-import 'dart:io'; // for image
-import 'dart:async';
 import 'dart:convert';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
-
-/// [todo] change to objectid
+/// provider
 import 'package:provider/provider.dart';
 // components
 import 'package:flutter/services.dart';
@@ -20,28 +17,38 @@ import 'package:iruri/pages/personal/personal_detail.dart';
 // api
 import 'package:iruri/util/data_user.dart' as API;
 
+/// main personal page class
+/// need to make page with state
 class PersonalPage extends StatefulWidget {
   @override
   _PersonalPageState createState() => _PersonalPageState();
 }
 
 class _PersonalPageState extends State<PersonalPage> {
+  /// this controller automatically disposes
   ScrollController scrollController = new ScrollController();
 
   @override
   Widget build(BuildContext context) {
+    /// [watch] is sth that retrieve data from Provider Tree
+    /// [user] is for current User State, who is signed-in from first app
+    /// [router] is for routing nested page
     final user = context.watch<UserState>();
     final router = context.watch<CustomRouter>();
     
     /// [view user] in list applicant -> specific user
+    /// [runtimeType] is for checking routed Data
+    /// if this page is routed from other page
+    /// then set parameter [others] with routed data
     if (router.data.runtimeType == User) {
       User others = router.data;
       return Container(
         child: SingleChildScrollView(
           controller: scrollController,
           child: Column(
+            /// Column for Several Widgets
             children: <Widget>[
-              MyProfile(userData: router.data),
+              PersonalDetail(userData: router.data),
               subContainerWithTopBorder(subComponentDetail(
                   context: context,
                   onPressed: () => Clipboard.setData(
@@ -72,6 +79,9 @@ class _PersonalPageState extends State<PersonalPage> {
       );
     }
     /// view information of [currentUser] the user who has signed-in now
+    /// if there is no data in router then return with currentUser
+    /// set [userState] with signed-in user
+    /// [portfolio] is for pdfViewer, need be pre-downloaded
     if (user.currentUser != null) {
       UserState userState = context.watch<UserState>();
       String portfolio = userState.currentUser.portfolioChunk;
@@ -80,7 +90,9 @@ class _PersonalPageState extends State<PersonalPage> {
           controller: scrollController,
           child: Column(
             children: <Widget>[
-              MyProfile(userData: user.currentUser),
+              // user data at the top
+              PersonalDetail(userData: user.currentUser),
+              // user object ID, ObjectID can be different by MongoDB which is linked with server
               subContainerWithTopBorder(subComponentDetail(
                   context: context,
                   onPressed: () => Clipboard.setData(
@@ -93,6 +105,7 @@ class _PersonalPageState extends State<PersonalPage> {
                       Text(user.currentUser.uid, style: articleWriterTextStyle),
                   name: '고유코드 정보',
                   btnName: '복사')),
+              /// view with pre-downloaded data with [portfolio]
               subContainerWithTopBorder(subComponentDetail(
                   context: context,
                   onPressed: () => showPDFDialog(context, portfolio),
@@ -104,6 +117,7 @@ class _PersonalPageState extends State<PersonalPage> {
                       style: articleWriterTextStyle),
                   name: '포트폴리오 관리',
                   btnName: '조회')),
+              // sign-out
               logout()
             ],
           ),
