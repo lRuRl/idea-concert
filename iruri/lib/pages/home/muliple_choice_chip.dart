@@ -1,12 +1,16 @@
+// package
 import 'package:flutter/material.dart';
+// components
 import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/spacing.dart';
 
+
+/// [choiceChipType] is for applicant / genre
+/// '0' means applicant multichoicechip
+/// '1' means genre multichoicechip
+/// [typeMap] is applicant Map / genre Map
+/// [onSelectionChanged] is for returning state to parent Widget
 class MultiChoiceChip extends StatefulWidget {
-  /*
-   *  choiceChipType = 0 → applicant position
-   *                 = 1 → genre  
-   */
   final int choiceChipType;
   final Map<String, Map<String, bool>> typeMap;
   final Function(Map<String, Map<String, bool>>) onSelectionChanged;

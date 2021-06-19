@@ -12,7 +12,7 @@ import 'package:iruri/model/article.dart';
 import 'package:iruri/model/user.dart';
 import 'package:iruri/pages/home/muliple_choice_chip.dart';
 import 'package:iruri/pages/state/state_utils.dart';
-import 'package:iruri/util/data_user.dart';
+import 'package:iruri/util/api_user.dart';
 // provider
 import 'package:provider/provider.dart';
 import 'package:iruri/provider.dart';
@@ -173,10 +173,9 @@ class HomeArticle extends StatelessWidget {
   }
 }
 
-/**
- *  onPressed => required
- *  tag => only String !!!
- */
+/// as the widget is built in TextButton, [onPressed] is for TextButton
+/// [tag] is for Button's title
+/// [colorMapper] is based on [palette.dart]
 // ignore: must_be_immutable
 class TagWrapper extends StatelessWidget {
   final onPressed;
@@ -218,7 +217,8 @@ class TagWrapper extends StatelessWidget {
   }
 }
 
-// get image from network
+/// [image] is the string encoded in [base64]
+/// this class is StatfulWidget that makes [base64String] to image
 class ImageWrapper extends StatefulWidget {
   final String image;
   ImageWrapper({this.image});
