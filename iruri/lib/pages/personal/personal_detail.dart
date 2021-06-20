@@ -27,6 +27,7 @@ class _PersonalDetailState extends State<PersonalDetail> {
   Widget build(BuildContext context) {
     final data = widget.userData;
     final size = MediaQuery.of(context).size;
+    if(widget.userData != null) {
     return Container(
         width: size.width,
         height: size.height * 0.5,
@@ -147,6 +148,12 @@ class _PersonalDetailState extends State<PersonalDetail> {
             )
           ],
         ));
+    }
+    else {
+      return Center(
+        child: Text('정보가 없습니다.'),
+      );
+    }
   }
 
   /// the component for sub detailed view
