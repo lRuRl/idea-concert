@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'state_utils.dart';
-import 'package:iruri/util/data_article.dart';
+import 'package:iruri/util/api_article.dart';
 import 'package:iruri/model/article.dart';
 // provider
 import 'package:provider/provider.dart';

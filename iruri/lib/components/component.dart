@@ -1,25 +1,21 @@
+// packages
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
-import 'package:flutter/services.dart';
-import 'dart:io';
+// components
 import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/spacing.dart';
 import 'package:iruri/components/typhography.dart';
+// models
 import 'package:iruri/model/article.dart';
 import 'package:iruri/model/user.dart';
+// route pages
 import 'package:iruri/pages/home/muliple_choice_chip.dart';
 import 'package:iruri/pages/state/state_utils.dart';
-import 'package:iruri/util/api_user.dart';
 // provider
 import 'package:provider/provider.dart';
 import 'package:iruri/provider.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:async';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
 // light gray 색 구분선
 const Widget divider = Divider(color: Color(0xFFEEEEEE), thickness: 1);

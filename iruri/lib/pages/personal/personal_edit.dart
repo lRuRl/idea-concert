@@ -16,7 +16,7 @@ import 'package:iruri/components/typhography.dart';
 import '../../provider.dart';
 import 'package:provider/provider.dart';
 // api
-import '../../util/data_user.dart' as api;
+import '../../util/api_user.dart' as api;
 // model
 import 'package:iruri/model/user.dart';
 

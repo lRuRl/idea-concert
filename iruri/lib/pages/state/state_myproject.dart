@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'state_utils.dart';
 import 'package:iruri/routes.dart';
-import 'package:iruri/util/data_article.dart';
+import 'package:iruri/util/api_article.dart';
 
 class MyprojectPage extends StatefulWidget {
   @override

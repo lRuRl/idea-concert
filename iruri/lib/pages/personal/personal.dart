@@ -15,7 +15,7 @@ import 'package:iruri/provider.dart';
 // pages
 import 'package:iruri/pages/personal/personal_detail.dart';
 // api
-import 'package:iruri/util/data_user.dart' as API;
+import 'package:iruri/util/api_user.dart' as API;
 
 /// main personal page class
 /// need to make page with state
@@ -195,8 +195,9 @@ class _PersonalPageState extends State<PersonalPage> {
             primary: Colors.blue,
             onSurface: Colors.red,
           ),
-          onPressed: () => Provider.of<CustomRouter>(context, listen: false)
-              .setRegistrationStatus(false),
+          // onPressed: () => Provider.of<CustomRouter>(context, listen: false)
+          //     .setRegistrationStatus(false),
+          onPressed: () => Provider.of<UserState>(context, listen: false).setUser(null),
           child: Text('로그아웃', style: TextStyle(color: greyText)),
         ));
   }

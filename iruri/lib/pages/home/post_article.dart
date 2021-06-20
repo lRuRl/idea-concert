@@ -12,7 +12,7 @@ import 'package:iruri/components/typhography.dart';
 import 'package:iruri/model/article.dart';
 import 'package:iruri/pages/home/muliple_choice_chip.dart';
 import 'package:iruri/provider.dart';
-import 'package:iruri/util/data_article.dart';
+import 'package:iruri/util/api_article.dart';
 
 // provider
 import 'package:provider/provider.dart';
