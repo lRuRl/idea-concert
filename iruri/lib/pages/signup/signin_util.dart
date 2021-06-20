@@ -115,9 +115,9 @@ class _UserSigninInfoState extends State<UserSigninInfo> {
               if (res != null) {
                 // set current User
                 Provider.of<UserState>(context, listen: false).setUser(res);
-                // set router
-                Provider.of<CustomRouter>(context, listen: false)
-                    .setRegistrationStatus(true);
+                // // set router
+                // Provider.of<CustomRouter>(context, listen: false)
+                //     .setRegistrationStatus(true);
                 routerReader.navigateTo(routerWatcher.currentPage, '/');
               } else {
                 ScaffoldMessenger.of(context)
