@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 // State Utils
 import 'package:iruri/pages/state/state_utils/state_component.dart';
 // Model
-import 'package:iruri/util/data_article.dart';
+import 'package:iruri/util/api_article.dart';
 
 class ApplyListPage extends StatefulWidget {
   @override

@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:iruri/provider.dart';
 
 // UserAPI
-import 'package:iruri/util/data_user.dart';
+import 'package:iruri/util/api_user.dart';
 import 'package:iruri/model/user.dart';
 
 // article

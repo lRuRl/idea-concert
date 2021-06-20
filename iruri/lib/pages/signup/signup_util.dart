@@ -9,7 +9,7 @@ import 'package:iruri/components/spacing.dart';
 import 'package:iruri/components/typhography.dart';
 import 'package:iruri/model/user.dart';
 import 'package:iruri/provider.dart';
-import 'package:iruri/util/data_user.dart';
+import 'package:iruri/util/api_user.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
@@ -373,7 +373,7 @@ class _UserInfoState extends State<UserInfo> {
 
             return Container(
                 padding:
-                    EdgeInsets.only(top: 20, bottom: 40, left: 20, right: 20),
+                    EdgeInsets.only(top: 20, bottom: 20, left: 20, right: 20),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
@@ -407,12 +407,13 @@ class _UserInfoState extends State<UserInfo> {
                           ]),
                           TextButton(
                             onPressed: () {
-                              postUserInfo().then((value) =>
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text('회원가입 완료!'))));
-                              Provider.of<CustomRouter>(context, listen: false)
-                                  .setRegistrationStatus(true);
-
+                              postUserInfo()
+                                  .then((value) =>
+                                      Provider.of<UserState>(context, listen: false)
+                                          .setUser(this.user))
+                                  .then((value) => ScaffoldMessenger.of(context)
+                                      .showSnackBar(
+                                          SnackBar(content: Text('회원가입 완료!'))));
                               Navigator.pop(context);
                               routerReader.navigateTo(
                                   routerWatcher.currentPage, '/');
@@ -422,7 +423,6 @@ class _UserInfoState extends State<UserInfo> {
                           ),
                         ],
                       ),
-
                       selectOptions(0, "메인글"),
                       selectOptions(1, "글콘티"),
                       selectOptions(2, "메인그림"),
@@ -442,13 +442,14 @@ class _UserInfoState extends State<UserInfo> {
                                       borderRadius: BorderRadius.circular(8)),
                                   backgroundColor: primary),
                               onPressed: () {
-                                postUserInfo().then((value) =>
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(content: Text('회원가입 완료!'))));
-                                Provider.of<CustomRouter>(context,
-                                        listen: false)
-                                    .setRegistrationStatus(true);
-
+                                postUserInfo()
+                                    .then((value) =>
+                                        Provider.of<UserState>(context, listen: false)
+                                            .setUser(this.user))
+                                    .then((value) =>
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                content: Text('회원가입 완료!'))));
                                 Navigator.pop(context);
                                 routerReader.navigateTo(
                                     routerWatcher.currentPage, '/');

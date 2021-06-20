@@ -9,10 +9,13 @@ import 'package:iruri/routes.dart';
 
 void main() {
   runApp(
-      // use provider !
+
+      /// the main part of provider tree
+      /// [CustomRouter] manage nested page routing
+      /// [UserState] manage current user, who has signed-in at the first time
       MultiProvider(
     providers: [
-      ChangeNotifierProvider(create: (context) => CustomRouter(false)),
+      ChangeNotifierProvider(create: (context) => CustomRouter()),
       ChangeNotifierProvider(create: (context) => UserState())
     ],
     child: MyApp(),
@@ -25,10 +28,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       // 우측 상단에 DEBUG 표시 제거
       debugShowCheckedModeBanner: false,
-      home: Provider.of<UserState>(context).currentUser != null && Provider.of<CustomRouter>(context).isLoggedin
+      /// check if the [currentUser] is null
+      /// if it is null then it means none of user exists
+      /// and go on to the LoginPage
+      home: Provider.of<UserState>(context).currentUser != null
           ? Routes()
           : LoginPage(),
-      // home: Routes(),
       // set theme
       theme: ThemeData(fontFamily: GoogleFonts.notoSans().fontFamily),
     );

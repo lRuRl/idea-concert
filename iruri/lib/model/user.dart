@@ -160,7 +160,7 @@ class ProfileInfo {
   Map<String, dynamic> toJson() => {
         "name": name,
         "phoneNumber": phoneNumber,
-        "roles": (roles),
+        "roles": jsonEncode(roles),
         "nickname": nickname,
         "location": location,
         "programs": (programs),

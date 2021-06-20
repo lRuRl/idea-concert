@@ -9,7 +9,7 @@ import 'package:iruri/pages/home/project_detail_components.dart';
 // Provider
 import 'package:iruri/provider.dart';
 // State Utils
-import 'package:iruri/util/data_article.dart';
+import 'package:iruri/util/api_article.dart';
 // Pages
 import 'package:iruri/pages/state/state_utils/state_function.dart';
 // Utils

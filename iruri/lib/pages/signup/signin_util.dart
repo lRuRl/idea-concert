@@ -1,12 +1,17 @@
+// packages
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+// components
 import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/spacing.dart';
 import 'package:iruri/components/typhography.dart';
-import 'package:iruri/model/user.dart';
 import 'package:iruri/pages/signup/signup.dart';
+// model
+import 'package:iruri/model/user.dart';
+// provider
 import 'package:iruri/provider.dart';
-import 'package:iruri/util/data_user.dart';
-import 'package:provider/provider.dart';
+// util
+import 'package:iruri/util/api_user.dart';
 
 class UserSigninInfo extends StatefulWidget {
   @override
@@ -23,7 +28,6 @@ class _UserSigninInfoState extends State<UserSigninInfo> {
   @override
   void initState() {
     super.initState();
-
     api = new UserAPI();
     isChecked = false;
     infoController['id'] = new TextEditingController();
@@ -111,9 +115,9 @@ class _UserSigninInfoState extends State<UserSigninInfo> {
               if (res != null) {
                 // set current User
                 Provider.of<UserState>(context, listen: false).setUser(res);
-                // set router
-                Provider.of<CustomRouter>(context, listen: false)
-                    .setRegistrationStatus(true);
+                // // set router
+                // Provider.of<CustomRouter>(context, listen: false)
+                //     .setRegistrationStatus(true);
                 routerReader.navigateTo(routerWatcher.currentPage, '/');
               } else {
                 ScaffoldMessenger.of(context)

@@ -1,5 +1,11 @@
+/// this file is made up based on Figma [Design_Guide_V.01] written by [@moospark0321@gmail.com]
+/// not every component is completed
+/// this file is only for TextField Decoration part
+
+// packages
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+// components
 import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/typhography.dart';
 

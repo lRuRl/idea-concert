@@ -1,26 +1,22 @@
+// packages
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
-import 'package:flutter/services.dart';
-import 'dart:io';
+// components
 import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/spacing.dart';
 import 'package:iruri/components/typhography.dart';
+// models
 import 'package:iruri/model/article.dart';
 import 'package:iruri/model/user.dart';
+// route pages
 import 'package:iruri/pages/home/muliple_choice_chip.dart';
 import 'package:iruri/pages/state/state_utils/state_component.dart';
 import 'package:iruri/pages/state/state_utils/state_function.dart';
-import 'package:iruri/util/data_user.dart';
 // provider
 import 'package:provider/provider.dart';
 import 'package:iruri/provider.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:async';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
 // light gray 색 구분선
 const Widget divider = Divider(color: Color(0xFFEEEEEE), thickness: 1);
@@ -171,10 +167,9 @@ class HomeArticle extends StatelessWidget {
   }
 }
 
-/**
- *  onPressed => required
- *  tag => only String !!!
- */
+/// as the widget is built in TextButton, [onPressed] is for TextButton
+/// [tag] is for Button's title
+/// [colorMapper] is based on [palette.dart]
 // ignore: must_be_immutable
 class TagWrapper extends StatelessWidget {
   final onPressed;
@@ -216,7 +211,8 @@ class TagWrapper extends StatelessWidget {
   }
 }
 
-// get image from network
+/// [image] is the string encoded in [base64]
+/// this class is StatfulWidget that makes [base64String] to image
 class ImageWrapper extends StatefulWidget {
   final String image;
   ImageWrapper({this.image});
