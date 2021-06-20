@@ -8,14 +8,11 @@ import 'package:iruri/pages/home/home.dart';
 import 'package:iruri/pages/home/post_article.dart';
 import 'package:iruri/pages/home/project_detail.dart';
 import 'package:iruri/pages/personal/personal.dart';
-import 'package:iruri/pages/signup/signup.dart';
-import 'package:iruri/pages/state/fill_contract.dart';
-import 'package:iruri/pages/state/state_projectlist.dart';
-import 'package:iruri/pages/state/state_myproject.dart';
+import 'package:iruri/pages/state/state_fill_contract.dart';
+import 'package:iruri/pages/state/state_matching.dart';
+import 'package:iruri/pages/state/state_postproject.dart';
 import 'package:iruri/pages/state/state_applylist.dart';
-import 'package:iruri/pages/state/state_myproject.dart';
 import 'package:iruri/pages/state/state_applys.dart';
-import 'package:iruri/pages/state/state_projectlist.dart';
 import 'package:iruri/pages/state/state_detailpage.dart';
 
 // provider
@@ -48,9 +45,9 @@ class _RoutesState extends State<Routes> {
 
   var page = {
     '/': HomePage(),
-    '/state': ProjectListPage(),
+    '/state': MatchingPage(),
     '/personal': PersonalPage(),
-    '/state/myproject': MyprojectPage(),
+    '/state/myproject': PostProjectPage(),
     '/state/applylist': ApplyListPage(),
     '/home/projectdetail': ProjectDetailPage(),
     '/state/projectdetail': StateProjectDetailPage(),

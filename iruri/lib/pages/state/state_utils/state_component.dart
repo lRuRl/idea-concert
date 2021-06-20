@@ -1,35 +1,29 @@
 import 'package:flutter/material.dart';
+// Package
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+// Components
 import 'package:iruri/components/component.dart';
+import 'package:iruri/pages/home/project_detail_components.dart';
+// Provider
+import 'package:iruri/provider.dart';
+// State Utils
+import 'package:iruri/util/api_article.dart';
+// Pages
+import 'package:iruri/pages/state/state_utils/state_function.dart';
+// Utils
 import 'package:iruri/components/palette.dart';
 import 'package:iruri/components/spacing.dart';
-import 'package:iruri/provider.dart';
-import 'package:iruri/util/api_article.dart';
-import 'package:iruri/util/api_user.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:iruri/pages/home/project_detail_components.dart';
-
-import 'dart:async';
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:iruri/components/typhography.dart';
-
-// pages
-import 'package:iruri/pages/state/state_applys.dart';
-
 // article
 import 'package:iruri/model/article.dart';
 // provider
 import 'package:provider/provider.dart';
 // model
-import 'package:iruri/model/article.dart';
 import 'package:iruri/model/user.dart';
 
-boxItem(int index, List<Container> items, BuildContext context, Article data) {
+boxItem(int index, BuildContext context, Article data) {
   // provider
   final routerReader = context.read<CustomRouter>();
   final routerWatcher = context.watch<CustomRouter>();
@@ -121,8 +115,7 @@ boxItem(int index, List<Container> items, BuildContext context, Article data) {
       ));
 }
 
-boxItem_apply(
-    int index, List<Container> items, BuildContext context, Article data) {
+boxItem_apply(int index, BuildContext context, Article data) {
   // provider
   final routerReader = context.read<CustomRouter>();
   final routerWatcher = context.watch<CustomRouter>();
@@ -259,12 +252,6 @@ Widget applyProject(BuildContext context, List<Container> items) {
               boldText("내가 지원한 프로젝트 "),
               IconButton(
                 onPressed: () {
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //       builder: (BuildContext context) => ApplyListPage(),
-                  //     ));
-                  // use Provider - updated 04.12.21 by seunghwanly
                   routerReader.navigateTo(
                       routerWatcher.currentPage, '/state/applylist');
                 },
@@ -530,21 +517,6 @@ Widget listItemButton_my(BuildContext context, Article article) {
             onSurface: Color.fromRGBO(0x1b, 0x30, 0x59, 1),
             onPrimary: Color.fromRGBO(0x1b, 0x30, 0x59, 1),
           )),
-      // ElevatedButton(
-      //     onPressed: () => routerReader.navigateTo(
-      //           routerWatcher.currentPage,
-      //           '/state/projectdetail',
-      //         ),
-      //     child: Text("팀원 조회",
-      //         style: TextStyle(
-      //           fontSize: 12,
-      //         )),
-      //     style: ElevatedButton.styleFrom(
-      //       padding: EdgeInsets.only(top: 11, bottom: 11, left: 21, right: 21),
-      //       // fixedSize: Size(90, 30),
-      //       primary: Color.fromRGBO(0x1B, 0x30, 0x59, 1),
-      //       onPrimary: Colors.white,
-      //     ))
     ],
   );
 }
@@ -629,55 +601,6 @@ Widget stateprojectDetailContent(BuildContext context, Article data) {
   ]));
 }
 
-// Widget manageTeam(BuildContext context) {
-//   return Container(
-//       height: MediaQuery.of(context).size.height * 0.25,
-//       width: MediaQuery.of(context).size.width * 1,
-//       child: ListView.builder(
-//         scrollDirection: Axis.vertical,
-//         itemCount: memberListSample.length,
-//         itemBuilder: (context, index) {
-//           return Container(
-//             width: MediaQuery.of(context).size.width * 1,
-//             margin: EdgeInsets.symmetric(vertical: 7),
-//             child: Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//               children: [
-//                 Expanded(
-//                   flex: 1,
-//                   child: Icon(
-//                     Icons.remove_circle_outline,
-//                     size: 20,
-//                   ),
-//                 ),
-//                 Expanded(
-//                     flex: 4,
-//                     child: Container(
-//                         alignment: Alignment.centerRight,
-//                         height: 20,
-//                         child: Row(
-//                             mainAxisAlignment: MainAxisAlignment.end,
-//                             children: List<Widget>.generate(
-//                                 memberListSample[index].roles.length,
-//                                 (indexs) => Container(
-//                                       margin: EdgeInsets.only(left: 10),
-//                                       child: TagWrapper(
-//                                         onPressed: () {},
-//                                         tag: memberListSample[index]
-//                                             .roles[indexs],
-//                                       ),
-//                                     ))))),
-//                 Expanded(
-//                     flex: 5,
-//                     child: nicknameEdit(
-//                         "@" + memberListSample[index].info.nickname)),
-//               ],
-//             ),
-//           );
-//         },
-//       ));
-// }
-
 Widget nicknameEdit(String nickname) {
   return Container(
       margin: EdgeInsets.symmetric(horizontal: 15),
@@ -736,44 +659,6 @@ Widget saveContractButton(BuildContext context) {
         primary: Color.fromRGBO(0xf2, 0xa2, 0x0c, 1),
         onPrimary: Colors.white,
       ));
-}
-
-Future<File> createFileOfPdfUrl() async {
-  Completer<File> completer = Completer();
-  try {
-    final url = "http://www.africau.edu/images/default/sample.pdf";
-    final filename = url.substring(url.lastIndexOf("/") + 1);
-    var request = await HttpClient().getUrl(Uri.parse(url));
-    var response = await request.close();
-    var bytes = await consolidateHttpClientResponseBytes(response);
-    var dir = await getApplicationDocumentsDirectory();
-    File file = File("${dir.path}/$filename");
-
-    await file.writeAsBytes(bytes, flush: true);
-    completer.complete(file);
-  } catch (e) {
-    throw Exception('Error parsing asset file!');
-  }
-
-  return completer.future;
-}
-
-Future<File> fromAsset(String asset, String filename) async {
-  // To open from assets, you can copy them to the app storage folder, and the access them "locally"
-  Completer<File> completer = Completer();
-
-  try {
-    var dir = await getApplicationDocumentsDirectory();
-    File file = File("${dir.path}/$filename");
-    var data = await rootBundle.load(asset);
-    var bytes = data.buffer.asUint8List();
-    await file.writeAsBytes(bytes, flush: true);
-    completer.complete(file);
-  } catch (e) {
-    throw Exception('Error parsing asset file!');
-  }
-
-  return completer.future;
 }
 
 class SelectBoxApply extends StatefulWidget {
@@ -928,7 +813,8 @@ class _SelectBoxApplyState extends State<SelectBoxApply> {
             TextButton(
                 onPressed: () {
                   ArticleAPI()
-                      .apply(widget.data.id, selectedList, user.currentUser.uid, 'new')
+                      .apply(widget.data.id, selectedList, user.currentUser.uid,
+                          'new')
                       .then((value) => showMyDialog(context, "신청이 완료 되었습니다.",
                           "자세한 지원 사항은 나의 페이지에서 확인 할 수 있습니다."))
                       .then((value) => Navigator.pop(context));
@@ -1198,8 +1084,8 @@ containerApplys(int index, BuildContext context, User data, Article article) {
                       ),
                       child: Center(
                         child: data.image != null
-                              ? ImageWrapper(image: data.imageChunk)
-                              : Image.asset('assets/default.png'),
+                            ? ImageWrapper(image: data.imageChunk)
+                            : Image.asset('assets/default.png'),
                       ),
                     ),
                   ),
@@ -1276,19 +1162,18 @@ containerApplys(int index, BuildContext context, User data, Article article) {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Flexible(
-                                  child:
-                                Text(
-                                    data.profileInfo.genres?.isEmpty ?? true
-                                        ? '선호 장르 : 미작성'
-                                        : '선호 장르 : ' +
-                                            getGenreList(
-                                                data.profileInfo.genres),
-                                    style: TextStyle(
-                                        fontSize: 10,
-                                        fontFamily: "Roboto",
-                                        color: Color.fromRGBO(
-                                            0x77, 0x77, 0x77, 1)),
-                                            overflow: TextOverflow.visible)),
+                                    child: Text(
+                                        data.profileInfo.genres?.isEmpty ?? true
+                                            ? '선호 장르 : 미작성'
+                                            : '선호 장르 : ' +
+                                                getGenreList(
+                                                    data.profileInfo.genres),
+                                        style: TextStyle(
+                                            fontSize: 10,
+                                            fontFamily: "Roboto",
+                                            color: Color.fromRGBO(
+                                                0x77, 0x77, 0x77, 1)),
+                                        overflow: TextOverflow.visible)),
                               ],
                             ),
                             Row(
@@ -1378,154 +1263,4 @@ containerApplys(int index, BuildContext context, User data, Article article) {
                   ))),
         ],
       ));
-}
-
-String getGenreList(List<String> genres) {
-  String result = '';
-  for (int i = 0; i < genres.length; i++) {
-    result += genres[i];
-    if (i != genres.length - 1) {
-      result += '/';
-    }
-  }
-  return result;
-}
-
-List<Widget> rolesLinearTag(List<String> roles) {
-  Widget element;
-  for (int i = 0; i < roles.length; i++) {
-    // element =
-    // PositionSmallLinear()
-  }
-}
-
-List<String> getUidList(Article article) {
-  List<String> uidList = [];
-
-  if (article.detail.applicant.drawAfters?.isEmpty == false) {
-    for (int i = 0; i < article.detail.applicant.drawAfters.length; i++) {
-      bool isExist = false;
-      for (int j = 0; j < uidList.length; j++) {
-        if (uidList[j] == article.detail.applicant.drawAfters[i].uid) {
-          isExist = true;
-          break;
-        }
-      }
-      if (isExist == false)
-        uidList.add(article.detail.applicant.drawAfters[i].uid);
-    }
-  }
-
-  if (article.detail.applicant.drawColors?.isEmpty == false) {
-    for (int i = 0; i < article.detail.applicant.drawColors.length; i++) {
-      bool isExist = false;
-      for (int j = 0; j < uidList.length; j++) {
-        if (uidList[j] == article.detail.applicant.drawColors[i].uid) {
-          isExist = true;
-          break;
-        }
-      }
-      if (isExist == false)
-        uidList.add(article.detail.applicant.drawColors[i].uid);
-    }
-  }
-
-  if (article.detail.applicant.drawChars?.isEmpty == false) {
-    for (int i = 0; i < article.detail.applicant.drawChars.length; i++) {
-      bool isExist = false;
-      for (int j = 0; j < uidList.length; j++) {
-        if (uidList[j] == article.detail.applicant.drawChars[i].uid) {
-          isExist = true;
-          break;
-        }
-      }
-      if (isExist == false)
-        uidList.add(article.detail.applicant.drawChars[i].uid);
-    }
-  }
-
-  if (article.detail.applicant.drawLines?.isEmpty == false) {
-    for (int i = 0; i < article.detail.applicant.drawLines.length; i++) {
-      bool isExist = false;
-      for (int j = 0; j < uidList.length; j++) {
-        if (uidList[j] == article.detail.applicant.drawLines[i].uid) {
-          isExist = true;
-          break;
-        }
-      }
-      if (isExist == false)
-        uidList.add(article.detail.applicant.drawLines[i].uid);
-    }
-  }
-
-  if (article.detail.applicant.drawDessins?.isEmpty == false) {
-    for (int i = 0; i < article.detail.applicant.drawDessins.length; i++) {
-      bool isExist = false;
-      for (int j = 0; j < uidList.length; j++) {
-        if (uidList[j] == article.detail.applicant.drawDessins[i].uid) {
-          isExist = true;
-          break;
-        }
-      }
-      if (isExist == false)
-        uidList.add(article.detail.applicant.drawDessins[i].uid);
-    }
-  }
-
-  if (article.detail.applicant.drawContis?.isEmpty == false) {
-    for (int i = 0; i < article.detail.applicant.drawContis.length; i++) {
-      bool isExist = false;
-      for (int j = 0; j < uidList.length; j++) {
-        if (uidList[j] == article.detail.applicant.drawContis[i].uid) {
-          isExist = true;
-          break;
-        }
-      }
-      if (isExist == false)
-        uidList.add(article.detail.applicant.drawContis[i].uid);
-    }
-  }
-
-  if (article.detail.applicant.drawMains?.isEmpty == false) {
-    for (int i = 0; i < article.detail.applicant.drawMains.length; i++) {
-      bool isExist = false;
-      for (int j = 0; j < uidList.length; j++) {
-        if (uidList[j] == article.detail.applicant.drawMains[i].uid) {
-          isExist = true;
-          break;
-        }
-      }
-      if (isExist == false)
-        uidList.add(article.detail.applicant.drawMains[i].uid);
-    }
-  }
-
-  if (article.detail.applicant.writeMains?.isEmpty == false) {
-    for (int i = 0; i < article.detail.applicant.writeMains.length; i++) {
-      bool isExist = false;
-      for (int j = 0; j < uidList.length; j++) {
-        if (uidList[j] == article.detail.applicant.writeMains[i].uid) {
-          isExist = true;
-          break;
-        }
-      }
-      if (isExist == false)
-        uidList.add(article.detail.applicant.writeMains[i].uid);
-    }
-  }
-
-  if (article.detail.applicant.writeContis?.isEmpty == false) {
-    for (int i = 0; i < article.detail.applicant.writeContis.length; i++) {
-      bool isExist = false;
-      for (int j = 0; j < uidList.length; j++) {
-        if (uidList[j] == article.detail.applicant.writeContis[i].uid) {
-          isExist = true;
-          break;
-        }
-      }
-      if (isExist == false)
-        uidList.add(article.detail.applicant.writeContis[i].uid);
-    }
-  }
-  return uidList;
 }

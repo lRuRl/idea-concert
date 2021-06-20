@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:iruri/components/component.dart';
 import 'package:iruri/model/article.dart';
 import 'package:iruri/pages/home/project_detail_components.dart';
-import 'package:iruri/pages/state/state_utils.dart';
+import 'package:iruri/pages/state/state_utils/state_component.dart';
+import 'package:iruri/pages/state/state_utils/state_function.dart';
 
 // provider
 import 'package:provider/provider.dart';

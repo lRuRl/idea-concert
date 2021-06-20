@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+// Components
 import 'package:iruri/pages/home/project_detail_components.dart';
-import 'package:iruri/pages/state/state_utils.dart';
+// State Utils
+import 'package:iruri/pages/state/state_utils/state_component.dart';
+import 'package:iruri/pages/state/state_utils/state_function.dart';
 import 'package:iruri/components/typhography.dart';
 // provider
 import 'package:provider/provider.dart';
