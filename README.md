@@ -1,5 +1,11 @@
 # idea-concert
 
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/22142225/122680160-db9daa80-d228-11eb-9043-18288eeb2c73.gif" width="100"/><br/>
+    <b>동국대학교 2021년 1학기 기업사회맞춤형캡스톤디자인1 X 아이디어콘서트</b><br/>
+    <em>박은별과장님 • 박무성사원님</em>
+</p>
+
 본 프로젝트는 Front-end(Flutter)와 Back-end(Node.js)로 이루어진 프로젝트입니다. `/iruri` 에는 Flutter 환경으로, `/server` 에는 Node.js 환경으로 되어있으니 사전에 위 두개의 환경설정이 필요합니다.
 
 - [Flutter 환경설정하기 👉](https://flutter.dev/docs/get-started/install)
