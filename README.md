@@ -35,6 +35,6 @@ git clone https://github.com/lRuRl/idea-concert.git
     ```
 
 
-[`/iruri` 관련 README.md로 이동하기]()
+[`/iruri` 관련 README.md로 이동하기](https://github.com/lRuRl/idea-concert/blob/main/iruri/README.md)
 
-[`/server` 관련 README.md로 이동하기]()
+[`/server` 관련 README.md로 이동하기](https://github.com/lRuRl/idea-concert/blob/main/server/README.md)
