@@ -46,4 +46,4 @@ git clone https://github.com/lRuRl/idea-concert.git
 [`/server` 관련 README.md로 이동하기](https://github.com/lRuRl/idea-concert/blob/main/server/README.md)
 
 # Demo Application preview
-[Youtube 링크 바로가기](https://youtu.be/CiYwsod3aVk)
+[Youtube 링크 바로가기](https://youtu.be/XaJ0LicT1d0)
